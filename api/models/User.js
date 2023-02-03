@@ -13,26 +13,25 @@ const userSchema = new Schema({
 	},
 	homes: [
 		{
-			hoa: {
-				type: ObjectId,
-				ref: 'HOA'
-			},
-			address: {
-				houseNumber: Number,
-				street: String,
-				phase: String
-			},
-			residents: [
-				{
-					name: String
-				}
-			]
+			type: ObjectId,
+			ref: 'Home',
+			required: true
 		}
 	],
-	vehicles: [{
-        type: ObjectId,
-        ref: 'Vehicle'
-    }]
+	vehicles: [
+		{
+			type: ObjectId,
+			ref: 'Vehicle',
+			required: true
+		}
+	],
+	dues: [
+		{
+			type: ObjectId,
+			ref: 'Due',
+			required: true
+		}
+	]
 });
 
 module.exports = model('User', userSchema);

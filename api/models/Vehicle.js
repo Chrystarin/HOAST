@@ -9,13 +9,14 @@ const vehicleSchema = new Schema({
 	},
 	owner: {
 		type: ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: true
 	},
-	brand: String,
-	model: String,
-	type: String,
-	color: String,
-	manufacturer: String
+	brand: { type: String, requried: true },
+	model: { type: String, requried: true },
+	type: { type: String, requried: true },
+	color: { type: String, requried: true },
+	manufacturer: { type: String, requried: true }
 });
 
 module.exports = model('Vehicle', vehicleSchema);

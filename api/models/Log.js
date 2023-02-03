@@ -9,18 +9,20 @@ const logSchema = new Schema({
 	},
 	id: {
 		type: ObjectId,
-		refPath: 'accessType'
+		refPath: 'accessType',
+		required: true
 	},
 	accessType: {
 		type: String,
-		required: true,
-		enum: ['Vehicle', 'Visitor']
+		enum: ['Vehicle', 'Visitor'],
+		required: true
 	},
 	logType: {
 		type: String,
-		enum: ['entry', 'exit']
+		enum: ['entry', 'exit'],
+		required: true
 	},
-	timestamp: Number
+	timestamp: { type: Number, required: true }
 });
 
 module.exports = model('Log', logSchema);

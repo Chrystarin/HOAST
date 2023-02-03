@@ -20,6 +20,16 @@ const hoaSchema = new Schema({
 			ref: 'User'
 		}
 	],
+	boardMembers: [
+		{
+			member: {
+				type: ObjectId,
+				ref: 'User'
+			},
+			position: { type: String, required: true },
+			status: { type: String, required: true }
+		}
+	],
 	guards: [
 		{
 			name: {
@@ -29,7 +39,7 @@ const hoaSchema = new Schema({
 			status: {
 				type: String,
 				enum: ['active', 'retired'],
-				default: 'active'
+				required: true
 			}
 		}
 	]

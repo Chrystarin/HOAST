@@ -9,17 +9,19 @@ const visitorSchema = new Schema({
 	},
 	user: {
 		type: ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: true
 	},
 	hoa: {
 		type: ObjectId,
-		ref: 'HOA'
+		ref: 'HOA',
+		required: true
 	},
-	name: String,
-	purpose: String,
-	arrival: Number,
-	departure: Number,
-	note: String
+	name: { type: String, required: true },
+	purpose: { type: String, required: true },
+	arrival: { type: Number, required: true },
+	departure: { type: Number, required: true },
+	note: { type: String, required: true }
 });
 
 module.exports = model('Vistior', visitorSchema);
