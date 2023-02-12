@@ -1,0 +1,97 @@
+* {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --primary-color: #3084e4;
+    --secondary-color:#2A5D7A;
+}
+h1{
+    font-size: 56px;
+}
+h2{
+    font-size: 45px;
+}
+h3{
+    font-size: 35px;
+}
+h4{
+    font-size: 27px;
+}
+h5{
+    font-size: 21px;
+}
+h6{
+    font-size: 16px;
+}
+p{
+    line-height: 25px;
+}
+.BodyText1{
+    font-size: 20px;
+}
+.BodyText2{
+    font-size: 17px;
+}
+.BodyText3{
+    font-size: 15px;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:active{
+    color: black;
+}
+#SectionHolder{
+    max-width: 1920px;
+    margin: auto;
+    .Section{
+        padding-left: 1em;
+        padding-right: 1em;
+        .SectionTitleLandingPage{
+            text-align: center;
+            padding-top: 25px;
+            margin-bottom: 75px;
+            h4{
+                margin-bottom: 15px;
+            }
+        }
+        .SectionTitleDashboard{
+            color: rgb(38, 38, 38);
+            position: relative;
+            margin-top: 25px;
+            margin-left: 15px;
+        }
+        .SectionTitleDashboard::before{
+            content: "";
+            width: 5px;
+            height: 100%;
+            left: -15px;
+            display: block;
+            position: absolute;
+            background-color: var(--primary-color);
+        }
+        .SectionController{
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+            #SearchInput__Container{
+                flex-grow: 1;
+            }
+        }
+        .SectionList{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    }
+}
+
+.Input__Wrapper2{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}

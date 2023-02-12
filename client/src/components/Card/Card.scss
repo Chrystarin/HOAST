@@ -1,0 +1,14 @@
+#Card{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.069);
+    padding: 55px 15px 15px;
+    border-radius: 6px;
+    width: 250px;
+    #Icon{
+        width: 100%;
+        scale: 3.2;
+        margin-bottom: 55px;
+    }
+}

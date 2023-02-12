@@ -1,0 +1,50 @@
+#Header{
+    height: 80px;
+    border-bottom: 2px solid rgb(70, 70, 70);
+
+    #Header__Container{
+        position: sticky;
+        margin: auto;
+        display: flex;
+        padding: .5em 1em;
+        height: 100%;
+        max-width: 1920px;
+        #Logo{
+            height: 100%;   
+            flex-grow: 1;
+            a{
+            display: flex;
+            align-items: center;
+            height: 100%;
+                img{
+                    height: 70%;
+                }
+            }
+            
+        }
+        ul{
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            li:nth-child(1),li:nth-child(2){
+                Button{
+                    color: black;
+                }
+            }
+            li:nth-child(3){
+                button{
+                    border-color:var(--secondary-color);
+                    color: var(--secondary-color);
+                }
+            }
+            li:nth-child(4){
+                button{
+                    background-color:var(--secondary-color);
+                }
+            }
+        }
+        
+    }
+    
+}

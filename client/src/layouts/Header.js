@@ -1,0 +1,34 @@
+import React from 'react'
+import Logo from '../images/logo.PNG';
+import './Header.scss';
+import Button from '@mui/material/Button';
+function Header() {
+  return (
+    <div id='Header'>
+        <div id='Header__Container'>
+            <div id="Logo">
+                <a href='/'>
+                <img  src={Logo} alt="" />
+
+                </a>
+            </div>
+            <ul>
+                <li>
+                    <Button variant="text">About</Button>
+                </li>
+                <li>
+                    <Button variant="text">FAQ's</Button>
+                </li>
+                <li>
+                    <Button variant="outlined">Login</Button>
+                </li>
+                <li>
+                    <Button variant="contained">Register</Button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  )
+}
+
+export default Header

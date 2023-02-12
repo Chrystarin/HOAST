@@ -1,0 +1,14 @@
+#SearchInput{
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    border: 1px solid black;
+    float: left;
+    padding-right: .5em;
+    input{
+        width: 300px;
+        padding: .8em 0 .8em .8em;
+        border: none;
+        outline: none;
+    }
+}
