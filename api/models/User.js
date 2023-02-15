@@ -14,22 +14,26 @@ const userSchema = new Schema({
 	homes: [
 		{
 			type: ObjectId,
-			ref: 'Home',
-			required: true
+			ref: 'Home'
 		}
 	],
 	vehicles: [
 		{
-			type: ObjectId,
-			ref: 'Vehicle',
-			required: true
+			plateNumber: {
+                type: String,
+                unique: true,
+                required: true
+            },
+            brand: { type: String, requried: true },
+            model: { type: String, requried: true },
+            type: { type: String, requried: true },
+            color: { type: String, requried: true }
 		}
 	],
 	dues: [
 		{
 			type: ObjectId,
-			ref: 'Due',
-			required: true
+			ref: 'Due'
 		}
 	]
 });

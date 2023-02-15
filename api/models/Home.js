@@ -17,7 +17,10 @@ const homeSchema = new Schema({
         street: { type: String, required: true },
         phase: { type: String, required: true }
     },
-    residents: [String]
+    residents: [{
+        type: ObjectId,
+        ref: 'User'
+    }]
 });
 
 module.exports = model('Home', homeSchema);
