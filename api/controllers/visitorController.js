@@ -42,5 +42,6 @@ const updateVisitor = async (req, res) => {
 }
 
 module.exports = {
-    createVisitor
+    createVisitor,
+    updateVisitor
 }
