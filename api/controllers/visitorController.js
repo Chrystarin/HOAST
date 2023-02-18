@@ -25,7 +25,7 @@ const updateVisitor = async (req, res) => {
     const { visitorId, user, hoa, name, purpose, arrival, departure, note } = req.body;
 
     try {
-        const visitor = await Visitor.findByIdAndUpdate(req.params.id, {
+        const visitor = await Visitor.findByIdAndUpdate(req.body, {
             visitorId,
             user,
             hoa,

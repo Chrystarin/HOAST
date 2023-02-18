@@ -9,12 +9,6 @@ const createUSer = async (req, res) => {
     if (checkUSer) return res.status(400).json({ message: 'User already exists' });
     
     try {
-        // const savedUser = await newUser.save();
-        // res.status(201).json(savedUser);
-
-        // const user = await User.create({userId, name, homes, vehicles, dues})
-        // res.status(200).json(user);
-
         const newUser = await User.Create({
             userId: "1234567890",
             name: {
@@ -41,7 +35,7 @@ const editUser = async (req, res) => {
     const { userId, name, homes, vehicles, dues } = req.body;
 
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, {
+        const user = await User.findByIdAndUpdate(req.body, {
             userId,
             name,
             homes,
