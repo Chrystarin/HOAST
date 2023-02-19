@@ -1,0 +1,12 @@
+#QRCodeContainer{
+    position: relative;
+    border-radius: 10px;
+    img{
+        width: 100%;
+    }
+    #DownloadButton{
+        position: absolute;
+        top: 1.2em;
+        right: 1em;
+    }
+}

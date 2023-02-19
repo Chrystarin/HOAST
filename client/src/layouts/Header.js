@@ -20,10 +20,10 @@ function Header() {
                     <Button variant="text">FAQ's</Button>
                 </li>
                 <li>
-                    <Button variant="outlined">Login</Button>
+                    <Button variant="outlined" href='/login'>Login</Button>
                 </li>
                 <li>
-                    <Button variant="contained">Register</Button>
+                    <Button variant="contained" href='/register'>Register</Button>
                 </li>
             </ul>
         </div>

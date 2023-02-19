@@ -24,13 +24,13 @@ function LandingPage() {
               <div id='MainSection__About'>
                 <h1>Lorem Ipsum</h1>
                 <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique!</h4>
-                <Button variant="contained">About</Button>
+                <Button variant="contained">Learn more</Button>
               </div>
             </div>
           </section>
           <section className='Section' id='Section1'>
-            <div className='SectionTitleLandingPage'>
-              <h4>About</h4>
+            <div className='SectionTitleLandingPage' style={{color: "white"}}>
+              <h4 >About</h4>
               <h6>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores, dolor.</h6>
             </div>
             <div id='Section1__Cards'> 

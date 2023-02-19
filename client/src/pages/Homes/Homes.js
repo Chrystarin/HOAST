@@ -11,8 +11,6 @@ function Homes() {
     subTitle1:"Saint Dominic",
     subTitle2:"8 Residents"
   }
-    
-  
   return <>
     <Navbar type="home"/>
     <div id='SectionHolder'>
@@ -23,15 +21,15 @@ function Homes() {
             <SearchInput/>
           </div>
           <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-          <Button variant="contained">Add Home</Button>
+          <Button variant="contained" href='addhome'>Add Home</Button>
         </div>
 
         <div className='SectionList'>
-            <Card type="Home" {...HomeOwner}/>
-            <Card type="Home"  {...HomeOwner}/>
-            <Card type="Home"  {...HomeOwner}/>
-            <Card type="Home"  {...HomeOwner}/>
-            
+          <Card type="Home" {...HomeOwner} url="viewhome"/>
+          <Card type="Home" {...HomeOwner} url="viewhome"/>
+          <Card type="Home" {...HomeOwner} url="viewhome"/>
+          <Card type="Home" {...HomeOwner} url="viewhome"/>
+          <Card type="Home" {...HomeOwner} url="viewhome"/>
         </div>
       </section>
     </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import Logo from '../images/logo.PNG';
 import './NavBar.scss';
-import Button from '@mui/material/Button';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
+import AvatarDrowDown from '../components/AvatarDropDown/AvatarDropDown';
 function NavBar(props) {
+
   return (
     <div id='NavBar'>
         <div id='NavBar__Container'>
@@ -22,24 +22,14 @@ function NavBar(props) {
               <a href="/vehicles" className={(props.type==="vehicles")?"active":""}>Vehicles</a>
             </li>
             <li>
-              <a href="/">Visitors</a>
-            </li>
-            <li>
-              <a href="/">Homeowners Associations</a>
-            </li>
-            <li>
-              <a href="/">Guard</a>
+              <a href="/visitors" className={(props.type==="visitors")?"active":""}>Visitors</a>
             </li>
             <li>
               <IconButton aria-label="delete" size="large">
                 <NotificationsIcon />
               </IconButton>
             </li>
-            <li>
-              <IconButton size="small">
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-              </IconButton>
-            </li>
+            <li><AvatarDrowDown/></li>
           </ul>
         </div>
     </div>

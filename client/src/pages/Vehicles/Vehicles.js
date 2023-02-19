@@ -3,6 +3,7 @@ import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
+
 import Card from '../../components/Card/Card.js';
 function Vehicles() {
     const CarOwner = {
@@ -20,15 +21,15 @@ function Vehicles() {
                 <SearchInput/>
             </div>
             <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-            <Button variant="contained">Add Vehicles</Button>
+            <Button variant="contained" href='/addvehicle'>Add Vehicles</Button>
         </div>
 
         <div className='SectionList'>
-            <Card type="vehicles" {...CarOwner}/>
-            <Card type="vehicles"  {...CarOwner}/>
-            <Card type="vehicles"  {...CarOwner}/>
-            <Card type="vehicles"  {...CarOwner}/>
-            <Card type="vehicles"  {...CarOwner}/>
+            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
+            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
+            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
+            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
+            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
         </div>
       </section>
     </div>

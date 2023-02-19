@@ -49,7 +49,7 @@ function Register() {
                     variant="filled"
                   />
                   <div>
-                    <Button variant="contained" size="large" type='submit'>
+                    <Button variant="contained" size="large" type='submit' href='/homes'>
                       Register
                     </Button>
                   </div>

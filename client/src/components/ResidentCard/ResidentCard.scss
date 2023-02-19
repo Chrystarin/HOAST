@@ -1,0 +1,12 @@
+#ResidentCard{
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.067);
+    width: 399px;
+    display: flex;
+    align-items: center;
+    padding: 1.5em 1em;
+    gap: 15px;
+    border-radius: 10px;
+    #ResidentCard__Name{
+        flex-grow: 1;
+    }
+}

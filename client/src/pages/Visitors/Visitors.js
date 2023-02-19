@@ -1,0 +1,48 @@
+import React, {useState} from 'react'
+import Navbar from '../../layouts/NavBar';
+import Button from '@mui/material/Button';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import Card from '../../components/Card/Card.js';
+function Visitors() {
+
+    function createData(name,type,date) {
+      return { name, type,date};
+    }
+    const visitor = [
+      { name : 'Jon Angelo Llagas', type : 'Single', date : 'March 2 - March 5'},
+      { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'},
+      { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'}
+    ];
+
+    return <>
+    <Navbar type="visitors"/>
+    <div id='SectionHolder'>
+      <section className='Section'>
+        <h3 className='SectionTitleDashboard'>Visitors</h3>
+        <div className='SectionController'>
+          <div id='SearchInput__Container'>
+            <SearchInput/>
+          </div>
+          <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
+          <Button variant="contained" href='addvisitor'>Add Visitors</Button>
+        </div>
+
+        <div className='SectionList'>
+          {visitor.map((Visitor) => (
+            <Card type="Visitor" title={Visitor.name} subTitle1={Visitor.type} subTitle2={Visitor.date} url="viewvisitor" />
+          ))}
+
+          {/* {Visitors.length > 0 && Visitors.map((Visitor) => {
+            return (
+              <Card type="Visitor" title="Jon Angelo Llagas" subTitle1="Single" subTitle2="March 1 - March 2" url="viewvisitor" />
+            )
+          })} */}
+          
+        </div>
+      </section>
+    </div>
+  </>
+}
+
+export default Visitors

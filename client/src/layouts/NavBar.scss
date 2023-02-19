@@ -1,6 +1,10 @@
 #NavBar{
     height: 80px;
-    border-bottom: 2px solid rgb(70, 70, 70);
+    box-shadow: 0 0 15px #0000004d;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background-color: white;
     #NavBar__Container{
         margin: auto;
         display: flex;
