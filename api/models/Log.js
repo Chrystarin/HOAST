@@ -7,14 +7,14 @@ const logSchema = new Schema({
 		unique: true,
 		required: true
 	},
-	id: {
-		type: ObjectId,
-		refPath: 'accessType',
-		required: true
-	},
 	accessType: {
 		type: String,
 		enum: ['Vehicle', 'Visitor'],
+		required: true
+	},
+	id: {
+		type: ObjectId,
+		refPath: 'accessType',
 		required: true
 	},
 	logType: {
