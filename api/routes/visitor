@@ -1,0 +1,7 @@
+const router = require('express').Router();
+const { createVisitor, updateVisitor } = require('../controllers/visitorController');
+
+router.post('/create', createVisitor);
+router.put('/edit', updateVisitor);
+
+module.exports = router;

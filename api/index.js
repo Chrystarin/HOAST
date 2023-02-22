@@ -17,6 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }));
 app.use(authenticate);
 
+app.use((err, req, res, next) => {
+	// ERROR HANDLER
+})
+
 const User = require('./models/User');
 const HOA = require('./models/HOA');
 const Log = require('./models/Log');

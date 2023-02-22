@@ -2,7 +2,7 @@ const { UserNotFoundError } = require('../helpers/errors');
 const User = require('../models/User');
 
 module.exports = async (req, res, next) => {
-	const { accessToken } = req.cookies;
+	const { 'access-token': accessToken } = req.cookies;
 
 	if (!accessToken) return next();
 

@@ -41,11 +41,20 @@ class InvalidString extends Error {
 	}
 }
 
+class InvalidCredentialsError extends Error {
+	constructor() {
+		super('Invalid user credentials');
+		this.name = 'InvalidCredentials';
+		this.status = 401;
+	}
+}
+
 module.exports = {
 	NotFoundError,
 	UserNotFoundError,
 	HOANotFoundError,
 	InvalidString,
 	GuardNotFoundError,
-    SameStatusError
+    SameStatusError,
+	InvalidCredentialsError
 };

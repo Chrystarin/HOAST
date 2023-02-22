@@ -41,7 +41,20 @@ const updateVisitor = async (req, res) => {
     }
 }
 
+// get visitor
+const getVisitors = async (req, res, next) => {
+    const { visitorId } = req.prams;
+
+    try{
+        const visitor = await Visitor.findOne({ visitorId }).exec();
+		if (!visitor) throw new NotFound('Visitor');
+    } catch (err){
+        next(err);
+    }
+}
+
 module.exports = {
     createVisitor,
+    getVisitors,
     updateVisitor
 }
