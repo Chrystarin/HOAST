@@ -1,3 +1,5 @@
+// User Authentication
+
 const { UserNotFoundError } = require('../helpers/errors');
 const User = require('../models/User');
 
@@ -7,7 +9,7 @@ module.exports = async (req, res, next) => {
 	if (!accessToken) return next();
 
 	try {
-		const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+		const { userId } = jwt.verify(accessToken, process.env.JWT_SECRET);
 
 		const user = await User.findOne({ userId });
 		if (!user) return next(new UserNotFoundError());

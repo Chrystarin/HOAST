@@ -108,7 +108,7 @@ const joinHOA = async (req, res, next) => {
         if(!hoa) throw new HOANotFoundError();
 
         // add home details
-        const newHome = await Home.create({
+        await Home.create({
             user: req.user._id,
             address: {
                 houseNumber, 
@@ -129,6 +129,5 @@ module.exports = {
     signUp,
     loginUser,
     editUser,
-    joinHOA,
-    joinRequest
+    joinHOA
 }
