@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const { ObjectId } = Schema.Types;
 
 const homeSchema = new Schema({
-    user: {
+    owner: {
         type: ObjectId,
         ref: 'User',
         required: true

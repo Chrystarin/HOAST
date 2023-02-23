@@ -5,11 +5,10 @@ const User = require('../models/User');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError,
-	SameStatusError
+	GuardNotFoundError
 } = require('../helpers/errors');
 
-const createHoa = async (req, res, next) => {
+const registerHoa = async (req, res, next) => {
 	const {
 		name,
 		address: { street, barangay, city, province }
@@ -58,7 +57,7 @@ const addGuard = async (req, res, next) => {
 		if (!hoa) throw new HOANotFoundError();
 
 		// Add guard to HOA
-		hoa.guards.push({ user: guard._id });
+		hoa.guards.push({ guard: guard._id });
 		hoa.save();
 
 		res.status(201).json({ message: 'Guard added' });
@@ -76,20 +75,20 @@ const updateGuardStatus = async (req, res, next) => {
 		checkString(guardId, 'Guard ID');
 
 		// Find guard (to be guard)
-		const guard = await User.findOne({ guardId });
-		if (!guard) throw new UserNotFoundError();
+		const userGuard = await User.findOne({ userId: guardId });
+		if (!userGuard) throw new UserNotFoundError();
 
 		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });
 		if (!hoa) throw new HOANotFoundError();
 
 		// Check if guard is existing in hoa
-		const foundGuard = hoa.guards.find((g) => g.user.equals(guard._id));
-		if (!foundGuard) throw new GuardNotFoundError();
-		if (foundGuard.status === status) throw new SameStatusError();
+		const guard = await hoa.getGuard(guardId);
+		if (!guard) throw new GuardNotFoundError();
 
-		foundGuard.status = status;
-        await hoa.save();
+		// Update status
+		guard.status = status;
+		await hoa.save();
 
 		res.status(200).json({
 			message: 'Updated guard status',
@@ -101,8 +100,35 @@ const updateGuardStatus = async (req, res, next) => {
 	}
 };
 
+const getGuard = async (req, res, next) => {
+	const { hoaId, guardId } = req.body;
+
+	try {
+		// Validate inputs
+		checkString(hoaId, 'HOA ID');
+		checkString(guardId, 'Guard ID');
+
+		// Find if guardId is valid
+		const guardUser = await User.findOne({ userId: guardId });
+		if (!guardUser) throw new UserNotFoundError();
+
+		// Find HOA
+		const hoa = await HOA.findOne({ hoaId });
+		if (!hoa) throw new HOANotFoundError();
+
+		// Find guard
+		const guard = await hoa.getGuard(guardId);
+		if (!guard) throw new GuardNotFoundError();
+
+		res.status(200).json(guard);
+	} catch (error) {
+		next(error);
+	}
+};
+
 module.exports = {
-    createHoa,
-    addGuard,
-    updateGuardStatus
-}
+	registerHoa,
+	addGuard,
+	updateGuardStatus,
+	getGuard
+};
