@@ -23,36 +23,47 @@ const Log = require('./models/Log');
 const { genUserId, genHoaId, genLogId } = require('./helpers/generateId');
 
 async function test() {
-	// const user1 = await User.create({
-	// 	userId: genUserId(),
-	// 	name: { firstName: 'fn1', lastName: 'ln1' }
-	// });
+	const user1 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn1', lastName: 'ln1' }
+	});
 
-    // user1.vehicles.push({
-    //     plateNumber: 'pn1',
-    //     brand: 'b1',
-    //     model: 'm1',
-    //     type: 't1',
-    //     color: 'c1'
-    // })
+	const user2 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn2', lastName: 'ln2' }
+	});
 
-    // await user1.save();
+	const user3 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn3', lastName: 'ln3' }
+	});
 
-    // const log1 = await Log.create({
-    //     logId: genLogId(),
-    //     accessType: 'Vehicle',
-    //     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
-    //     logType: 'entry'
-    // });
+	const hoa1 = await HOA.create({
+		hoaId: genHoaId(),
+		name: 'hoa1',
+		address: {
+			street: 'hoa1_s',
+			barangay: 'hoa1_b',
+			city: 'hoa1_c',
+			province: 'hoa1_p'
+		},
+		admin: user1._id,
+		guards: [
+			{
+				guard: user2._id
+			},
+			{
+				guard: user3._id
+			}
+		]
+	});
+	// const hoa = await HOA.findOne({ hoaId: 'taQBrVFVssolSaC' });
+	// const guard = await hoa.getGuard('glk_TLJZesolSoq');
 
-    // const log2 = await Log.create({
-    //     logId: genLogId(),
-    //     accessType: 'Vehicle',
-    //     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
-    //     logType: 'exit'
-    // });
-    const logs = await Log.find().populate('id')
-    console.log(logs)
+	// guard.status = 'active';
+	// await hoa.save()
+
+	// console.log(hoa);
 }
 
 mongoose
@@ -74,7 +85,7 @@ mongoose
 			console.log('Listening on port', process.env.PORT);
 		});
 
-        test();
+		test();
 	})
 	.catch((err) => {
 		console.log('Failed connecting to database\n', err);
