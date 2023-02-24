@@ -10,10 +10,10 @@ const { readFileSync } = require('fs');
 const authenticate = require('./middlewares/authentication');
 
 // Route Controllers
-const userController = require('./controllers/userController');
-const dueController = require('./controllers/dueController');
-const visitorController = require('./controllers/visitorController');
-const vehicleController = require('./controllers/vehicleController');
+const userRoute = require('./routes/user');
+const dueRoute = require('./routes/due');
+const visitorRoute = require('./routes/visitor');
+const vehicleRoute = require('./routes/vehicle');
 
 const app = express();
 
@@ -23,10 +23,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }));
 app.use(authenticate);
 
-app.use('/users', userController);
-app.use('/dues', dueController);
-app.use('/visitors', visitorController);
-app.use('/vehicles', vehicleController);
+app.use('/users', userRoute);
+app.use('/dues', dueRoute);
+app.use('/visitors', visitorRoute);
+app.use('/vehicles', vehicleRoute);
 
 app.use((err, req, res, next) => {
 	// ERROR HANDLER
