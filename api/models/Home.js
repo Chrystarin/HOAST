@@ -2,6 +2,11 @@ const { Schema, model } = require('mongoose');
 const { ObjectId } = Schema.Types;
 
 const homeSchema = new Schema({
+    homeId: {
+        type: String,
+        unique: true,
+        required: true
+    },
     owner: {
         type: ObjectId,
         ref: 'User',

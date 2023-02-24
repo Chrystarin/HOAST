@@ -9,6 +9,12 @@ const { readFileSync } = require('fs');
 
 const authenticate = require('./middlewares/authentication');
 
+// Route Controllers
+const userRoute = require('./routes/user');
+const dueRoute = require('./routes/due');
+const visitorRoute = require('./routes/visitor');
+const vehicleRoute = require('./routes/vehicle');
+
 const app = express();
 
 app.use(cookieParser());
@@ -16,6 +22,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }));
 app.use(authenticate);
+
+app.use('/users', userRoute);
+app.use('/dues', dueRoute);
+app.use('/visitors', visitorRoute);
+app.use('/vehicles', vehicleRoute);
+
+app.use((err, req, res, next) => {
+	// ERROR HANDLER
+});
 
 const User = require('./models/User');
 const HOA = require('./models/HOA');
@@ -25,17 +40,45 @@ const { genUserId, genHoaId, genLogId } = require('./helpers/generateId');
 async function test() {
 	const user1 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn1', lastName: 'ln1' }
+		name: { firstName: 'fn1', lastName: 'ln1' },
+        credentials: { email: 'user1@gmail.com', password: 'user123'}
 	});
 
+	// user1.vehicles.push({
+	//     plateNumber: 'pn1',
+	//     brand: 'b1',
+	//     model: 'm1',
+	//     type: 't1',
+	//     color: 'c1'
+	// })
+
+	// await user1.save();
+
+	// const log1 = await Log.create({
+	//     logId: genLogId(),
+	//     accessType: 'Vehicle',
+	//     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
+	//     logType: 'entry'
+	// });
+
+	// const log2 = await Log.create({
+	//     logId: genLogId(),
+	//     accessType: 'Vehicle',
+	//     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
+	//     logType: 'exit'
+	// });
+	const logs = await Log.find().populate('id');
+	console.log(logs);
 	const user2 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn2', lastName: 'ln2' }
+		name: { firstName: 'fn2', lastName: 'ln2' },
+        credentials: { email: 'user2@gmail.com', password: 'user123'}
 	});
 
 	const user3 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn3', lastName: 'ln3' }
+		name: { firstName: 'fn3', lastName: 'ln3' },
+        credentials: { email: 'user2@gmail.com', password: 'user123'}
 	});
 
 	const hoa1 = await HOA.create({

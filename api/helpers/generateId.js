@@ -107,9 +107,26 @@ const genLogId = () => {
 	);
 };
 
+let dueNonce = 0;
+/**
+ * Generates a unique id exclusive for Dues
+ *
+ * @returns {string}
+ */
+const genDueId = () => {
+	return bufferToString(
+		Buffer.concat([
+			randomBuffer(),
+			toHexBuffer(++dueNonce),
+			toHexBuffer(Date.now())
+		])
+	);
+};
+
 module.exports = {
 	genHoaId,
 	genUserId,
 	genVisitorId,
-	genLogId
+	genLogId,
+	genDueId
 };
