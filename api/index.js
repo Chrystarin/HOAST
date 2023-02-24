@@ -38,10 +38,10 @@ const Log = require('./models/Log');
 const { genUserId, genHoaId, genLogId } = require('./helpers/generateId');
 
 async function test() {
-	// const user1 = await User.create({
-	// 	userId: genUserId(),
-	// 	name: { firstName: 'fn1', lastName: 'ln1' }
-	// });
+	const user1 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn1', lastName: 'ln1' }
+	});
 
 	// user1.vehicles.push({
 	//     plateNumber: 'pn1',
@@ -68,6 +68,42 @@ async function test() {
 	// });
 	const logs = await Log.find().populate('id');
 	console.log(logs);
+	const user2 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn2', lastName: 'ln2' }
+	});
+
+	const user3 = await User.create({
+		userId: genUserId(),
+		name: { firstName: 'fn3', lastName: 'ln3' }
+	});
+
+	const hoa1 = await HOA.create({
+		hoaId: genHoaId(),
+		name: 'hoa1',
+		address: {
+			street: 'hoa1_s',
+			barangay: 'hoa1_b',
+			city: 'hoa1_c',
+			province: 'hoa1_p'
+		},
+		admin: user1._id,
+		guards: [
+			{
+				guard: user2._id
+			},
+			{
+				guard: user3._id
+			}
+		]
+	});
+	// const hoa = await HOA.findOne({ hoaId: 'taQBrVFVssolSaC' });
+	// const guard = await hoa.getGuard('glk_TLJZesolSoq');
+
+	// guard.status = 'active';
+	// await hoa.save()
+
+	// console.log(hoa);
 }
 
 mongoose

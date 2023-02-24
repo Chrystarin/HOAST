@@ -49,6 +49,14 @@ class InvalidCredentialsError extends Error {
 	}
 }
 
+class InvalidDate extends Error {
+	constructor() {
+		super('Unable to parse date');
+		this.name = 'InvalidDate';
+		this.status = 422;
+	}
+}
+
 module.exports = {
 	NotFoundError,
 	UserNotFoundError,
@@ -56,5 +64,6 @@ module.exports = {
 	InvalidString,
 	GuardNotFoundError,
     SameStatusError,
-	InvalidCredentialsError
+	InvalidCredentialsError,
+	InvalidDate
 };

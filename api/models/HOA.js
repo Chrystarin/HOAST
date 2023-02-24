@@ -1,12 +1,13 @@
 const { Schema, model } = require('mongoose');
+const { genHoaId } = require('../helpers/generateId');
 const { ObjectId } = Schema.Types;
 
 const hoaSchema = new Schema(
 	{
 		hoaId: {
 			type: String,
-			required: true,
-			unique: true
+			unique: true,
+			default: genHoaId()
 		},
 		name: { type: String, required: true },
 		address: {
@@ -18,7 +19,7 @@ const hoaSchema = new Schema(
 		admin: {
 			type: ObjectId,
 			ref: 'User',
-            required: true
+			required: true
 		},
 		homeowners: [
 			{
@@ -28,7 +29,7 @@ const hoaSchema = new Schema(
 		],
 		guards: [
 			{
-				user: {
+				guard: {
 					type: ObjectId,
 					ref: 'User'
 				},
@@ -36,11 +37,25 @@ const hoaSchema = new Schema(
 					type: String,
 					enum: ['active', 'retired'],
 					default: 'active'
-				}
+				},
+                addedAt: {
+                    type: Date,
+                    default: new Date()
+                }
 			}
 		]
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+		methods: {
+			async getGuard(guardId) {
+                // return (await this.populate('guards.guard', 'userId')).guards.find(({ guard: { userId } }) => userId == guardId);
+				return (await this.populate('guards.guard', 'userId')).guards.find(
+					({ guard: { userId } }) => userId == guardId
+				);
+			}
+		}
+	}
 );
 
 module.exports = model('HOA', hoaSchema);
