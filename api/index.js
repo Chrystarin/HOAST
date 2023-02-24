@@ -40,7 +40,8 @@ const { genUserId, genHoaId, genLogId } = require('./helpers/generateId');
 async function test() {
 	const user1 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn1', lastName: 'ln1' }
+		name: { firstName: 'fn1', lastName: 'ln1' },
+        credentials: { email: 'user1@gmail.com', password: 'user123'}
 	});
 
 	// user1.vehicles.push({
@@ -70,12 +71,14 @@ async function test() {
 	console.log(logs);
 	const user2 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn2', lastName: 'ln2' }
+		name: { firstName: 'fn2', lastName: 'ln2' },
+        credentials: { email: 'user2@gmail.com', password: 'user123'}
 	});
 
 	const user3 = await User.create({
 		userId: genUserId(),
-		name: { firstName: 'fn3', lastName: 'ln3' }
+		name: { firstName: 'fn3', lastName: 'ln3' },
+        credentials: { email: 'user2@gmail.com', password: 'user123'}
 	});
 
 	const hoa1 = await HOA.create({
@@ -109,21 +112,21 @@ async function test() {
 mongoose
 	.connect(process.env.DEV_MONGO)
 	.then(() => {
-		// console.log('Connected to database');
-		// app.listen(process.env.PORT, (err) => {
-		// 	if (err) return console.log('Error', err);
-		// 	console.log('Listening on port', process.env.PORT);
-		// });
-		createServer(
-			{
-				key: readFileSync('./test/localhost.key'),
-				cert: readFileSync('./test/localhost.crt')
-			},
-			app
-		).listen(process.env.PORT, (err) => {
-			if (err) return console.log('Failed launching server\n', err);
+		console.log('Connected to database');
+		app.listen(process.env.PORT, (err) => {
+			if (err) return console.log('Error', err);
 			console.log('Listening on port', process.env.PORT);
 		});
+		// createServer(
+		// 	{
+		// 		key: readFileSync('./test/localhost.key'),
+		// 		cert: readFileSync('./test/localhost.crt')
+		// 	},
+		// 	app
+		// ).listen(process.env.PORT, (err) => {
+		// 	if (err) return console.log('Failed launching server\n', err);
+		// 	console.log('Listening on port', process.env.PORT);
+		// });
 
 		test();
 	})
