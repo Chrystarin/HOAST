@@ -1,7 +1,11 @@
 const router = require('express').Router();
-const { createVisitor, updateVisitor } = require('../controllers/visitorController');
+const {
+	addVisitor,
+	getVisitor,
+	getVisitors
+} = require('../controllers/visitorController');
 
-router.post('/create', createVisitor);
-router.put('/edit', updateVisitor);
+router.post('/add', addVisitor);
+router.get('/:visitorId', getVisitor);
 
 module.exports = router;

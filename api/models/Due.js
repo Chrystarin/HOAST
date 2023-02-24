@@ -7,9 +7,9 @@ const dueSchema = new Schema({
 		unique: true,
 		required: true
 	},
-	user: {
+	home: {
 		type: ObjectId,
-		ref: 'User'
+		ref: 'Home'
 	},
 	hoa: {
 		type: ObjectId,
@@ -19,27 +19,8 @@ const dueSchema = new Schema({
 		type: Number,
 		required: true
 	},
-	month: {
-		type: String,
-		enum: [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		],
-		required: true
-	},
-	status: {
-		type: String,
-		enum: [],
+	paidUntil: {
+		type: Date,
 		required: true
 	}
 });

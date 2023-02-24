@@ -9,6 +9,12 @@ const { readFileSync } = require('fs');
 
 const authenticate = require('./middlewares/authentication');
 
+// Route Controllers
+const userController = require('./controllers/userController');
+const dueController = require('./controllers/dueController');
+const visitorController = require('./controllers/visitorController');
+const vehicleController = require('./controllers/vehicleController');
+
 const app = express();
 
 app.use(cookieParser());
@@ -17,9 +23,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }));
 app.use(authenticate);
 
+app.use('/users', userController);
+app.use('/dues', dueController);
+app.use('/visitors', visitorController);
+app.use('/vehicles', vehicleController);
+
 app.use((err, req, res, next) => {
 	// ERROR HANDLER
-})
+});
 
 const User = require('./models/User');
 const HOA = require('./models/HOA');
@@ -32,31 +43,31 @@ async function test() {
 	// 	name: { firstName: 'fn1', lastName: 'ln1' }
 	// });
 
-    // user1.vehicles.push({
-    //     plateNumber: 'pn1',
-    //     brand: 'b1',
-    //     model: 'm1',
-    //     type: 't1',
-    //     color: 'c1'
-    // })
+	// user1.vehicles.push({
+	//     plateNumber: 'pn1',
+	//     brand: 'b1',
+	//     model: 'm1',
+	//     type: 't1',
+	//     color: 'c1'
+	// })
 
-    // await user1.save();
+	// await user1.save();
 
-    // const log1 = await Log.create({
-    //     logId: genLogId(),
-    //     accessType: 'Vehicle',
-    //     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
-    //     logType: 'entry'
-    // });
+	// const log1 = await Log.create({
+	//     logId: genLogId(),
+	//     accessType: 'Vehicle',
+	//     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
+	//     logType: 'entry'
+	// });
 
-    // const log2 = await Log.create({
-    //     logId: genLogId(),
-    //     accessType: 'Vehicle',
-    //     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
-    //     logType: 'exit'
-    // });
-    const logs = await Log.find().populate('id')
-    console.log(logs)
+	// const log2 = await Log.create({
+	//     logId: genLogId(),
+	//     accessType: 'Vehicle',
+	//     id: user1.vehicles.find(v => v.plateNumber === 'pn1')._id,
+	//     logType: 'exit'
+	// });
+	const logs = await Log.find().populate('id');
+	console.log(logs);
 }
 
 mongoose
@@ -78,7 +89,7 @@ mongoose
 			console.log('Listening on port', process.env.PORT);
 		});
 
-        test();
+		test();
 	})
 	.catch((err) => {
 		console.log('Failed connecting to database\n', err);

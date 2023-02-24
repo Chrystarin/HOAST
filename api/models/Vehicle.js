@@ -3,6 +3,10 @@ const { ObjectId } = Schema.Types;
 
 const vehicleSchema = new Schema(
 	{
+		owner: {
+			type: ObjectId,
+			ref: 'User'
+		},
 		plateNumber: {
 			type: String,
 			unique: true,
@@ -11,7 +15,12 @@ const vehicleSchema = new Schema(
 		brand: { type: String, requried: true },
 		model: { type: String, requried: true },
 		type: { type: String, requried: true },
-		color: { type: String, requried: true }
+		color: { type: String, requried: true },
+		status: {
+			type: String,
+			enum: ['active', 'inactive'],
+			default: 'active'
+		}
 	},
 	{ timestamps: true }
 );
