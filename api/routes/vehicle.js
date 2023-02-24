@@ -10,3 +10,5 @@ router.post('/add', addVehicle);
 router.get('/:platenumber', getVehicle);
 router.patch('/:plateNumber', updateVehicleColor);
 router.delete('/:plateNumber', deleteVehicle);
+
+module.exports = router;

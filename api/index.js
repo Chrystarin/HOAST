@@ -109,7 +109,7 @@ async function test() {
 mongoose
 	.connect(process.env.DEV_MONGO)
 	.then(() => {
-		console.log('Connected to database');
+		// console.log('Connected to database');
 		// app.listen(process.env.PORT, (err) => {
 		// 	if (err) return console.log('Error', err);
 		// 	console.log('Listening on port', process.env.PORT);
