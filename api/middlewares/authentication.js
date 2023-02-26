@@ -2,6 +2,7 @@
 
 const { UserNotFoundError } = require('../helpers/errors');
 const User = require('../models/User');
+const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
 	const { 'access-token': accessToken } = req.cookies;

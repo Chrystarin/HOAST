@@ -15,8 +15,8 @@ const { checkString, checkEmail } = require('../helpers/validData');
 const signup = async (req, res, next) => {
 	const {
 		name: { firstName, lastName },
-		email,
-		password
+        email, 
+        password
 	} = req.body;
 
 	try {
@@ -25,8 +25,7 @@ const signup = async (req, res, next) => {
 		checkString(password, 'Password');
 		checkEmail(email);
 
-		// Check if email used
-		const user = await User.create({ credentials: { email } });
+        const user = await User.findOne({ credentials: { email } }).exec();
 		if (user) throw new InvalidEmail();
 
 		// Create user
@@ -36,7 +35,7 @@ const signup = async (req, res, next) => {
 				firstName,
 				lastName
 			},
-			credenials: {
+			credentials: {
 				email,
 				password: await bcrypt.hash(password, 10)
 			}
@@ -44,20 +43,29 @@ const signup = async (req, res, next) => {
 
 		res.status(201).json({ message: 'Account created', userId });
 	} catch (err) {
+        console.log(firstName);
+        console.log(lastName);
+        console.log(email);
+        console.log(password);
 		next(err);
 	}
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
 	const { email, password } = req.body;
+
+    console.log(req.body);
 
 	try {
 		checkEmail(email);
 		checkString(password, 'Password');
 
+        console.log(email);
+
 		// Find email
 		const user = await User.findOne({ credentials: { email } }).exec();
-		if (!user) throw new InvalidCredentialsError();
+        console.log(user);
+        if (!user) throw new InvalidEmail();
 
 		// Check password
 		const verify = await bcrypt.compare(
