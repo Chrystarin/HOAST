@@ -50,13 +50,13 @@ function Login() {
             })
             
             .catch((error) => {
+                alert("Invalid Credentials!");
                 console.log('Error:' + error);
                 return;
             });
             
         }
         catch(err){
-            console.log("caught");
             console.error(err.message);
         }
 

@@ -65,7 +65,7 @@ const login = async (req, res, next) => {
 		// Find email
 		const user = await User.findOne({  [`credentials.email`] : email  }).exec();
         console.log(user);
-        if (user.length<=0) throw new InvalidEmail();
+        if (!user) throw new InvalidEmail();
 
         console.log("password: " + user.credentials.password);
 
