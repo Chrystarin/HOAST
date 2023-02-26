@@ -44,9 +44,11 @@ function Login() {
                 }
             )
             .then((response) => {
+                console.log(response.data)
                 alert("Logged in Successfully!");
                 navigate("/profile");
             })
+            
             .catch((error) => {
                 console.log('Error:' + error);
                 return;

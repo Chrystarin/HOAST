@@ -63,9 +63,11 @@ const login = async (req, res, next) => {
         console.log(email);
 
 		// Find email
-		const user = await User.findOne({ credentials: { email } }).exec();
+		const user = await User.findOne({  [`credentials.email`] : email  }).exec();
         console.log(user);
-        if (!user) throw new InvalidEmail();
+        if (user.length<=0) throw new InvalidEmail();
+
+        console.log("password: " + user.credentials.password);
 
 		// Check password
 		const verify = await bcrypt.compare(
