@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
+
 import './Register.scss'
+
 import HouseImg from '../../images/House.png'
 import Header from '../../layouts/Header';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 import axios from '../../configs/axios';
+
 import { useNavigate } from 'react-router';
 
 function Register() {
+
     const navigate = useNavigate();
+
     const [registerForm, setRegisterForm] = useState({
         firstName: '',
         lastName: '',
@@ -26,11 +31,12 @@ function Register() {
         
     });}
 
+    // Submit function for register
     async function Submit(e){
         e.preventDefault();
 
         try{
-            // Register user
+            // API call for user signup
             await axios
             .post(
                 `users/signup`,
@@ -50,11 +56,6 @@ function Register() {
                 alert("Registered Successfully!");
                 navigate("/");
             })
-            .catch((error) => {
-                console.log('Error:' + error);
-                return;
-            });
-            
         }
         catch(err){
             console.error(err.message);

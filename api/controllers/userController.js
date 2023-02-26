@@ -87,13 +87,15 @@ const login = async (req, res, next) => {
 			{ expiresIn: '30d' }
 		);
 
+        const roles = "user"
+
 		res.status(200)
 			.cookie('access-token', token, {
 				httpOnly: true,
 				sameSite: 'none',
 				secure: true
 			})
-			.json({ success: true, message: 'Logged in successfully' });
+			.json({ success: true, message: 'Logged in successfully', accessToken: token, roles: roles });
 	} catch (err) {
 		next(err);
 	}

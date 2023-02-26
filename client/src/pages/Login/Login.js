@@ -1,16 +1,22 @@
 import React, {useState} from 'react';
+import { useNavigate } from 'react-router';
+
 import './Login.scss'
+
 import HouseImg from '../../images/House.png'
 import Header from '../../layouts/Header';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+import useAuth from '../../authentication/useAuth';
 import axios from '../../configs/axios';
-import { useNavigate } from 'react-router';
 
 function Login() {
 
+    const { setAuth } = useAuth();
+
     const navigate = useNavigate();
+
     const [loginForm, setLoginForm] = useState({
         email: '',
         password: ''
@@ -25,10 +31,9 @@ function Login() {
         
     });}
 
+    // Submit button for login
     async function Submit(e){
         e.preventDefault();
-
-        // console.log(loginForm);
 
         try{
             // Login
@@ -44,19 +49,18 @@ function Login() {
                 }
             )
             .then((response) => {
-                console.log(response.data)
+                console.log(JSON.stringify(response?.data));
+                const user = loginForm.email;
+                const password = loginForm.password;
+                const roles = response?.data?.roles;
+                const accessToken = response?.data?.accessToken;
+                setAuth({user, password, roles, accessToken});
                 alert("Logged in Successfully!");
-                navigate("/profile");
+                navigate("/homes");
             })
-            
-            .catch((error) => {
-                alert("Invalid Credentials!");
-                console.log('Error:' + error);
-                return;
-            });
-            
         }
         catch(err){
+            alert("Invalid Credentials!");
             console.error(err.message);
         }
 
