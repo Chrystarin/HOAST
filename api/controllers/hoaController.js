@@ -1,11 +1,15 @@
 const { checkString } = require('../helpers/validData');
-const { genHoaId } = require('../helpers/generateId');
+const { genHoaId, genRequestId } = require('../helpers/generateId');
 const HOA = require('../models/HOA');
 const User = require('../models/User');
+const Request = require('../models/Request');
+const Home = require('../models/Home');
+const Visitor = require('../models/Visitor');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError
+	GuardNotFoundError,
+	NotFoundError
 } = require('../helpers/errors');
 
 const registerHoa = async (req, res, next) => {
@@ -13,7 +17,6 @@ const registerHoa = async (req, res, next) => {
 		name,
 		address: { street, barangay, city, province }
 	} = req.body;
-	const { _id } = req.user;
 
 	try {
 		// Validate strings
@@ -28,7 +31,7 @@ const registerHoa = async (req, res, next) => {
 			hoaId: genHoaId(),
 			name,
 			address: { street, barangay, city, province },
-			admin: _id
+			admin: req.user._id
 		});
 
 		res.status(201).json({
@@ -40,11 +43,46 @@ const registerHoa = async (req, res, next) => {
 	}
 };
 
-const addGuard = async (req, res, next) => {
-	const { userId, hoaId } = req.body;
+const joinHoa = async (req, res, next) => {
+	const { hoaId } = req.params;
+	const {
+		address: { houseNumber, street, phase }
+	} = req.body;
 
 	try {
-		// Validate strings
+		checkString(hoaId, 'HOA ID');
+		checkString(houseNumber, 'House Number');
+		checkString(street, 'Street');
+		checkString(phase, 'Phase', true);
+
+		// Find HOA
+		const hoa = await HOA.findOne({ hoaId });
+		if (!hoa) throw new HOANotFoundError();
+
+		let homeDetails = { houseNumber, street };
+		if (phase) homeDetails.phase = phase;
+
+		// Create request
+		const request = await Request.create({
+			requestId: genRequestId(),
+			hoa: hoa._id,
+			requestor: req.user._id,
+			homeDetails
+		});
+
+		res.status(201).json({
+			message: 'Join requested',
+			requestId: request.requestId
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
+const addGuard = async (req, res, next) => {
+	const { hoaId, userId } = req.body;
+
+	try {
 		checkString(userId, 'User ID');
 		checkString(hoaId, 'HOA ID');
 
@@ -58,7 +96,7 @@ const addGuard = async (req, res, next) => {
 
 		// Add guard to HOA
 		hoa.guards.push({ guard: guard._id });
-		hoa.save();
+		await hoa.save();
 
 		res.status(201).json({ message: 'Guard added' });
 	} catch (error) {
@@ -67,7 +105,7 @@ const addGuard = async (req, res, next) => {
 };
 
 const updateGuardStatus = async (req, res, next) => {
-	const { status, hoaId, guardId } = req.body;
+	const { hoaId, status, guardId } = req.body;
 
 	try {
 		checkString(status, 'Status');
@@ -100,27 +138,32 @@ const updateGuardStatus = async (req, res, next) => {
 	}
 };
 
-const getGuard = async (req, res, next) => {
+const getGuards = async (req, res, next) => {
 	const { hoaId, guardId } = req.body;
 
 	try {
-		// Validate inputs
 		checkString(hoaId, 'HOA ID');
-		checkString(guardId, 'Guard ID');
-
-		// Find if guardId is valid
-		const guardUser = await User.findOne({ userId: guardId });
-		if (!guardUser) throw new UserNotFoundError();
+		checkString(guardId, 'Guard ID', true);
 
 		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
+		const hoa = await HOA.findOne({ hoaId }).populate(
+			'guards.guard',
+			'userId'
+		);
 		if (!hoa) throw new HOANotFoundError();
 
-		// Find guard
-		const guard = await hoa.getGuard(guardId);
-		if (!guard) throw new GuardNotFoundError();
+		let guards = hoa.guards;
+		if (guardId) {
+			// Check guard if registered
+			const guard = await User.findOne({ userId: guardId });
+			if (!guard) throw new UserNotFoundError();
 
-		res.status(200).json(guard);
+			guards = hoa.guards.filter(
+				({ guard: { userId } }) => userId === guardId
+			);
+		}
+
+		res.status(200).json(guards);
 	} catch (error) {
 		next(error);
 	}
@@ -128,7 +171,8 @@ const getGuard = async (req, res, next) => {
 
 module.exports = {
 	registerHoa,
+	joinHoa,
 	addGuard,
 	updateGuardStatus,
-	getGuard
+	getGuards
 };

@@ -5,7 +5,8 @@ const vehicleSchema = new Schema(
 	{
 		owner: {
 			type: ObjectId,
-			ref: 'User'
+			ref: 'User',
+			required: true
 		},
 		plateNumber: {
 			type: String,

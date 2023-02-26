@@ -18,7 +18,7 @@ const logSchema = new Schema(
 			enum: ['User', 'Vehicle', 'Visitor'],
 			required: true
 		},
-		id: {
+		docId: {
 			type: ObjectId,
 			refPath: 'logType',
 			required: true

@@ -7,18 +7,14 @@ const userSchema = new Schema(
 		userId: {
 			type: String,
 			unique: true,
-			default: genUserId()
+			required: true
 		},
 		name: {
 			firstName: { type: String, required: true },
 			lastName: { type: String, required: true }
 		},
-		homes: [{ type: ObjectId, ref: 'Home' }],
-		vehicles: [{ type: ObjectId, ref: 'Vehicle' }],
-		dues: [{ type: ObjectId, ref: 'Due' }],
-	
 		credentials: {
-			email:{
+			email: {
 				type: String,
 				required: true,
 				unique: true
@@ -28,17 +24,10 @@ const userSchema = new Schema(
 				required: true
 			}
 		},
-		name: {
-			firstName: { type: String, required: true },
-			lastName: { type: String, required: true }
-		},
 		homes: [{ type: ObjectId, ref: 'Home' }],
-		vehicles: [{ type: ObjectId, ref: 'Vehicle' }],
-		dues: [{ type: ObjectId, ref: 'Due' }],
-
-		
-	}, { timestamps: true, methods: {} });
-
-
+		vehicles: [{ type: ObjectId, ref: 'Vehicle' }]
+	},
+	{ timestamps: true, methods: {} }
+);
 
 module.exports = model('User', userSchema);

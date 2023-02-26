@@ -7,21 +7,26 @@ const Due = require('../models/Due');
 const User = require('../models/User');
 const HOA = require('../models/HOA');
 const { genDueId } = require('../helpers/generateId');
+const { checkDate, checkNumber } = require('../helpers/validData');
 
-// create new due
 const createDue = async (req, res, next) => {
-	const { userId, hoaId, amount, paidUntil } = req.body;
+	const { homeId, hoaId, amount, paidUntil } = req.body;
 
 	try {
-		const hoa = await HOA.findOne({ hoaId }).exec();
+		checkString(homeId, 'Home ID');
+		checkString(hoaId, 'HOA ID');
+		checkNumber(amount);
+		checkDate(paidUntil);
+
+		const hoa = await HOA.findOne({ hoaId });
 		if (!hoa) throw new HOANotFoundError();
 
-		const user = await User.findOne({ userId }).exec();
-		if (!user) throw new UserNotFoundError();
+		const home = await Home.findOne({ homeId });
+		if (!home) throw new NotFoundError('Home');
 
-		const newDue = await Due.Create({
+		const due = await Due.Create({
 			dueId: genDueId(),
-			user: user._id,
+			home: home._id,
 			hoa: hoa._id,
 			amount,
 			paidUntil
@@ -29,45 +34,38 @@ const createDue = async (req, res, next) => {
 
 		res.status(201).json({
 			message: 'Due added',
-			dueId: newDue.dueId
+			dueId: due.dueId
 		});
 	} catch (err) {
 		next(err);
 	}
 };
 
-// get due
-const getDue = async (req, res, next) => {
-	const { dueId } = req.params;
-
-	try {
-		const due = await Due.findOne({ dueId })
-			.populate('hoa', 'hoaId')
-			.populate('user', 'userId')
-			.exec();
-
-		if (!due) throw new NotFoundError();
-
-		res.status(200).json(due);
-	} catch (err) {
-		next(err);
-	}
-};
-
 const getDues = async (req, res, next) => {
-	const { homeId, hoaId, startDate, endDate } = req.body;
+	const { homeId, hoaId, from, to } = req.body;
 
 	try {
+		checkString(homeId, 'Home ID');
+		checkString(hoaId, 'HOA ID');
+
 		const home = await User.findOne(homeId).exec();
 		if (!home) throw new NotFoundError('Home');
 
 		const hoa = await HOA.findOne(hoaId).exec();
 		if (!hoa) throw new HOANotFoundError();
 
-		let dueQuery = { hoa: hoa._id };
-		if (homeId) dueQuery.home = home._id;
-		if (startDate) dueQuery.createdAt = { $gte: new Date(startDate) };
-		if (endDate) dueQuery.createdAt = { $lte: new Date(endDate) };
+		let dueQuery = { hoa: hoa._id, home: home._id };
+
+		if (from && to) {
+			checkDate(from, to);
+			dueQuery.createdAt = { $gte: new Date(from), $lte: new Date(to) };
+		} else if (from) {
+			checkDate(from);
+			dueQuery.createdAt = { $gte: new Date(from) };
+		} else if (to) {
+			checkDate(to);
+			dueQuery.createdAt = { $lte: new Date(to) };
+		}
 
 		const dues = await Due.find(dueQuery)
 			.populate('hoa', 'hoaId')
@@ -80,6 +78,5 @@ const getDues = async (req, res, next) => {
 
 module.exports = {
 	createDue,
-	getDue,
 	getDues
 };

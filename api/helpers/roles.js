@@ -1,6 +1,6 @@
 module.exports = {
-	ADMIN: 'admin',
-	GUARD: 'guard',
-	HOMEOWNER: 'homeowner',
-	RESIDENT: 'resident'
-};
+    ADMIN: 'admin',
+    GUARD: 'guard',
+    HOMEOWNER: 'homeowner',
+    SELF: 'self'
+}

@@ -1,13 +1,18 @@
-const User = require('../models/User');
-const Hoa = require('../models/HOA');
-const Request = require('../models/Request');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { genUserId } = require('../helpers/generateId');
-const { NotFoundError, InvalidCredentialsError } = require('../helpers/errors');
 
-// create new user
-const signUp = async (req, res, next) => {
+const User = require('../models/User');
+const Home = require('../models/Home');
+
+const { genUserId } = require('../helpers/generateId');
+const {
+	InvalidCredentialsError,
+	InvalidEmail,
+	UserNotFoundError
+} = require('../helpers/errors');
+const { checkString, checkEmail } = require('../helpers/validData');
+
+const signup = async (req, res, next) => {
 	const {
 		name: { firstName, lastName },
 		email,
@@ -15,44 +20,46 @@ const signUp = async (req, res, next) => {
 	} = req.body;
 
 	try {
-		const user = await User.create({ credentials: { email } });
-		if (user) throw new Error('Email already registered');
+		checkString(firstName, 'First Name');
+		checkString(lastName, 'Last Name');
+		checkString(password, 'Password');
+		checkEmail(email);
 
-		const newUser = await User.create({
+		// Check if email used
+		const user = await User.create({ credentials: { email } });
+		if (user) throw new InvalidEmail();
+
+		// Create user
+		const { userId } = await User.create({
 			userId: genUserId(),
 			name: {
 				firstName,
 				lastName
 			},
-			email,
-			password: await bcrypt.hash(password, 10)
+			credenials: {
+				email,
+				password: await bcrypt.hash(password, 10)
+			}
 		});
-		// res.status(201).json({message: 'You had successfully created a new user', name});
-		res.status(201).json({
-			message: 'Account created',
-			userId: newUser.userId,
-			createdAt: newUser.createdAt
-		});
-		// res.send();
+
+		res.status(201).json({ message: 'Account created', userId });
 	} catch (err) {
 		next(err);
 	}
 };
 
-// login user
-const loginUser = async (req, res) => {
+const login = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
-		// find email
-		// if found, proceed
-		// else throw error
+		checkEmail(email);
+		checkString(password, 'Password');
+
+		// Find email
 		const user = await User.findOne({ credentials: { email } }).exec();
 		if (!user) throw new InvalidCredentialsError();
 
-		// check password if equal
-		// if equal, proceed
-		// else throw error
+		// Check password
 		const verify = await bcrypt.compare(
 			password,
 			user.credentials.password
@@ -82,89 +89,32 @@ const loginUser = async (req, res) => {
 	}
 };
 
-// edit or update user
 const editUser = async (req, res, next) => {
-	const { name, email, password } = req.body;
-
-	try {
-		const user = await User.findByIdAndUpdate(req.user._id, {
-			name,
-			email,
-			password
-		});
-		res.status(200).json({
-			message: 'User profile updated'
-		});
-	} catch (err) {
-		next(err);
-	}
-};
-
-// Join HOA
-const joinHOA = async (req, res, next) => {
 	const {
-		hoaId,
-		address: { houseNumber, street, phase }
+		name: { firstName, lastName },
+		email,
+		password
 	} = req.body;
 
 	try {
-		// Find HOA
-		const hoa = await Hoa.findOne({ hoaId }).exec();
-		if (!hoa) throw new HOANotFoundError();
+		// Check if email used
+		const userEmail = await User.findOne({ credentials: { email } });
+		if (userEmail) throw new InvalidEmail('Email already used');
 
-		// add home details
-		await Home.create({
-			user: req.user._id,
-			address: {
-				houseNumber,
-				street,
-				phase
-			},
-			hoa: hoa._id
+		// Update user
+		await User.findByIdAndUpdate(req.user._id, {
+			name: { firstName, lastName },
+			credentials: { email, password }
 		});
 
-		res.status(201).json({ message: 'Hoa Joined' });
+		res.status(200).json({ message: 'User profile updated' });
 	} catch (err) {
 		next(err);
-	}
-};
-
-const getVehicles = async (req, res, next) => {
-	const { userId } = req.body;
-
-	try {
-		const user = await User.findOne({ userId }).populate(
-			'vehicles',
-			'-owner'
-		);
-		if (!user) throw new UserNotFoundError();
-
-		res.status(200).json(user.vehicles);
-	} catch (error) {
-		next(error);
-	}
-};
-
-const getVisitors = async (req, res, next) => {
-	const { userId } = req.body;
-
-	try {
-		const user = await User.findOne({ userId });
-		if (!user) throw new UserNotFoundError();
-
-		const visitors = await Visitor.find({ user: user._id });
-
-		res.status(200).json(visitors);
-	} catch (error) {
-		next(error);
 	}
 };
 
 module.exports = {
-	signUp,
-	loginUser,
-	editUser,
-	joinHOA, 
-	getVehicles,
-	getVisitors
+	signup,
+	login,
+	editUser
 };

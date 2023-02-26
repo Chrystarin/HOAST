@@ -1,6 +1,13 @@
 const User = require('../models/User');
 const Vehicle = require('../models/Vehicle');
-const { UserNotFoundError, NotFoundError } = require('../helpers/errors');
+const HOA = require('../models/HOA');
+const Home = require('../models/Home');
+const {
+	UserNotFoundError,
+	NotFoundError,
+	HOANotFoundError
+} = require('../helpers/errors');
+const { checkString } = require('../helpers/validData');
 
 const addVehicle = async (req, res, next) => {
 	const { plateNumber, brand, model, type, color } = req.body;
@@ -18,21 +25,45 @@ const addVehicle = async (req, res, next) => {
 		$push: { vehicles: vehicle._id }
 	});
 
-	res.status(201).json({
-		message: 'Vehicle added'
-	});
+	res.status(201).json({ message: 'Vehicle added' });
 };
 
-const getVehicle = async (req, res, next) => {
-	const { plateNumber } = req.body;
+const getVehicles = async (req, res, next) => {
+	const { hoaId, userId, plateNumber } = req.body;
 
 	try {
-		const vehicle = await Vehicle.findOne({ plateNumber })
-			.populate('owner', 'userId')
-			.exec();
-		if (!vehicle) throw new NotFoundError('Vehicle');
+		checkString(plateNumber, 'Plate Number', true);
 
-		res.status(200).json(vehicle);
+		let vehicleQuery = { owner: req.user._id };
+
+		if (hoaId && userId) {
+			checkString(hoaId, 'HOA ID');
+			checkString(userId, 'User ID');
+
+			// Find HOA
+			const hoa = await HOA.findOne({ hoaId });
+			if (!hoa) throw new HOANotFoundError();
+
+			// Find User
+			const user = await User.findOne({ userId });
+			if (!user) throw new UserNotFoundError();
+
+			// Check if user is resident within hoa
+			const home = await Home.findOne({
+				hoa: hoa._id,
+				residents: { user: user._id, status: 'active' }
+			});
+			if (!home) throw new NotFoundError('Home');
+
+			// Update owner
+			vehicleQuery.owner = user._id;
+		}
+
+		if (plateNumber) vehicleQuery.plateNumber = plateNumber;
+
+		res.status(200).json(
+			await Vehicle.find(vehicleQuery).populate('owner', 'userId').exec()
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -42,7 +73,11 @@ const updateVehicleColor = async (req, res, next) => {
 	const { plateNumber, color } = req.body;
 
 	try {
-		const vehicle = await Vehicle.findOne({ plateNumber });
+		// Find vehicle
+		const vehicle = await Vehicle.findOne({
+			plateNumber,
+			owner: req.user._id
+		});
 		if (!vehicle) throw new NotFoundError('Vehicle');
 
 		vehicle.color = color;
@@ -55,14 +90,17 @@ const updateVehicleColor = async (req, res, next) => {
 };
 
 const deleteVehicle = async (req, res, next) => {
-	const { plateNumber, status } = req.body;
+	const { plateNumber } = req.body;
 
 	try {
-		const vehicle = await Vehicle.findOne({ plateNumber });
+		const vehicle = await Vehicle.findOne({
+			plateNumber,
+			owner: req.user._id
+		});
 		if (!vehicle) throw new NotFoundError('Vehicle');
 
-		vehicle.status = status;
-		vehicle.save();
+		vehicle.status = 'inactive';
+		await vehicle.save();
 
 		res.status(200).json({ message: 'Vehicle deleted' });
 	} catch (error) {
@@ -72,7 +110,7 @@ const deleteVehicle = async (req, res, next) => {
 
 module.exports = {
 	addVehicle,
-	getVehicle,
+	getVehicles,
 	updateVehicleColor,
 	deleteVehicle
-}
+};

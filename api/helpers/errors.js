@@ -57,13 +57,31 @@ class InvalidDate extends Error {
 	}
 }
 
+class InvalidEmail extends Error {
+	constructor(message) {
+		super(message || 'Invalid email');
+		this.name = 'InvalidEmail';
+		this.status = 422;
+	}
+}
+
+class InvalidAction extends Error {
+	constructor(message) {
+		super(message);
+		this.name = 'InvalidAction';
+		this.status = 403;
+	}
+}
+
 module.exports = {
 	NotFoundError,
 	UserNotFoundError,
 	HOANotFoundError,
 	InvalidString,
 	GuardNotFoundError,
-    SameStatusError,
+	SameStatusError,
 	InvalidCredentialsError,
-	InvalidDate
+	InvalidDate,
+	InvalidEmail,
+	InvalidAction
 };

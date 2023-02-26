@@ -1,11 +1,21 @@
 const router = require('express').Router();
-const {
-	addVisitor,
-	getVisitor,
-	getVisitors
-} = require('../controllers/visitorController');
+const { addVisitor, getVisitors } = require('../controllers/visitorController');
 
-router.post('/add', addVisitor);
-router.get('/:visitorId', getVisitor);
+/**
+ * homeId
+ * name
+ * purpose
+ * arrivalDate
+ * departureDate
+ * note
+ */
+router.post('/', addVisitor);
+
+/**
+ * hoaId
+ * homeId - optional
+ * visitorId - optional
+ */
+router.get('/', getVisitors);
 
 module.exports = router;

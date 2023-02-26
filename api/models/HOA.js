@@ -21,10 +21,10 @@ const hoaSchema = new Schema(
 			ref: 'User',
 			required: true
 		},
-		homeowners: [
+		homes: [
 			{
 				type: ObjectId,
-				ref: 'User'
+				ref: 'Home'
 			}
 		],
 		guards: [
@@ -38,24 +38,14 @@ const hoaSchema = new Schema(
 					enum: ['active', 'retired'],
 					default: 'active'
 				},
-                addedAt: {
-                    type: Date,
-                    default: new Date()
-                }
+				addedAt: {
+					type: Date,
+					default: new Date()
+				}
 			}
 		]
 	},
-	{
-		timestamps: true,
-		methods: {
-			async getGuard(guardId) {
-                // return (await this.populate('guards.guard', 'userId')).guards.find(({ guard: { userId } }) => userId == guardId);
-				return (await this.populate('guards.guard', 'userId')).guards.find(
-					({ guard: { userId } }) => userId == guardId
-				);
-			}
-		}
-	}
+	{ timestamps: true }
 );
 
 module.exports = model('HOA', hoaSchema);

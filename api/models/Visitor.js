@@ -8,9 +8,9 @@ const visitorSchema = new Schema({
 		unique: true,
 		default: genLogId()
 	},
-	user: {
+	home: {
 		type: ObjectId,
-		ref: 'User',
+		ref: 'Home',
 		required: true
 	},
 	hoa: {
@@ -20,8 +20,8 @@ const visitorSchema = new Schema({
 	},
 	name: { type: String, required: true },
 	purpose: { type: String, required: true },
-	arrival: { type: Number, required: true },
-	departure: { type: Number, required: true },
+	arrival: { type: Date, required: true },
+	departure: { type: Date, required: true },
 	note: { type: String, required: true }
 });
 

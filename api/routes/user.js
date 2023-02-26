@@ -1,18 +1,35 @@
 const router = require('express').Router();
+const authenticate = require('../middlewares/authentication');
 const {
-	signUp,
-	loginUser,
-	editUser,
-	joinHOA,
-	getVehicles,
-	getVisitors
+	signup,
+	login,
+	editUser
 } = require('../controllers/userController');
 
-router.post('/signup', signUp);
-router.post('/login', loginUser);
+/**
+ * name
+ *     firstName
+ *     lastName
+ * email
+ * password
+ */
+router.post('/signup', signup);
+
+/**
+ * email
+ * password
+ */
+router.post('/login', login);
+
+router.use(authenticate);
+
+/**
+ * name
+ *     firstName
+ *     lastName
+ * email
+ * password
+ */
 router.patch('/edit', editUser);
-router.post('/join', joinHOA);
-router.get('/:userId', getVehicles);
-router.get('/:userId', getVisitors);
 
 module.exports = router;

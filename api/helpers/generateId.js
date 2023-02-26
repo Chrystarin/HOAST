@@ -123,10 +123,44 @@ const genDueId = () => {
 	);
 };
 
+let requestNonce = 0;
+/**
+ * Generates a unique id exclusive for Requests
+ *
+ * @returns {string}
+ */
+const genRequestId = () => {
+	return bufferToString(
+		Buffer.concat([
+			randomBuffer(),
+			toHexBuffer(++requestNonce),
+			toHexBuffer(Date.now())
+		])
+	);
+};
+
+let homeNonce = 0;
+/**
+ * Generates a unique id exclusive for Requests
+ *
+ * @returns {string}
+ */
+const genHomeId = () => {
+	return bufferToString(
+		Buffer.concat([
+			randomBuffer(),
+			toHexBuffer(++homeNonce),
+			toHexBuffer(Date.now())
+		])
+	);
+};
+
 module.exports = {
 	genHoaId,
 	genUserId,
 	genVisitorId,
 	genLogId,
-	genDueId
+	genDueId,
+    genRequestId,
+    genHomeId
 };
