@@ -36,6 +36,8 @@ const ROLES = {
     'Guard': 'guard'
   }
 
+  console.log(ROLES.User)
+
 function App() {
   return (
     <Routes>
@@ -47,7 +49,7 @@ function App() {
         <Route path='/register' element={<Register/>}/>
 
     {/* Private Routes for Users */}
-        <Route element={<RequireAuth/>} allowedRoles={[ROLES.User]}>
+        <Route element={<RequireAuth allowedRoles={[ROLES.User]}/>} >
             <Route path='/homes'>
                 <Route path='' element={<Homes/>}/>
                 <Route path='add' element={<AddHome/>}/>
@@ -67,15 +69,18 @@ function App() {
                 <Route path=':id' element={<VisitorView/>}/>
             </Route>
 
-            <Route element={<RequireAuth/>} allowedRoles={[ROLES.Admin]}>
+            {/* Private Routes for Admin */}
+            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>} >
                 <Route path='/associationdues' element={<AssociationDues/>}/>
             </Route>
 
-            <Route element={<RequireAuth/>} allowedRoles={[ROLES.Guard]}>
+            {/* Private Routes for Guard */}
+            <Route element={<RequireAuth allowedRoles={[ROLES.Guard]}/>} >
                 <Route path='/scanner' element={<Scanner/>}/>
             </Route>
 
-            <Route element={<RequireAuth/>} allowedRoles={[ROLES.Admin, ROLES.Guard]}>
+            {/* Private Routes for Admin and Guard */}
+            <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Guard]}/>} >
                 <Route path='/dashboard' element={<Dashboard/>}/>
                 <Route path='/visitorslist' element={<VisitorsList/>}/>
                 <Route path='/logs' element={<Logs/>}/>
@@ -85,7 +90,7 @@ function App() {
             </Route>
 
         </Route>
-        
+
     </Routes>
     
   );

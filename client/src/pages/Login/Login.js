@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 
 import './Login.scss'
 
@@ -16,6 +16,8 @@ function Login() {
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const [loginForm, setLoginForm] = useState({
         email: '',
@@ -57,6 +59,7 @@ function Login() {
                 setAuth({user, password, roles, accessToken});
                 alert("Logged in Successfully!");
                 navigate("/homes");
+                // navigate(from, { replace: true });
             })
         }
         catch(err){
