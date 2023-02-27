@@ -81,8 +81,6 @@ const login = async (req, res, next) => {
 		checkEmail(email);
 		checkString(password, 'Password');
 
-        console.log(email);
-
 		// Find email
 		const user = await User.findOne({ 'credentials.email': email }).exec();
 		if (!user) throw new InvalidCredentialsError();
