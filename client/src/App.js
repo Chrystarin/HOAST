@@ -50,11 +50,12 @@ function App() {
 
     {/* Private Routes for Users */}
         <Route element={<RequireAuth allowedRoles={[ROLES.User]}/>} >
+            <Route path='/resident/:id' element={<ResidentsView/>}/>
+
             <Route path='/homes'>
                 <Route path='' element={<Homes/>}/>
                 <Route path='add' element={<AddHome/>}/>
                 <Route path=':id' element={<ViewHome/>}/>
-                <Route path='resident/:id' element={<ResidentsView/>}/>
             </Route>
 
             <Route path='/vehicles'>

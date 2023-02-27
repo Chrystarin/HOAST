@@ -21,15 +21,15 @@ function Vehicles() {
                 <SearchInput/>
             </div>
             <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-            <Button variant="contained" href='/addvehicle'>Add Vehicles</Button>
+            <Button variant="contained" href='/vehicles/add'>Add Vehicles</Button>
         </div>
 
         <div className='SectionList'>
-            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
-            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
-            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
-            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
-            <Card type="Vehicles" {...CarOwner} url="VehicleView"/>
+            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
+            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
+            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
+            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
+            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
         </div>
       </section>
     </div>

@@ -21,15 +21,15 @@ function Homes() {
             <SearchInput/>
           </div>
           <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-          <Button variant="contained" href='addhome'>Add Home</Button>
+          <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 
         <div className='SectionList'>
-          <Card type="Home" {...HomeOwner} url="viewhome"/>
-          <Card type="Home" {...HomeOwner} url="viewhome"/>
-          <Card type="Home" {...HomeOwner} url="viewhome"/>
-          <Card type="Home" {...HomeOwner} url="viewhome"/>
-          <Card type="Home" {...HomeOwner} url="viewhome"/>
+          <Card type="Home" {...HomeOwner} url="/homes/:id"/>
+          <Card type="Home" {...HomeOwner} url="/homes/:id"/>
+          <Card type="Home" {...HomeOwner} url="/homes/:id"/>
+          <Card type="Home" {...HomeOwner} url="/homes/:id"/>
+          <Card type="Home" {...HomeOwner} url="/homes/:id"/>
         </div>
       </section>
     </div>

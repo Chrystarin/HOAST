@@ -25,12 +25,12 @@ function Visitors() {
             <SearchInput/>
           </div>
           <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-          <Button variant="contained" href='addvisitor'>Add Visitors</Button>
+          <Button variant="contained" href='/visitors/add'>Add Visitors</Button>
         </div>
 
         <div className='SectionList'>
           {visitor.map((Visitor) => (
-            <Card type="Visitor" title={Visitor.name} subTitle1={Visitor.type} subTitle2={Visitor.date} url="viewvisitor" />
+            <Card type="Visitor" title={Visitor.name} subTitle1={Visitor.type} subTitle2={Visitor.date} url="/visitors/:id" />
           ))}
 
           {/* {Visitors.length > 0 && Visitors.map((Visitor) => {

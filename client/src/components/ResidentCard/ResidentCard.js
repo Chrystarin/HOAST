@@ -15,7 +15,7 @@ function ResidentCard(props) {
             </IconButton>
         </div>
         :
-        <a href='/resident/view'>
+        <a href='/resident/:id'>
             <div id='ResidentCard'>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                 <div>
