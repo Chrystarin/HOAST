@@ -42,14 +42,23 @@ const createRequest = async (req, res, next) => {
 };
 
 const processRequest = async (req, res, next) => {
-	const { requestId, status } = req.body;
+	const { requestId, hoaId, status } = req.body;
 
 	try {
 		checkString(requestId, 'Request ID');
+		checkString(hoaId, 'HOA ID');
 		checkString(status, 'Request Status');
 
+		// Find HOA
+		const hoa = await HOA.findOne({ hoaId });
+		if (!hoa) throw new HOANotFoundError();
+
 		// Find request
-		const request = await Request.findOne({ requestId, status: 'pending' });
+		const request = await Request.findOne({
+			hoa: hoa._id,
+			requestId,
+			status: 'pending'
+		});
 		if (!request) throw new NotFoundError('Request');
 
 		request.status = status;
@@ -61,7 +70,7 @@ const processRequest = async (req, res, next) => {
 			const home = await Home.create({
 				homeId: genHomeId(),
 				owner: request.requestor,
-				hoa: request.hoa,
+				hoa: hoa._id,
 				address: request.homeDetails,
 				residents: [{ user: request.requestor }]
 			});
@@ -70,8 +79,13 @@ const processRequest = async (req, res, next) => {
 				$push: { homes: home._id }
 			});
 
+			hoa.homes.push(home._id);
+			await hoa.save();
+
 			response.homeId = home.homeId;
 		}
+
+		await request.save();
 
 		res.status(200).json(response);
 	} catch (error) {
@@ -83,7 +97,7 @@ const getRequests = async (req, res, next) => {
 	const { hoaId, requestId } = req.body;
 
 	try {
-		checkString(hoaId, 'HOA ID', true);
+		checkString(hoaId, 'HOA ID');
 		checkString(requestId, 'Request ID', true);
 
 		let requestQuery = {};

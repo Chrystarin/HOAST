@@ -1,12 +1,16 @@
 const HOA = require('../models/HOA');
 const Home = require('../models/Home');
-const { InvalidAction, HOANotFoundError } = require('../helpers/errors');
+const {
+	InvalidAction,
+	HOANotFoundError,
+	NotFoundError
+} = require('../helpers/errors');
 const role = require('../helpers/roles');
 const { checkString } = require('../helpers/validData');
 
 module.exports = (...roles) => {
 	return async (req, res, next) => {
-		if (roles.contains(role.ADMIN)) {
+		if (roles.includes(role.ADMIN)) {
 			const { hoaId } = req.body;
 
 			try {
@@ -16,12 +20,10 @@ module.exports = (...roles) => {
 				if (!hoa) throw new InvalidAction();
 
 				return next();
-			} catch (error) {
-				return next(error);
-			}
+			} catch (error) {}
 		}
 
-		if (roles.contains(role.GUARD)) {
+		if (roles.includes(role.GUARD)) {
 			const { hoaId } = req.body;
 
 			try {
@@ -29,17 +31,16 @@ module.exports = (...roles) => {
 
 				const hoa = await HOA.findOne({
 					hoaId,
-					guards: { guard: req.user._id, status: 'active' }
+					'guards.guard': req.user._id,
+					'guards.status': 'actve'
 				});
 				if (!hoa) throw new InvalidAction();
 
 				return next();
-			} catch (error) {
-				return next(error);
-			}
+			} catch (error) {}
 		}
 
-		if (roles.contains(role.HOMEOWNER)) {
+		if (roles.includes(role.HOMEOWNER)) {
 			const { homeId } = req.body;
 
 			try {
@@ -52,12 +53,24 @@ module.exports = (...roles) => {
 				if (!home) throw new InvalidAction();
 
 				return next();
-			} catch (error) {
-				return next(error);
-			}
+			} catch (error) {}
 		}
 
-		if (roles.contains(role.SELF)) return next();
+		if (roles.includes(role.RESIDENT)) {
+			const { homeId } = req.body;
+
+			try {
+				checkString(homeId, 'Home ID');
+
+				const home = await Home.findOne({
+					'residents.user': req.user._id,
+					'residents.status': 'active'
+				});
+				if (!home) throw new NotFoundError('Home');
+
+				return next();
+			} catch (error) {}
+		}
 
 		next(new InvalidAction());
 	};

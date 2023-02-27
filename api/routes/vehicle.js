@@ -16,11 +16,12 @@ const {
 router.post('/add', addVehicle);
 
 /**
- * case 1: (Admin, Guard)
+ * [ADMIN, GUARD, USER]
+ * 
+ * case ADMIN/GUARD:
  *     hoaId
- *     userId
  *     plateNumber - optional
- * case 2:
+ * case USER:
  *     plateNumber - optional
  */
 router.get('/', getVehicles);

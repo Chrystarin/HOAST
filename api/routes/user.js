@@ -3,8 +3,14 @@ const authenticate = require('../middlewares/authentication');
 const {
 	signup,
 	login,
-	editUser
+	editUser,
+    getUser
 } = require('../controllers/userController');
+
+/**
+ * userId - optional
+ */
+router.get('/', getUser);
 
 /**
  * name

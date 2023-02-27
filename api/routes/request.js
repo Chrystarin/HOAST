@@ -9,10 +9,10 @@ const authorization = require('../middlewares/authorization');
 const router = require('express').Router();
 
 /**
- * hoaId = optional
+ * hoaId
  * requestId - optional
  */
-router.get('/', authorization(roles.ADMIN, roles.SELF), getRequests);
+router.get('/', authorization(roles.ADMIN), getRequests);
 
 /**
  * hoaId
@@ -24,6 +24,7 @@ router.get('/', authorization(roles.ADMIN, roles.SELF), getRequests);
 router.post('/', createRequest);
 
 /**
+ * hoaId
  * requestId
  * status
  */

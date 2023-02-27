@@ -34,36 +34,56 @@ const getVehicles = async (req, res, next) => {
 	try {
 		checkString(plateNumber, 'Plate Number', true);
 
-		let vehicleQuery = { owner: req.user._id };
+		let vehicles;
 
-		if (hoaId && userId) {
+		if (hoaId) {
 			checkString(hoaId, 'HOA ID');
-			checkString(userId, 'User ID');
 
 			// Find HOA
 			const hoa = await HOA.findOne({ hoaId });
 			if (!hoa) throw new HOANotFoundError();
 
-			// Find User
-			const user = await User.findOne({ userId });
-			if (!user) throw new UserNotFoundError();
+			if (plateNumber) {
+				// Find vehicle
+				vehicles = await Vehicle.findOne({ plateNumber });
+				if (!vehicles) throw new NotFoundError('Vehicle');
 
-			// Check if user is resident within hoa
-			const home = await Home.findOne({
-				hoa: hoa._id,
-				residents: { user: user._id, status: 'active' }
-			});
-			if (!home) throw new NotFoundError('Home');
+				// Check if owner of vehicle is resident of hoa
+				const home = await Home.findOne({
+					hoa: hoa._id,
+					'residents.user': vehicles.owner
+				});
+				if (!home)
+					throw new Error('Owner of vehicle not resident of hoa');
+			} else {
+				// Get the homes within the hoa
+				const homes = await Home.find({ hoa: hoa._id }).populate({
+					path: 'residents.user',
+					populate: { path: 'homes', model: 'Home' }
+				});
 
-			// Update owner
-			vehicleQuery.owner = user._id;
+				// Extract the vehicles owned by the residents of each home
+				vehicles = homes.reduce(
+					(prevHome, { residents }) => [
+						...prevHome,
+						...residents.reduce(
+							(prevUser, { vehicles }) => [
+								...prevUser,
+								...vehicles
+							],
+							[]
+						)
+					],
+					[]
+				);
+			}
+		} else {
+			({ vehicles } = await User.findById(req.user._id).populate(
+				'vehicles'
+			));
 		}
 
-		if (plateNumber) vehicleQuery.plateNumber = plateNumber;
-
-		res.status(200).json(
-			await Vehicle.find(vehicleQuery).populate('owner', 'userId').exec()
-		);
+		res.status(200).json(vehicles);
 	} catch (error) {
 		next(error);
 	}

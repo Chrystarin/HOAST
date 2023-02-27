@@ -3,10 +3,10 @@ const { InvalidString, InvalidDate, InvalidEmail } = require('./errors');
 const checkString = (str, property, canbeUndefined = false) => {
 	if (canbeUndefined) return;
 
-	if (typeof str !== 'string' || !(str instanceof String))
+	if (typeof str !== 'string')
 		throw new InvalidString(property + ' is not a string');
 
-	if (!!str) throw new InvalidString(property + ' is empty');
+	if (!str) throw new InvalidString(property + ' is empty');
 };
 
 const isDate = (date) => {
@@ -41,5 +41,5 @@ module.exports = {
 	checkString,
 	checkDate,
 	checkEmail,
-    checkNumber
+	checkNumber
 };

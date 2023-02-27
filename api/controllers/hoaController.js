@@ -1,4 +1,4 @@
-const { checkString } = require('../helpers/validData');
+const { checkString, checkNumber } = require('../helpers/validData');
 const { genHoaId, genRequestId } = require('../helpers/generateId');
 const HOA = require('../models/HOA');
 const User = require('../models/User');
@@ -8,8 +8,7 @@ const Visitor = require('../models/Visitor');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError,
-	NotFoundError
+	GuardNotFoundError
 } = require('../helpers/errors');
 
 const registerHoa = async (req, res, next) => {
@@ -44,14 +43,15 @@ const registerHoa = async (req, res, next) => {
 };
 
 const joinHoa = async (req, res, next) => {
-	const { hoaId } = req.params;
 	const {
-		address: { houseNumber, street, phase }
+		hoaId,
+		address: { houseName, houseNumber, street, phase }
 	} = req.body;
 
 	try {
 		checkString(hoaId, 'HOA ID');
-		checkString(houseNumber, 'House Number');
+        checkString(houseName, 'Home Name');
+        checkNumber(houseNumber);
 		checkString(street, 'Street');
 		checkString(phase, 'Phase', true);
 
@@ -59,7 +59,7 @@ const joinHoa = async (req, res, next) => {
 		const hoa = await HOA.findOne({ hoaId });
 		if (!hoa) throw new HOANotFoundError();
 
-		let homeDetails = { houseNumber, street };
+		let homeDetails = { houseName, houseNumber, street };
 		if (phase) homeDetails.phase = phase;
 
 		// Create request

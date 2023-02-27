@@ -18,6 +18,6 @@ router.get('/', authorize(roles.ADMIN, roles.GUARD), getRecords);
  * objId
  * logType
  */
-router.post('/', authorize(roles.GUARD), addRecord);
+router.post('/', authorize(roles.GUARD, roles.GUARD), addRecord);
 
 module.exports = router;
