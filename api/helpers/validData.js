@@ -41,5 +41,5 @@ module.exports = {
 	checkString,
 	checkDate,
 	checkEmail,
-    checkNumber
+	checkNumber
 };

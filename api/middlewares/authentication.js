@@ -1,4 +1,4 @@
-// User Authentication
+const jwt = require('jsonwebtoken');
 
 const { UserNotFoundError } = require('../helpers/errors');
 const User = require('../models/User');

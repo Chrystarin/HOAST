@@ -19,7 +19,7 @@ const requestSchema = new Schema(
 			required: true
 		},
 		homeDetails: {
-			homeName: { type: Number, required: true },
+			houseName: { type: String, required: true },
 			houseNumber: { type: Number, required: true },
 			street: { type: String, required: true },
 			phase: String

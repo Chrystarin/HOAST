@@ -2,6 +2,8 @@ const router = require('express').Router();
 const { addVisitor, getVisitors } = require('../controllers/visitorController');
 
 /**
+ * [RESIDENT]
+ * 
  * homeId
  * name
  * purpose
@@ -12,9 +14,15 @@ const { addVisitor, getVisitors } = require('../controllers/visitorController');
 router.post('/', addVisitor);
 
 /**
- * hoaId
- * homeId - optional
- * visitorId - optional
+ * [ADMIN, GUARD, RESIDENT]
+ * 
+ * case ADMIN
+ *     hoaId
+ *     homeId - optional
+ *     visitorId - optional
+ * case RESIDENT
+ *     homeId
+ *     visitorId - optional
  */
 router.get('/', getVisitors);
 

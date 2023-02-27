@@ -15,7 +15,10 @@ const addVisitor = async (req, res, next) => {
 		checkString(note, 'Note');
 		checkDate(arrival, departure);
 
-		const home = await Home.findOne({ homeId });
+		const home = await Home.findOne({
+			homeId,
+			'residents.user': req.user._id
+		});
 		if (!home) throw new NotFoundError('Home');
 
 		const visitor = await Visitor.create({
@@ -41,35 +44,51 @@ const getVisitors = async (req, res, next) => {
 	const { hoaId, homeId, visitorId } = req.body;
 
 	try {
-		checkString(hoaId, 'HOA ID');
-		checkString(homeId, 'Home ID', true);
 		checkString(visitorId, 'Visitor ID', true);
 
-		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new HOANotFoundError();
-
 		// Create query for visitors
-		let visitorQuery = { hoa: hoa._id };
+		let visitorQuery = {};
 
-		// Find home if homeId is given and add to query its _id
-		if (homeId) {
+		if (hoaId) {
+			checkString(hoaId, 'HOA ID');
+			checkString(homeId, 'Home ID', true);
+
+			// Find HOA
+			const hoa = await HOA.findOne({ hoaId });
+			if (!hoa) throw new HOANotFoundError();
+
+			visitorQuery.hoa = hoa._id;
+
+			if (homeId) {
+				// Find Home
+				const home = await Home.findOne({ homeId });
+				if (!home) throw new NotFoundError('Home');
+
+				// Check if home is in hoa
+				if (!hoa.homes.includes(home._id))
+					throw new Error('Home not in HOA');
+
+				visitorQuery.home = home._id;
+			}
+		} else {
+			checkString(homeId, 'Home ID');
+
+			// Find Home
 			const home = await Home.findOne({ homeId });
 			if (!home) throw new NotFoundError('Home');
 
 			visitorQuery.home = home._id;
 		}
 
-		// If visitorId is given, add it to query
 		if (visitorId) visitorQuery.visitorId = visitorId;
 
-		// Initiate the query
-		res.status(200).json(
-			await Visitor.find(visitorQuery)
-				.populate('home', 'homeId')
-				.populate('hoa', 'hoaId')
-				.exec()
-		);
+		// Find visitors
+		const visitors = await Visitor.find(visitorQuery)
+			.populate('home', 'homeId')
+			.populate('hoa', 'hoaId')
+			.exec();
+
+		res.status(200).json(visitors);
 	} catch (error) {
 		next(error);
 	}

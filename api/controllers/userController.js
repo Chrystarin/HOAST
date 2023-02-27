@@ -25,11 +25,12 @@ const signup = async (req, res, next) => {
 		checkString(password, 'Password');
 		checkEmail(email);
 
-        const user = await User.findOne({ credentials: { email } }).exec();
-		if (user) throw new InvalidEmail();
+		// Check if email used
+		const userEmail = await User.findOne({ credentials: { email } });
+		if (userEmail) throw new InvalidEmail('Email already used');
 
 		// Create user
-		const { userId } = await User.create({
+		const user = await User.create({
 			userId: genUserId(),
 			name: {
 				firstName,
@@ -41,7 +42,27 @@ const signup = async (req, res, next) => {
 			}
 		});
 
-		res.status(201).json({ message: 'Account created', userId });
+		// Create access token
+		const token = jwt.sign(
+			{
+				userId: user.userId,
+				email: user.credentials.email,
+				createdAt: new Date().toISOString()
+			},
+			process.env.JWT_SECRET,
+			{ expiresIn: '30d' }
+		);
+
+		res.status(201)
+			.cookie('access-token', token, {
+				httpOnly: true,
+				sameSite: 'none',
+				secure: true
+			})
+			.json({
+				message: 'Account created',
+				userId: user.userId
+			});
 	} catch (err) {
         console.log(firstName);
         console.log(lastName);
@@ -63,11 +84,8 @@ const login = async (req, res, next) => {
         console.log(email);
 
 		// Find email
-		const user = await User.findOne({  [`credentials.email`] : email  }).exec();
-        console.log(user);
-        if (!user) throw new InvalidEmail();
-
-        console.log("password: " + user.credentials.password);
+		const user = await User.findOne({ 'credentials.email': email }).exec();
+		if (!user) throw new InvalidCredentialsError();
 
 		// Check password
 		const verify = await bcrypt.compare(
@@ -99,6 +117,25 @@ const login = async (req, res, next) => {
 	}
 };
 
+const getUser = async (req, res, next) => {
+	const { userId } = req.body;
+
+	try {
+		checkString(userId, 'User ID', true);
+
+		const user = await User.findOne(
+			userId ? { userId } : { _id: req.user._id }
+		)
+			.populate('vehicles homes')
+			.select('-credentials');
+		if (!user) throw new UserNotFoundError();
+
+		res.status(200).json(user);
+	} catch (error) {
+		next(error);
+	}
+};
+
 const editUser = async (req, res, next) => {
 	const {
 		name: { firstName, lastName },
@@ -108,7 +145,7 @@ const editUser = async (req, res, next) => {
 
 	try {
 		// Check if email used
-		const userEmail = await User.findOne({ credentials: { email } });
+		const userEmail = await User.findOne({ 'credentials.email': email });
 		if (userEmail) throw new InvalidEmail('Email already used');
 
 		// Update user
@@ -126,5 +163,6 @@ const editUser = async (req, res, next) => {
 module.exports = {
 	signup,
 	login,
+	getUser,
 	editUser
 };

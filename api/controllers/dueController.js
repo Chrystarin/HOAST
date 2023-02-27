@@ -5,6 +5,7 @@ const {
 } = require('../helpers/errors');
 const Due = require('../models/Due');
 const User = require('../models/User');
+const Home = require('../models/Home');
 const HOA = require('../models/HOA');
 const { genDueId } = require('../helpers/generateId');
 const { checkDate, checkNumber } = require('../helpers/validData');
@@ -18,10 +19,12 @@ const createDue = async (req, res, next) => {
 		checkNumber(amount);
 		checkDate(paidUntil);
 
+		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });
 		if (!hoa) throw new HOANotFoundError();
 
-		const home = await Home.findOne({ homeId });
+		// Find Home
+		const home = await Home.findOne({ homeId, hoa: hoa._id });
 		if (!home) throw new NotFoundError('Home');
 
 		const due = await Due.Create({
@@ -46,15 +49,19 @@ const getDues = async (req, res, next) => {
 
 	try {
 		checkString(homeId, 'Home ID');
-		checkString(hoaId, 'HOA ID');
 
-		const home = await User.findOne(homeId).exec();
+		// Find home
+		const home = await Home.findOne({ homeId }).exec();
 		if (!home) throw new NotFoundError('Home');
 
-		const hoa = await HOA.findOne(hoaId).exec();
-		if (!hoa) throw new HOANotFoundError();
+		if (hoaId) {
+			checkString(hoaId, 'HOA ID');
 
-		let dueQuery = { hoa: hoa._id, home: home._id };
+			const hoa = await HOA.findOne({ hoaId, homes: home._id });
+			if (!hoa) throw new HOANotFoundError();
+		}
+
+		let dueQuery = { home: home._id };
 
 		if (from && to) {
 			checkDate(from, to);

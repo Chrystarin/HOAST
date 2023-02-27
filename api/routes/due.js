@@ -4,14 +4,20 @@ const authorize = require('../middlewares/authorization');
 const roles = require('../helpers/roles');
 
 /**
- * hoaId
- * homeId
+ * case ADMIN:
+ *     hoaId
+ *     homeId
+ * case RESIDENT:
+ *     homeId
+ * 
  * from - optional
  * to - optional
  */
-router.get('/', authorize(roles.ADMIN), getDues);
+router.get('/', authorize(roles.ADMIN, roles.RESIDENT), getDues);
 
 /**
+ * [ADMIN]
+ *
  * hoaId
  * homeId
  * amount
