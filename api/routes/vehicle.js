@@ -13,7 +13,7 @@ const {
  * type
  * color
  */
-router.post('/add', addVehicle);
+router.post('/', addVehicle);
 
 /**
  * [ADMIN, GUARD, USER]

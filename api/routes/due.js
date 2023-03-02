@@ -13,7 +13,7 @@ const roles = require('../helpers/roles');
  * from - optional
  * to - optional
  */
-router.get('/', authorize(roles.ADMIN, roles.RESIDENT), getDues);
+router.get('/', getDues);
 
 /**
  * [ADMIN]
@@ -23,6 +23,6 @@ router.get('/', authorize(roles.ADMIN, roles.RESIDENT), getDues);
  * amount
  * paidUntil
  */
-router.post('/', authorize(roles.ADMIN), createDue);
+router.post('/', createDue);
 
 module.exports = router;

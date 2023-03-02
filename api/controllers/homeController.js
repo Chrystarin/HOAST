@@ -15,16 +15,16 @@ const getHomes = async (req, res, next) => {
 		checkString(hoaId, 'HOA ID', true);
 		checkString(homeId, 'Home ID', true);
 
-		let homeQuery;
+		let homeQuery = {};
 
 		if (hoaId) {
 			// Find HOA
 			const hoa = await HOA.findOne({ hoaId });
 			if (!hoa) throw new HOANotFoundError();
 
-			homeQuery = { hoa: hoa._id };
+			homeQuery.hoa = hoa._id;
 		} else {
-			homeQuery = { owner: req.user._id };
+			homeQuery.owner = req.user._id;
 		}
 
 		if (homeId) homeQuery.homeId = homeId;

@@ -8,7 +8,8 @@ const Visitor = require('../models/Visitor');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError
+	GuardNotFoundError,
+	InvalidAction
 } = require('../helpers/errors');
 
 const registerHoa = async (req, res, next) => {
@@ -50,14 +51,17 @@ const joinHoa = async (req, res, next) => {
 
 	try {
 		checkString(hoaId, 'HOA ID');
-        checkString(houseName, 'Home Name');
-        checkNumber(houseNumber);
+		checkString(houseName, 'Home Name');
+		checkNumber(houseNumber);
 		checkString(street, 'Street');
 		checkString(phase, 'Phase', true);
 
 		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });
 		if (!hoa) throw new HOANotFoundError();
+
+		// Check if admin of the hoa is requesting
+		if (hoa.admin.equals(req.user._id)) throw new InvalidAction();
 
 		let homeDetails = { houseName, houseNumber, street };
 		if (phase) homeDetails.phase = phase;

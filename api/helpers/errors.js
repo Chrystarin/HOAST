@@ -73,6 +73,62 @@ class InvalidAction extends Error {
 	}
 }
 
+class BadRequestError extends Error {
+	constructor(message, name) {
+		super(message);
+		this.name = name || 'Bad Request';
+		this.status = 400;
+	}
+}
+
+class UnauthorizedError extends Error {
+	constructor(message, name) {
+		super(message);
+		this.name = name || 'Unauthorized Request';
+		this.status = 401;
+	}
+}
+
+class ForbiddenError extends Error {
+	constructor(message, name) {
+		super(message);
+		this.name = name || 'Forbidden Request';
+		this.status = 403;
+	}
+}
+
+class NotFoundError extends Error {
+	constructor(message, name) {
+		super(message + ' not found');
+		this.name = name || 'Resource Not Found';
+		this.status = 404;
+	}
+}
+
+class ConflictError extends Error {
+	constructor(message, name) {
+		super(message);
+		this.name = name || 'Conflict in Request';
+		this.status = 409;
+	}
+}
+
+class UnprocessableContentError extends Error {
+	constructor(message, name) {
+		super(message);
+		this.name = name || 'Unprocessable Content';
+		this.status = 422;
+	}
+}
+
+class InternalServerError extends Error {
+	constructor() {
+		super('Server has encountered an unexpected condition');
+		this.name = 'Internal Server Error';
+		this.status = 500;
+	}
+}
+
 module.exports = {
 	NotFoundError,
 	UserNotFoundError,
@@ -83,5 +139,12 @@ module.exports = {
 	InvalidCredentialsError,
 	InvalidDate,
 	InvalidEmail,
-	InvalidAction
+	InvalidAction,
+    BadRequestError,
+    UnauthorizedError,
+    ForbiddenError,
+    NotFoundError,
+    ConflictError,
+    UnprocessableContentError,
+    InternalServerError
 };

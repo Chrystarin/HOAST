@@ -7,10 +7,6 @@ const {
     getUser
 } = require('../controllers/userController');
 
-/**
- * userId - optional
- */
-router.get('/', getUser);
 
 /**
  * name
@@ -27,7 +23,12 @@ router.post('/signup', signup);
  */
 router.post('/login', login);
 
-router.use(authenticate);
+// router.use(authenticate);
+
+/**
+ * userId - optional
+ */
+router.get('/', getUser);
 
 /**
  * name
