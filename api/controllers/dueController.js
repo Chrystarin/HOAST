@@ -21,13 +21,14 @@ const createDue = async (req, res, next) => {
 
 		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new HOANotFoundError();
+		if (!hoa) throw new NotFoundError('HOA');
 
 		// Find Home
 		const home = await Home.findOne({ homeId, hoa: hoa._id });
 		if (!home) throw new NotFoundError('Home');
 
-		const due = await Due.Create({
+		// Create due
+		const due = await Due.create({
 			dueId: genDueId(),
 			home: home._id,
 			hoa: hoa._id,
@@ -54,11 +55,12 @@ const getDues = async (req, res, next) => {
 		const home = await Home.findOne({ homeId }).exec();
 		if (!home) throw new NotFoundError('Home');
 
+		// Check if admin
 		if (hoaId) {
 			checkString(hoaId, 'HOA ID');
 
 			const hoa = await HOA.findOne({ hoaId, homes: home._id });
-			if (!hoa) throw new HOANotFoundError();
+			if (!hoa) throw new HOANotFoundError('HOA');
 		}
 
 		let dueQuery = { home: home._id };

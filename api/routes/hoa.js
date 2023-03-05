@@ -23,6 +23,7 @@ router.post('/register', registerHoa);
 /**
  * hoaId
  * address
+ *     houseName
  *     houseNumber
  *     street
  *     phase - optional

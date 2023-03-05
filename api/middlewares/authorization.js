@@ -8,9 +8,11 @@ const {
 const role = require('../helpers/roles');
 const { checkString } = require('../helpers/validData');
 
+
+
 module.exports = (...roles) => {
 	return async (req, res, next) => {
-		if (roles.includes(role.ADMIN)) {
+        if (roles.includes(role.ADMIN)) {
 			const { hoaId } = req.body;
 
 			try {

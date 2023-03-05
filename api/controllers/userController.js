@@ -2,15 +2,26 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
-const Home = require('../models/Home');
 
 const { genUserId } = require('../helpers/generateId');
 const {
-	InvalidCredentialsError,
-	InvalidEmail,
-	UserNotFoundError
+	UserNotFoundError,
+	ConflictError,
+	UnauthorizedError
 } = require('../helpers/errors');
 const { checkString, checkEmail } = require('../helpers/validData');
+
+const createToken = (userId) => {
+	return jwt.sign(
+		{
+			userId,
+			createdAt: Date.now()
+		},
+		process.env.JWT_SECRET,
+		{ expiresIn: '30d' }
+	);
+};
+const emailExist = new ConflictError('Email already used', 'Existing Email');
 
 const signup = async (req, res, next) => {
 	const {
@@ -27,7 +38,7 @@ const signup = async (req, res, next) => {
 
 		// Check if email used
 		const userEmail = await User.findOne({ credentials: { email } });
-		if (userEmail) throw new InvalidEmail('Email already used');
+		if (userEmail) throw emailExist;
 
 		// Create user
 		const user = await User.create({
@@ -42,19 +53,8 @@ const signup = async (req, res, next) => {
 			}
 		});
 
-		// Create access token
-		const token = jwt.sign(
-			{
-				userId: user.userId,
-				email: user.credentials.email,
-				createdAt: new Date().toISOString()
-			},
-			process.env.JWT_SECRET,
-			{ expiresIn: '30d' }
-		);
-
 		res.status(201)
-			.cookie('access-token', token, {
+			.cookie('access-token', createToken(user.userId), {
 				httpOnly: true,
 				sameSite: 'none',
 				secure: true
@@ -83,28 +83,17 @@ const login = async (req, res, next) => {
 
 		// Find email
 		const user = await User.findOne({ 'credentials.email': email }).exec();
-		if (!user) throw new InvalidCredentialsError();
+		if (!user) throw new UnauthorizedError('Incorrect email or password');
 
 		// Check password
 		const verify = await bcrypt.compare(
 			password,
 			user.credentials.password
 		);
-		if (!verify) throw new InvalidCredentialsError();
+		if (!verify) throw new UnauthorizedError('Incorrect email or password');
 
-		// Create access token
-		const token = jwt.sign(
-			{
-				userId: user.userId,
-				email: user.credentials.email,
-				createdAt: new Date().toISOString()
-			},
-			process.env.JWT_SECRET,
-			{ expiresIn: '30d' }
-		);
-
-		res.status(200)
-			.cookie('access-token', token, {
+		res.status(201)
+			.cookie('access-token', createToken(user.userId), {
 				httpOnly: true,
 				sameSite: 'none',
 				secure: true
@@ -116,7 +105,7 @@ const login = async (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
-	const { userId } = req.body;
+	const { userId } = req.query;
 
 	try {
 		checkString(userId, 'User ID', true);
@@ -144,7 +133,7 @@ const editUser = async (req, res, next) => {
 	try {
 		// Check if email used
 		const userEmail = await User.findOne({ 'credentials.email': email });
-		if (userEmail) throw new InvalidEmail('Email already used');
+		if (userEmail) throw emailExist;
 
 		// Update user
 		await User.findByIdAndUpdate(req.user._id, {

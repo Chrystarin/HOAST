@@ -24,10 +24,15 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true }));
+app.use(
+	cors({
+		credentials: true,
+		origin: 'http://127.0.0.1:8080'
+	})
+);
 
 app.use('/users', userRoute);
-app.use(authenticate);
+// app.use(authenticate);
 app.use('/dues', dueRoute);
 app.use('/visitors', visitorRoute);
 app.use('/vehicles', vehicleRoute);
@@ -39,7 +44,10 @@ app.use('/requests', requestRoute);
 app.use((err, req, res, next) => {
 	console.log(err);
 
-	res.status(err.status || 500).json({name: err.name, message: err.message});
+	res.status(err.status || 500).json({
+		name: err.name,
+		message: err.message
+	});
 });
 
 mongoose
