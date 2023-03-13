@@ -53,6 +53,8 @@ const signup = async (req, res, next) => {
 			}
 		});
 
+		
+
 		res.status(201)
 			.cookie('access-token', createToken(user.userId), {
 				httpOnly: true,
@@ -92,13 +94,15 @@ const login = async (req, res, next) => {
 		);
 		if (!verify) throw new UnauthorizedError('Incorrect email or password');
 
+		const token = createToken(user.userId)
+
 		res.status(201)
-			.cookie('access-token', createToken(user.userId), {
+			.cookie('access-token', token, {
 				httpOnly: true,
 				sameSite: 'none',
 				secure: true
 			})
-			.json({ success: true, message: 'Logged in successfully', accessToken: token, roles: ['user', 'admin'] });
+			.json({ success: true, message: 'Logged in successfully', token: token, roles: ['user', 'admin'] });
 	} catch (err) {
 		next(err);
 	}

@@ -55,8 +55,8 @@ function Login() {
                 const user = loginForm.email;
                 const password = loginForm.password;
                 const roles = response?.data?.roles;
-                const accessToken = response?.data?.accessToken;
-                setAuth({user, password, roles, accessToken});
+                const token = response?.data?.token;
+                setAuth({user, password, roles, token});
                 alert("Logged in Successfully!");
                 navigate("/homes");
                 // navigate(from, { replace: true });

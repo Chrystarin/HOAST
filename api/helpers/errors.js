@@ -97,13 +97,13 @@ class ForbiddenError extends Error {
 	}
 }
 
-class NotFoundError extends Error {
-	constructor(message, name) {
-		super(message + ' not found');
-		this.name = name || 'Resource Not Found';
-		this.status = 404;
-	}
-}
+// class NotFoundError extends Error {
+// 	constructor(message, name) {
+// 		super(message + ' not found');
+// 		this.name = name || 'Resource Not Found';
+// 		this.status = 404;
+// 	}
+// }
 
 class ConflictError extends Error {
 	constructor(message, name) {
