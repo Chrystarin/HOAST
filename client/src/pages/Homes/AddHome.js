@@ -1,13 +1,69 @@
 import React,{useState} from 'react';
+
+import {useNavigate} from 'react-router';
+
 import './AddHome.scss';
+
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
+
+import axios from './../../utils/axios';
+
 function AddHome() {
+    const navigate = useNavigate();
+
     const [stepper, setStepper] = useState(1);
+
+    const [form, setForm] = useState({
+        hoaId: '',
+        houseName: '',
+        houseNumber: '',
+        street: '',
+        phase: ''
+    });
+
+    // Retrieves data from text input then assigns to form
+    function updateForm(e) {
+        return setForm((prev) => {
+            const [key, value] = Object.entries(e)[0];
+            prev[key] = value;
+            return prev;
+    });}
+
+    // Submit button for login
+    async function Submit(e){
+        e.preventDefault();
+
+        try{
+            // Login
+            await axios
+            .post(
+                `requests`,
+                JSON.stringify({ 
+                    hoaId: form.hoaId,
+                    houseName: form.houseName,
+                    houseNumber: parseInt(form.houseNumber),
+                    street: form.street,
+                    phase: form.phase
+                }),
+                {headers: { 'Content-Type': 'application/json' }},
+                {withCredentials: true}
+                
+            )
+            .then((response) => {
+                console.log(JSON.stringify(response?.data));
+                alert("Registered Successfully!");
+                navigate("/homes");
+            })
+        }
+        catch(err){
+            console.error(err.message);
+        }
+    }
     function Stepper(){
         switch (stepper) {
             case 1:
@@ -38,18 +94,18 @@ function AddHome() {
                 break;
             case 2:
                 return <>
-                    <form  className='Form' id='GeneralInformation'>
-                        <TextField fullWidth  label="Home Name" variant="filled" />
-                        <TextField fullWidth  label="Address Line 1" variant="filled" />
-                        <TextField fullWidth  label="Address Line 2" variant="filled" />
+                    <form onSubmit={Submit} className='Form' id='GeneralInformation'>
+                        <TextField fullWidth  label="HOA ID" variant="filled" onChange={(e)=>updateForm({ hoaId: e.target.value })}/>
+                        <TextField fullWidth  label="Home Name" variant="filled" onChange={(e)=>updateForm({ houseName: e.target.value })}/>
+                        <TextField fullWidth  label="Home Number" variant="filled" onChange={(e)=>updateForm({ houseNumber: e.target.value })}/>
                         <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Town or City" variant="filled" />
-                            <TextField fullWidth  label="State or Province" variant="filled" />
+                            <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })}/>
+                            <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })}/>
                         </div>
-                        <div className='FormWrapper__2'>
+                        {/* <div className='FormWrapper__2'>
                             <TextField fullWidth  label="Postal Code" variant="filled" />
                             <TextField fullWidth  label="Country" variant="filled" />
-                        </div>
+                        </div> */}
                         <div className='Form__Button'>
                             <Button variant='text'>Back</Button>
                             <Button variant='contained' type='submit' className='Submit'>Next</Button>

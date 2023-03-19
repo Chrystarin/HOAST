@@ -33,7 +33,7 @@ app.use(
 	})
 );
 
-// app.use(authenticate);
+app.use(authenticate);
 
 app.use('/users', userRoute);
 app.use('/dues', dueRoute);

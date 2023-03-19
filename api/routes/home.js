@@ -14,7 +14,8 @@ const router = require('express').Router();
  * hoaId - optional
  * homeId - optional
  */
-router.get('/', authorize(roles.ADMIN, roles.HOMEOWNER), getHomes);
+// router.get('/', authorize(roles.ADMIN, roles.HOMEOWNER), getHomes);
+router.get('/', getHomes);
 
 /**
  * homeId

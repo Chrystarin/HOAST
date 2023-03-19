@@ -1,24 +1,82 @@
 import React,{useState} from 'react'
+import {useNavigate} from 'react-router';
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+import axios from './../../utils/axios';
+
 function AddVisitor() {
+    const navigate = useNavigate();
+
     const [stepper, setStepper] = useState(1);
+
+    const [form, setForm] = useState({
+        home: '',
+        hoa: '',
+        name: '',
+        purpose: '',
+        arrival: '',
+        departure: '',
+        note: '',
+    });
+
+    // Retrieves data from text input then assigns to form
+    function updateForm(e) {
+        return setForm((prev) => {
+            const [key, value] = Object.entries(e)[0];
+            prev[key] = value;
+            return prev;
+    });}
+
+    // Submit button for login
+    async function Submit(e){
+        e.preventDefault();
+
+        try{
+            // Login
+            await axios
+            .post(
+                `visitors`,
+                JSON.stringify({ 
+                    home: form.home,
+                    hoa: form.hoa,
+                    name: form.name,
+                    purpose: form.purpose,
+                    arrival: form.arrival,
+                    departure: form.departure,
+                    note: form.note
+                }),
+                {headers: { 'Content-Type': 'application/json' }},
+                {withCredentials: true}
+                
+            )
+            .then((response) => {
+                console.log(JSON.stringify(response?.data));
+                alert("Registered Successfully!");
+                navigate("/visitors");
+            })
+        }
+        catch(err){
+            console.error(err.message);
+        }
+    }
+
     function Stepper(){
         switch (stepper) {
             case 1:
                 return <>
-                    <form action="" className='Form'>
-                        <TextField fullWidth  label="Type" variant="filled" />
-                        <TextField fullWidth  label="Name" variant="filled" />
+                    <form onSubmit={Submit} className='Form'>
+                        <TextField fullWidth  label="Home" variant="filled" onChange={(e)=>updateForm({ home: e.target.value })}/>
+                        <TextField fullWidth  label="Hoa" variant="filled" onChange={(e)=>updateForm({ hoa: e.target.value })}/>
+                        <TextField fullWidth  label="Name" variant="filled" onChange={(e)=>updateForm({ name: e.target.value })}/>
                         <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Arrival Date" variant="filled" />
-                            <TextField fullWidth  label="Departure Date" variant="filled" />
+                            <TextField fullWidth  label="Arrival Date" variant="filled" onChange={(e)=>updateForm({ arrival: e.target.value })}/>
+                            <TextField fullWidth  label="Departure Date" variant="filled" onChange={(e)=>updateForm({ departure: e.target.value })}/>
                         </div>
                         <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Purpose" variant="filled" />
-                            <TextField fullWidth  label="Note" variant="filled" />
+                            <TextField fullWidth  label="Purpose" variant="filled" onChange={(e)=>updateForm({ purpose: e.target.value })}/>
+                            <TextField fullWidth  label="Note" variant="filled" onChange={(e)=>updateForm({ note: e.target.value })}/>
                         </div>
                         <div className='Form__Button'>
                             <Button variant='text'>Cancel</Button>

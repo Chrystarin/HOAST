@@ -100,7 +100,7 @@ const login = async (req, res, next) => {
 				sameSite: 'none',
 				secure: true
 			})
-			.json({ id: user.userId, user: user.credentials.email, token: token  });
+			.json({ id: user.userId, user: user.credentials.email, token: token, roles: ['user', 'admin']  });
 		
 	} catch (err) {
 		next(err);

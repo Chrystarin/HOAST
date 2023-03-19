@@ -1,16 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 
 import Card from '../../components/Card/Card.js';
+
+import axios from '../../utils/axios';
 function Vehicles() {
-    const CarOwner = {
-        title:"#ASC231S",
-        subTitle1:"Sportivo",
-        subTitle2:"ISUZU"
-    }
+
+    const [vehicles, setVehicles] = useState();
+
+    useEffect(() => {
+      // Retrieves Homes
+      const fetchVehicles = async () => {
+        const response = await axios
+          .get(`vehicles`)
+          .then((response) => {
+            setVehicles(response.data);
+          });
+      };
+
+      fetchVehicles();
+    }, []);
+
+    console.log(vehicles);
+
     return <>
     <Navbar type="vehicles"/>
     <div id='SectionHolder'>
@@ -25,11 +40,33 @@ function Vehicles() {
         </div>
 
         <div className='SectionList'>
-            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
-            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
-            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
-            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
-            <Card type="Vehicles" {...CarOwner} url="/vehicles/:id"/>
+        {(!vehicles) ?
+            <>
+              <p>No Vehicles available!</p>
+            </>
+            :
+            (vehicles.length === 0 )?
+              <>
+                <p>No Vehicles found!</p>
+              </>
+              :
+              <>
+                  {vehicles.length > 0 &&
+                    vehicles.map((vehicle) => {
+                    return (
+                      <Card 
+                        type="Vehicles"
+                        key={vehicle.plateNumber}
+                        id={vehicle.plateNumber}
+                        title={vehicle.plateNumber}
+                        subTitle1={vehicle.brand}
+                        subTitle2={vehicle.model}
+                        url="/vehicles/:id"
+                      />
+                    );
+                  })}
+              </>
+          }
         </div>
       </section>
     </div>

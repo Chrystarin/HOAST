@@ -1,14 +1,35 @@
-import React from 'react'
+import React, {useState} from 'react'
 import NavBar from '../../layouts/NavBar';
 import './Scanner.scss';
 import SideBar from './SideBar';
 import Button from '@mui/material/Button';
 import ScannerImg from '../../images/Placeholder/Scanner.PNG';
 import Modal from '@mui/material/Modal';
+
+import QrReader from 'react-qr-scanner'
+
 function Scanner() {
+    const [startScan, setStartScan] = useState(false);
+    const [loadingScan, setLoadingScan] = useState(false);
+    const [data, setData] = useState("");
     const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const handleScan = async (scanData) => {
+        setLoadingScan(true);
+        console.log(`loaded data data`, scanData);
+        if (scanData && scanData !== "") {
+          console.log(`loaded >>>`, scanData);
+          setData(scanData);
+          setStartScan(false);
+          setLoadingScan(false);
+          // setPrecScan(scanData);
+        }
+    };
+    const handleError = (err) => {
+        console.error(err);
+    };
 
     return <>
         <NavBar/>
@@ -19,7 +40,15 @@ function Scanner() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Scanner</a></span></h3>
                     <div className='SectionList' id='QRScanner'>
                         <div id='Scanner'>
-                            <img src={ScannerImg} alt="" />
+                            {/* <img src={ScannerImg} alt="" /> */}
+                            <QrReader
+                                facingMode="front"
+                                delay={1000}
+                                onError={handleError}
+                                onScan={handleScan}
+                                // chooseDeviceId={()=>selected}
+                                style={{ width: "100%" }}
+                            />
                         </div>
                         <div id='SidePanel'>
                             <div className='SidePanel__Container' id='DateTime'>
