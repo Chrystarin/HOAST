@@ -7,7 +7,7 @@ import Header from '../../layouts/Header';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import axios from '../../configs/axios';
+import axios from '../../utils/axios';
 
 import { useNavigate } from 'react-router';
 

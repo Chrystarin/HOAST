@@ -8,17 +8,12 @@ import Header from '../../layouts/Header';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import useAuth from '../../authentication/useAuth';
-import axios from '../../configs/axios';
+import axios from '../../utils/axios';
 
 function Login() {
-
-    const { setAuth } = useAuth();
-
     const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
 
+    // Contains login input
     const [loginForm, setLoginForm] = useState({
         email: '',
         password: ''
@@ -36,7 +31,6 @@ function Login() {
     // Submit button for login
     async function Submit(e){
         e.preventDefault();
-
         try{
             // Login
             await axios
@@ -46,20 +40,13 @@ function Login() {
                     email: loginForm.email,
                     password: loginForm.password
                 }),
-                {
-                    headers: { 'Content-Type': 'application/json' }
-                }
+                {headers: { 'Content-Type': 'application/json' }},
+                {withCredentials: true}
             )
             .then((response) => {
-                console.log(JSON.stringify(response?.data));
-                const user = loginForm.email;
-                const password = loginForm.password;
-                const roles = response?.data?.roles;
-                const token = response?.data?.token;
-                setAuth({user, password, roles, token});
+                localStorage.setItem('user', JSON.stringify(response.data))
                 alert("Logged in Successfully!");
                 navigate("/homes");
-                // navigate(from, { replace: true });
             })
         }
         catch(err){

@@ -53,8 +53,6 @@ const signup = async (req, res, next) => {
 			}
 		});
 
-		
-
 		res.status(201)
 			.cookie('access-token', createToken(user.userId), {
 				httpOnly: true,
@@ -102,7 +100,8 @@ const login = async (req, res, next) => {
 				sameSite: 'none',
 				secure: true
 			})
-			.json({ success: true, message: 'Logged in successfully', token: token, roles: ['user', 'admin'] });
+			.json({ id: user.userId, user: user.credentials.email, token: token  });
+		
 	} catch (err) {
 		next(err);
 	}

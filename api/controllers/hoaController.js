@@ -1,5 +1,6 @@
 const { checkString, checkNumber } = require('../helpers/validData');
 const { genHoaId, genRequestId } = require('../helpers/generateId');
+
 const HOA = require('../models/HOA');
 const User = require('../models/User');
 const Request = require('../models/Request');
@@ -25,7 +26,7 @@ const registerHoa = async (req, res, next) => {
 		checkString(barangay, 'Barangay');
 		checkString(city, 'City');
 		checkString(province, 'Province');
-
+		
 		// Create HOA
 		const hoa = await HOA.create({
 			hoaId: genHoaId(),
@@ -55,6 +56,8 @@ const joinHoa = async (req, res, next) => {
 		checkNumber(houseNumber);
 		checkString(street, 'Street');
 		checkString(phase, 'Phase', true);
+
+		
 
 		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });

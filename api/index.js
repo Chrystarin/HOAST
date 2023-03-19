@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+
 require('dotenv/config');
 
 const { createServer } = require('https');
@@ -27,12 +28,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
 	cors({
 		credentials: true,
+		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
 		origin: 'http://localhost:3000'
 	})
 );
 
-app.use('/users', userRoute);
 // app.use(authenticate);
+
+app.use('/users', userRoute);
 app.use('/dues', dueRoute);
 app.use('/visitors', visitorRoute);
 app.use('/vehicles', vehicleRoute);
