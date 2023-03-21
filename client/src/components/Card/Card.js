@@ -33,6 +33,7 @@ function Card(props) {
                 <div>
                     {(props.type ==="Home")?<KeyIcon/>: ""}
                 </div>
+                {props.type=="Request" ? <button onClick={props.action}>approve</button> : <div></div>}
             </div>
         </a>
     )

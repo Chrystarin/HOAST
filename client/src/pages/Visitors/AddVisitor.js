@@ -12,8 +12,7 @@ function AddVisitor() {
     const [stepper, setStepper] = useState(1);
 
     const [form, setForm] = useState({
-        home: '',
-        hoa: '',
+        homeId: '',
         name: '',
         purpose: '',
         arrival: '',
@@ -39,8 +38,7 @@ function AddVisitor() {
             .post(
                 `visitors`,
                 JSON.stringify({ 
-                    home: form.home,
-                    hoa: form.hoa,
+                    homeId: form.homeId,
                     name: form.name,
                     purpose: form.purpose,
                     arrival: form.arrival,
@@ -67,8 +65,7 @@ function AddVisitor() {
             case 1:
                 return <>
                     <form onSubmit={Submit} className='Form'>
-                        <TextField fullWidth  label="Home" variant="filled" onChange={(e)=>updateForm({ home: e.target.value })}/>
-                        <TextField fullWidth  label="Hoa" variant="filled" onChange={(e)=>updateForm({ hoa: e.target.value })}/>
+                        <TextField fullWidth  label="Home ID" variant="filled" onChange={(e)=>updateForm({ homeId: e.target.value })}/>
                         <TextField fullWidth  label="Name" variant="filled" onChange={(e)=>updateForm({ name: e.target.value })}/>
                         <div className='FormWrapper__2'>
                             <TextField fullWidth  label="Arrival Date" variant="filled" onChange={(e)=>updateForm({ arrival: e.target.value })}/>

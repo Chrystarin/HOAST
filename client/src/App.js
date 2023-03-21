@@ -31,6 +31,7 @@ import Scanner from './pages/HomeOwnerAssociation/Scanner.js';
 import ProtectedRoute from './utils/ProtectedRoute.js'
 
 import RegisterHoa from './pages/RegisterHoa.js';
+import JoinRequests from './pages/JoinRequests.js';
 
 function App() {
 
@@ -42,11 +43,11 @@ function App() {
             <Route path='*' element={<Error404/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
-            <Route path='/scanner' element={<Scanner/>}/>
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
 
                 <Route path='/hoa/register' element={<RegisterHoa/>}/>
+                <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
                 <Route path='/resident/:id' element={<ResidentsView/>}/>
 

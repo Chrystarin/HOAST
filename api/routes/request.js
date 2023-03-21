@@ -12,7 +12,8 @@ const router = require('express').Router();
  * hoaId
  * requestId - optional
  */
-router.get('/', authorization(roles.ADMIN), getRequests);
+// router.get('/', authorization(roles.ADMIN), getRequests);
+router.get('/', getRequests);
 
 /**
  * hoaId
@@ -28,6 +29,7 @@ router.post('/', createRequest);
  * requestId
  * status
  */
-router.patch('/', authorization(roles.ADMIN), processRequest);
+// router.patch('/', authorization(roles.ADMIN), processRequest);
+router.patch('/', processRequest);
 
 module.exports = router;

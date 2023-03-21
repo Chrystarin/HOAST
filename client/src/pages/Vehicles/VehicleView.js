@@ -1,6 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import Navbar from '../../layouts/NavBar';
+
 import './VehicleView.scss'
+
 import Card from '../../components/Card/Card.js';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +12,34 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import QRCodeCard from '../../layouts/QRCodeCard';
+
+import axios from '../../utils/axios';
+
 function VehicleView() {
+
+
+    const [vehicle, setVehicle] = useState();
+
+    useEffect(() => {
+      // Retrieves Vehicles
+      const fetchVehicle = async () => {
+        const response = await axios
+          .get(`vehicles`,{
+                params: {
+                    plateNumber: '123f',
+                    hoaId: 'h4Np5mlWesojCl6'
+                }
+            })
+          .then((response) => {
+            setVehicle(response.data);
+          });
+      };
+
+      fetchVehicle();
+    }, []);
+
+    console.log(vehicle);
+
     const [VehicleInfo, setVehicleInfo] = useState({
         owner:"Harold James H. Castillo",
         brand: "Ford",

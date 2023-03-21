@@ -1,10 +1,28 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
+import axios from '../../utils/axios';
 function Visitors() {
+
+  const [visitors, setVisitors] = useState();
+
+  useEffect(() => {
+    // Retrieves Homes
+    const fetchVisitors = async () => {
+      const response = await axios
+        .get(`visitors`)
+        .then((response) => {
+          setVisitors(response.data);
+        });
+    };
+
+    fetchVisitors();
+  }, []);
+
+  console.log(visitors)
 
     function createData(name,type,date) {
       return { name, type,date};

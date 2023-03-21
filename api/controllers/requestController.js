@@ -94,7 +94,12 @@ const processRequest = async (req, res, next) => {
 };
 
 const getRequests = async (req, res, next) => {
-	const { hoaId, requestId } = req.body;
+	// const { hoaId, requestId } = req.body;
+
+	const hoaId = req.query.hoaId;
+	const requestId = req.query.requestId;
+
+	console.log(hoaId)
 
 	try {
 		checkString(hoaId, 'HOA ID');

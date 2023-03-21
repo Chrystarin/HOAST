@@ -29,12 +29,18 @@ const addVehicle = async (req, res, next) => {
 };
 
 const getVehicles = async (req, res, next) => {
-	const { hoaId, userId, plateNumber } = req.body;
+	// const { hoaId, userId, plateNumber } = req.body;
+	const { userId } = req.body;
+	const hoaId = req.query.hoaId;
+	const plateNumber = req.query.plateNumber;
+	
 
 	try {
 		checkString(plateNumber, 'Plate Number', true);
 
 		let vehicles;
+
+		console.log(plateNumber)
 
 		if (hoaId) {
 			checkString(hoaId, 'HOA ID');
