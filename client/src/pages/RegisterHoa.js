@@ -44,19 +44,12 @@ export default function RegisterHoa() {
                         city : registerForm.city,
                         province : registerForm. province
                     }
-                }),
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                },
-                { 
-                    withCredentials: true 
-                }
-                
+                })
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
                 alert("Registered Successfully!");
-                // navigate("/hoa/register");
+                navigate("/homes");
             })
         }
         catch(err){

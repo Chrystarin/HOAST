@@ -8,27 +8,53 @@ import Modal from '@mui/material/Modal';
 
 import QrReader from 'react-qr-scanner'
 
+import axios from '../../utils/axios';
+
 function Scanner() {
-    const [startScan, setStartScan] = useState(false);
-    const [loadingScan, setLoadingScan] = useState(false);
-    const [data, setData] = useState("");
-    const [open, setOpen] = React.useState(false);
+    const [data, setData] = useState(null);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleScan = async (scanData) => {
-        setLoadingScan(true);
-        console.log(`loaded data data`, scanData);
-        if (scanData && scanData !== "") {
-          console.log(`loaded >>>`, scanData);
-          setData(scanData);
-          setStartScan(false);
-          setLoadingScan(false);
-          // setPrecScan(scanData);
+    let log = null;
+    let status = null;
+
+    // Function upon scanning
+    async function handleScan(data){
+        if (data) {
+            try{
+                log = JSON.parse(data.text)
+                console.log(log)
+                alert("QR Code Detected!")
+
+                // Add Record of Log
+                await axios
+                .post(
+                    `logs`,
+                    JSON.stringify({ 
+                        objId: log.objId,
+                        logType: log.logType,
+                        hoaId: log.hoaId
+                    })
+                )
+                .then((response) => {
+                    status = true;
+                    alert("Record Added Successfully!");
+                })
+            }
+            catch(err){
+                status = false;
+                console.error(err.message);
+                alert("Record Not Detected!");
+            }
+            finally{
+                console.log(status);
+            }
         }
     };
-    const handleError = (err) => {
-        console.error(err);
+
+    let handleError = (err) => {
+        alert(err);
     };
 
     return <>
@@ -42,12 +68,11 @@ function Scanner() {
                         <div id='Scanner'>
                             {/* <img src={ScannerImg} alt="" /> */}
                             <QrReader
-                                facingMode="front"
-                                delay={1000}
+                                delay={10000}
                                 onError={handleError}
                                 onScan={handleScan}
-                                // chooseDeviceId={()=>selected}
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
+                                facingmode='front'
                             />
                         </div>
                         <div id='SidePanel'>
@@ -61,9 +86,8 @@ function Scanner() {
                                     <h5>June 1, 2019</h5>
                                 </div>
                             </div>
-                            
-                            <Button variant='contained' onClick={handleOpen}>Manual Check</Button>
-                            
+                            <Button variant='contained'>Manual Check</Button>
+
                         </div>
                     </div>
                 </div>

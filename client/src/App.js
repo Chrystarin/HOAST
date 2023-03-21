@@ -42,7 +42,7 @@ function App() {
             <Route path='*' element={<Error404/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
-
+            <Route path='/scanner' element={<Scanner/>}/>
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
 
@@ -77,7 +77,7 @@ function App() {
                 <Route element={<ProtectedRoute/>} >
                     <Route path='/scanner' element={<Scanner/>}/>
                 </Route>
-
+                
                 {/* Private Routes for Admin and Guard */}
                 <Route element={<ProtectedRoute/>} >
                     <Route path='/dashboard' element={<Dashboard/>}/>

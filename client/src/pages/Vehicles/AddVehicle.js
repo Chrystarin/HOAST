@@ -47,10 +47,7 @@ function AddVehicle() {
                     brand: form.brand,
                     type: form.type,
                     color: form.color
-                }),
-                {headers: { 'Content-Type': 'application/json' }},
-                {withCredentials: true}
-                
+                })
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));

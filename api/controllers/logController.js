@@ -24,13 +24,13 @@ const addRecord = async (req, res, next) => {
 		// Find the id depending on which model
 		switch (logType) {
 			case 'User':
-				({ _id: docId } = await User.findOne({ userId: id }));
+				({ _id: docId } = await User.findOne({ userId: objId }));
 				break;
 			case 'Vehicle':
-				({ _id: docId } = await Vehicle.findOne({ plateNumber: id }));
+				({ _id: docId } = await Vehicle.findOne({ plateNumber: objId }));
 				break;
 			case 'Visitor':
-				({ _id: docId } = await Visitor.findOne({ visitorId: id }));
+				({ _id: docId } = await Visitor.findOne({ visitorId: objId }));
 				break;
 			default:
 				throw new Error('Invalid Log Type');
