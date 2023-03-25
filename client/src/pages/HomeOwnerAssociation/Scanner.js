@@ -17,7 +17,6 @@ function Scanner() {
     const handleClose = () => setOpen(false);
 
     let log = null;
-    let status = null;
 
     // Function upon scanning
     async function handleScan(data){
@@ -38,13 +37,13 @@ function Scanner() {
                     })
                 )
                 .then((response) => {
-                    status = true;
+                    fetch('http://192.168.0.13:80/?header=true')
                     alert("Record Added Successfully!");
                 })
             }
             catch(err){
-                status = false;
                 console.error(err.message);
+                fetch('http://192.168.0.13:80/?header=fasle')
                 alert("Record Not Detected!");
             }
             finally{
