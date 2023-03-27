@@ -46,9 +46,6 @@ function Scanner() {
                 fetch('http://192.168.0.13:80/?header=false')
                 alert("Record Not Detected!");
             }
-            finally{
-                console.log(status);
-            }
         }
     };
 
