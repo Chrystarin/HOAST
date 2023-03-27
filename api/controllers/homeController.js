@@ -9,7 +9,7 @@ const HOA = require('../models/HOA');
 const Home = require('../models/Home');
 
 const getHomes = async (req, res, next) => {
-	const { hoaId, homeId } = req.body;
+	const { hoaId, homeId } = req.query;
 
 	try {
 		checkString(hoaId, 'HOA ID', true);
@@ -27,14 +27,24 @@ const getHomes = async (req, res, next) => {
 			homeQuery.owner = req.user._id;
 		}
 
-		if (homeId) homeQuery.homeId = homeId;
+		if (homeId) {
+            homeQuery.homeId = homeId;
+            res.status(200).json(
+                await Home.findOne(homeQuery)
+                    .populate('owner', 'userId')
+                    .populate('hoa', 'hoaId')
+                    .exec()
+            );
+        } else{
+            res.status(200).json(
+                await Home.find(homeQuery)
+                    .populate('owner', 'userId')
+                    .populate('hoa', 'hoaId')
+                    .exec()
+            );
+        }
 
-		res.status(200).json(
-			await Home.find(homeQuery)
-				.populate('owner', 'userId')
-				.populate('hoa', 'hoaId')
-				.exec()
-		);
+		
 	} catch (error) {
 		next(error);
 	}
@@ -57,7 +67,7 @@ const updateHomeName = async (req, res, next) => {
 };
 
 const getResidents = async (req, res, next) => {
-	const { hoaId, homeId } = req.body;
+	const { hoaId, homeId } = req.query;
 
 	try {
 		let residents;

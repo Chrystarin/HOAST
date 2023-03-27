@@ -1,5 +1,6 @@
 const {
 	registerHoa,
+    getHoa,
 	addGuard,
 	updateGuardStatus,
 	getGuards,
@@ -9,6 +10,8 @@ const authorize = require('../middlewares/authorization');
 const roles = require('../helpers/roles');
 
 const router = require('express').Router();
+
+router.get('/', getHoa);
 
 /**
  * name
@@ -40,7 +43,8 @@ router.get('/guards', authorize(roles.ADMIN), getGuards);
  * hoaId
  * userId
  */
-router.post('/guards', authorize(roles.ADMIN), addGuard);
+// router.post('/guards', authorize(roles.ADMIN), addGuard);
+router.post('/guards', addGuard);
 
 /**
  * hoaId

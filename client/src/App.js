@@ -32,6 +32,7 @@ import ProtectedRoute from './utils/ProtectedRoute.js'
 
 import RegisterHoa from './pages/RegisterHoa.js';
 import JoinRequests from './pages/JoinRequests.js';
+import AddGuard from './pages/AddGuard';
 
 function App() {
 
@@ -45,7 +46,7 @@ function App() {
             <Route path='/register' element={<Register/>}/>
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
-
+                <Route path='/hoa/addguard' element={<AddGuard/>}/>
                 <Route path='/hoa/register' element={<RegisterHoa/>}/>
                 <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
@@ -68,6 +69,8 @@ function App() {
                     <Route path='add' element={<AddVisitor/>}/>
                     <Route path=':id' element={<VisitorView/>}/>
                 </Route>
+
+                
 
                 {/* Private Routes for Admin */}
                 <Route element={<ProtectedRoute/>} >

@@ -27,14 +27,8 @@ function Homes() {
     fetchHomes();
 	}, []);
 
-  const HomeOwner = {
-    title:"Castillo's Residence",
-    subTitle1:"Saint Dominic",
-    subTitle2:"8 Residents"
-  }
-
   // Returns if member is null
-	// if (!homes) return <div>loading... No Homes Found</div>;
+	if (!homes) return <div>Loading...</div>;
 
   return <>
     <Navbar type="home"/>
@@ -51,35 +45,26 @@ function Homes() {
 
         <div className='SectionList'>
 
-          {(!homes) ?
-            <>
-              <p>No homes available!</p>
-            </>
-            :
-            (homes.length === 0 )?
-              <>
-                <p>No homes found!</p>
-              </>
-              :
-              <>
-                <div className='Wrapper__Card'>
-                  {homes.length > 0 &&
-                    homes.map((home) => {
-                    return (
-                      <Card 
-                        type="Home"
-                        key={home.address.homeId}
-                        id={home.address.homeId}
-                        title={home.address.houseName}
-                        subTitle1={home.address.houseNumber}
-                        subTitle2={home.address.street}
-                        url="/homes/:id"
-                      />
-                    );
-                  })}
-                </div>
-              </>
-          }
+            {(homes.length === 0 )?
+                    <p>No homes found!</p>
+                :
+                <>
+                    {homes.length > 0 &&
+                        homes.map((home) => {
+                        return (
+                        <Card 
+                            type="Home"
+                            key={home.homeId}
+                            id={home.homeId}
+                            title={home.address.houseName}
+                            subTitle1={home.address.houseNumber}
+                            subTitle2={home.address.street}
+                            url={`/homes/${home.homeId}`}
+                        />
+                        );
+                    })}
+                </>
+            }
         </div>
       </section>
     </div>

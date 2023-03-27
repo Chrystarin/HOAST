@@ -29,11 +29,7 @@ const addVehicle = async (req, res, next) => {
 };
 
 const getVehicles = async (req, res, next) => {
-	// const { hoaId, userId, plateNumber } = req.body;
-	const { userId } = req.body;
-	const hoaId = req.query.hoaId;
-	const plateNumber = req.query.plateNumber;
-	
+	const { hoaId, plateNumber, homeId } = req.query;
 
 	try {
 		checkString(plateNumber, 'Plate Number', true);
@@ -84,9 +80,17 @@ const getVehicles = async (req, res, next) => {
 				);
 			}
 		} else {
-			({ vehicles } = await User.findById(req.user._id).populate(
-				'vehicles'
-			));
+			if (plateNumber) {
+				// Find vehicle
+				vehicles = await Vehicle.findOne({ plateNumber });
+				if (!vehicles) throw new NotFoundError('Vehicle');
+			} 
+			else{
+				({ vehicles } = await User.findById(req.user._id).populate(
+					'vehicles'
+				));
+			}
+			
 		}
 
 		res.status(200).json(vehicles);

@@ -22,7 +22,7 @@ const logSchema = new Schema(
 			type: ObjectId,
 			refPath: 'logType',
 			required: true
-		}
+		},
 	},
 	{ timestamps: true }
 );

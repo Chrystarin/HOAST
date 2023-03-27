@@ -53,15 +53,33 @@ const addRecord = async (req, res, next) => {
 };
 
 const getRecords = async (req, res, next) => {
-	const { hoaId, logId, logType, from, to } = req.body;
+	const { hoaId, logId, logType, objId, from, to } = req.query;
 
 	try {
-		checkString(hoaId, 'HOA ID');
+		checkString(hoaId, 'HOA ID', true);
 		checkString(logId, 'Log ID', true);
 		checkString(logType, 'Log Type', true);
 
-		let logQuery = { hoaId };
+		let logQuery = {};
+        
+		if (hoaId) logQuery.hoaId = hoaId;
 		if (logType) logQuery.logType = logType;
+		if (objId) logQuery.objId = objId
+
+		// Find the id depending on which model
+		switch (logType) {
+			case 'User':
+				(logQuery.docId = await User.findOne({ userId: objId }));
+				break;
+			case 'Vehicle':
+				(logQuery.docId = await Vehicle.findOne({ plateNumber: objId }));
+				break;
+			case 'Visitor':
+				(logQuery.docId = await Visitor.findOne({ visitorId: objId }));
+				break;
+			default:
+				throw new Error('Invalid Log Type');
+		}
 
 		if (from && to) {
 			checkDate(from, to);
@@ -74,10 +92,14 @@ const getRecords = async (req, res, next) => {
 			logQuery.createdAt = { $lte: new Date(to) };
 		}
 
+		console.log(logQuery)
+
 		res.status(200).json(
-			await Log.find(query)
-				.populate('hoa docId')
-				.select('docId.userId docId.visitorId docId.plateNumber')
+			await Log.find(logQuery)
+				// .populate('hoa')
+				// .select('docId.userId docId.visitorId docId.plateNumber')
+				// .select({})
+				// .exec()
 		);
 	} catch (error) {
 		next(error);

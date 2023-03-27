@@ -4,6 +4,7 @@ const Home = require('../models/Home');
 const User = require('../models/User');
 const { HOANotFoundError, NotFoundError } = require('../helpers/errors');
 const { checkString, checkDate } = require('../helpers/validData');
+const { genVisitorId } = require('../helpers/generateId');
 
 const addVisitor = async (req, res, next) => {
 	const { homeId, name, purpose, arrival, departure, note } = req.body;
@@ -22,6 +23,7 @@ const addVisitor = async (req, res, next) => {
 		if (!home) throw new NotFoundError('Home');
 
 		const visitor = await Visitor.create({
+            visitorId: genVisitorId(),
 			home: home._id,
 			hoa: home.hoa,
 			name,
@@ -41,13 +43,15 @@ const addVisitor = async (req, res, next) => {
 };
 
 const getVisitors = async (req, res, next) => {
-	const { hoaId, homeId, visitorId } = req.body;
+	// const { hoaId, homeId, visitorId } = req.body;
+	const { hoaId, homeId, visitorId } = req.query;
 
 	try {
 		checkString(visitorId, 'Visitor ID', true);
 
 		// Create query for visitors
 		let visitorQuery = {};
+		let visitors ={};
 
 		if (hoaId) {
 			checkString(hoaId, 'HOA ID');
@@ -70,23 +74,31 @@ const getVisitors = async (req, res, next) => {
 
 				visitorQuery.home = home._id;
 			}
-		} else {
-			checkString(homeId, 'Home ID');
 
-			// Find Home
-			const home = await Home.findOne({ homeId });
-			if (!home) throw new NotFoundError('Home');
-
-			visitorQuery.home = home._id;
-		}
-
-		if (visitorId) visitorQuery.visitorId = visitorId;
-
-		// Find visitors
-		const visitors = await Visitor.find(visitorQuery)
+			// Find visitors
+			 visitors = await Visitor.find(visitorQuery)
 			.populate('home', 'homeId')
 			.populate('hoa', 'hoaId')
 			.exec();
+		} 
+
+		else if (visitorId){
+			visitorQuery.visitorId = visitorId;
+			 visitors = await Visitor.findOne(visitorQuery)
+			.populate('home', 'homeId')
+			.populate('hoa', 'hoaId')
+			.exec();
+		}
+		
+		else {
+			visitorQuery.user = req.user._id;
+			
+			// Find visitors
+			 visitors = await Visitor.find(visitorQuery)
+			.populate('home', 'homeId')
+			.populate('hoa', 'hoaId')
+			.exec();
+		}
 
 		res.status(200).json(visitors);
 	} catch (error) {

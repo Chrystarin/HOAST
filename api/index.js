@@ -33,9 +33,10 @@ app.use(
 	})
 );
 
-app.use(authenticate);
+
 
 app.use('/users', userRoute);
+app.use(authenticate);
 app.use('/dues', dueRoute);
 app.use('/visitors', visitorRoute);
 app.use('/vehicles', vehicleRoute);

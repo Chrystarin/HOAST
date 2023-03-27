@@ -1,9 +1,6 @@
 import React,{useState, useEffect} from 'react'
-import Navbar from '../../layouts/NavBar';
+import { useParams } from 'react-router-dom';
 
-import './VehicleView.scss'
-
-import Card from '../../components/Card/Card.js';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,60 +8,62 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+
+import './VehicleView.scss'
+
+import Navbar from '../../layouts/NavBar';
 import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
 
 function VehicleView() {
 
-
+    const { id } = useParams();
     const [vehicle, setVehicle] = useState();
+    const [logs, setLogs] = useState();
 
     useEffect(() => {
-      // Retrieves Vehicles
-      const fetchVehicle = async () => {
-        const response = await axios
-          .get(`vehicles`,{
-                params: {
-                    plateNumber: '123f',
-                    hoaId: 'h4Np5mlWesojCl6'
-                }
-            })
-          .then((response) => {
-            setVehicle(response.data);
-          });
-      };
+        // Retrieves Vehicles
+        const fetchVehicle = async () => {
+            await axios
+            .get(`vehicles`,{
+                    params: {
+                        plateNumber: `${id}`
+                    }
+                })
+            .then((response) => {
+                setVehicle(response.data);
+            });
+        };
 
-      fetchVehicle();
+        // Retrieves All of Specific Visitor's Logs Data 
+        const fetchLogs = async () => {
+            await axios
+            .get(`logs`,{
+                    params: {
+                        objId: `${id}`,
+                        logType: 'Vehicle'
+                    }
+                })
+            .then((response) => {
+                setLogs(response.data);
+                console.log(response.data)
+            });
+        };
+
+        // Executes Functions of fetch vehicle and fetch logs
+        fetchLogs();
+        fetchVehicle();
     }, []);
 
-    console.log(vehicle);
+    // Returns loading if data is not yet retrieved
+    if(!vehicle || !logs) return <div>Loading...</div>
 
-    const [VehicleInfo, setVehicleInfo] = useState({
-        owner:"Harold James H. Castillo",
-        brand: "Ford",
-        plateNumber: "MRPL8S",
-        color:"Black",
-        model:"Raptor",
-        register:"Tue, 07 Feb 20 23 02:37:40 GMT "
-    });
-    function createData(name,calories) {
-        return { name, calories};
-    }
-    const rows = [
-        createData('Enter', "Tue, 07 Feb 20 23 02:37:40 GMT"),
-        createData('Exit', "Tue, 07 Feb 20 23 02:37:40 GMT" ),
-    ];
     return <>
         <Navbar type="vehicles"/>
         <div id='SectionHolder'>
             <section className='Section'>
-            <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>{VehicleInfo.plateNumber}</span></h3>
-                {/* <div className='SectionController'>
-                    
-                    <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-                    <Button variant="contained" href='addhome'>Add Home</Button>
-                </div> */}
+            <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>{vehicle.plateNumber}</span></h3>
                 <div className='SectionContent SectionView' id='ViewResident'>
                     <div className='SectionView__Content' id="ViewResident__Content__Container" >
                         <div className="SectionView__Sections">
@@ -75,31 +74,31 @@ function VehicleView() {
                                 <div className='Input__Wrapper2'>
                                     <div className='GeneralInformation__InfoContainer '>
                                         <h6>Owner:</h6>
-                                        <h5>{VehicleInfo.owner}</h5>
+                                        <h5>{vehicle.owner}</h5>
                                     </div>
                                     <div className='GeneralInformation__InfoContainer'>
                                         <h6>Brand: </h6>
-                                        <h5>{VehicleInfo.brand}</h5>
+                                        <h5>{vehicle.brand}</h5>
                                     </div>
                                 </div>
                                 <div className='Input__Wrapper2'>
                                     <div className='GeneralInformation__InfoContainer '>
                                         <h6>Plate Number:</h6>
-                                        <h5>{VehicleInfo.plateNumber}</h5>
+                                        <h5>{vehicle.plateNumber}</h5>
                                     </div>
                                     <div className='GeneralInformation__InfoContainer'>
                                         <h6>Color: </h6>
-                                        <h5>{VehicleInfo.color}</h5>
+                                        <h5>{vehicle.color}</h5>
                                     </div>
                                 </div>
                                 <div className='Input__Wrapper2'>
                                     <div className='GeneralInformation__InfoContainer '>
                                         <h6>Model:</h6>
-                                        <h5>{VehicleInfo.model}</h5>
+                                        <h5>{vehicle.model}</h5>
                                     </div>
                                     <div className='GeneralInformation__InfoContainer'>
                                         <h6>Registered Since: </h6>
-                                        <h5>{VehicleInfo.register}</h5>
+                                        <h5>{vehicle.createdAt}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -114,22 +113,29 @@ function VehicleView() {
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell component="th" align='center'><h6>Access Type</h6></TableCell>
+                                                <TableCell component="th" align='center'><h6>Log Id</h6></TableCell>
                                                 <TableCell align="center"><h6>Timestamp</h6></TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow
-                                            key={row.name}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                            <TableCell component="th" scope="row" align='center'>
-                                                {row.name}
-                                            </TableCell>
-                                            <TableCell align="center">{row.calories}</TableCell>
-                                            </TableRow>
-                                        ))}
+                                            {(logs.length === 0 )?
+                                                <p>No Logs Recorded</p>
+                                                :
+                                                <>{logs.length > 0 && logs.map((log) => {
+                                                    return (
+                                                        <TableRow
+                                                            key={log.logId}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
+                                                            <TableCell component="th" scope="row" align='center'>
+                                                                {log.logId}
+                                                            </TableCell>
+                                                            <TableCell align="center">{log.createdAt}</TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                                </>
+                                            }
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -137,7 +143,7 @@ function VehicleView() {
                         </div>
                     </div>
                     <div className='SectionView__SidePanel' id="ViewResident__QRCode__Container">
-                        <QRCodeCard/>
+                        <QRCodeCard objId={vehicle.plateNumber} logType={'Vehicle'} hoaId={'9d5YZYUiesmNXua'}/>
                     </div>
                 </div>
             </section>

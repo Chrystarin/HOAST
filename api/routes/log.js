@@ -11,7 +11,8 @@ const router = require('express').Router();
  * fromDate - optional
  * toDate - optional
  */
-router.get('/', authorize(roles.ADMIN, roles.GUARD), getRecords);
+// router.get('/', authorize(roles.ADMIN, roles.GUARD), getRecords);
+router.get('/', getRecords);
 
 /**
  * hoaId

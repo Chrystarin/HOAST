@@ -44,6 +44,22 @@ const registerHoa = async (req, res, next) => {
 	}
 };
 
+const getHoa = async (req, res, next) => {
+    const {hoaId} = req.query
+    let hoa={}
+	try {
+        if(hoaId) {
+            hoa = await HOA.findOne({hoaId : hoaId})
+        }
+        else {
+            hoa = await HOA.find()
+        }
+        res.status(200).json(hoa);
+	} catch (error) {
+		next(error);
+	}
+};
+
 const joinHoa = async (req, res, next) => {
 	const {
 		hoaId,
@@ -56,8 +72,6 @@ const joinHoa = async (req, res, next) => {
 		checkNumber(houseNumber);
 		checkString(street, 'Street');
 		checkString(phase, 'Phase', true);
-
-		
 
 		// Find HOA
 		const hoa = await HOA.findOne({ hoaId });
@@ -178,6 +192,7 @@ const getGuards = async (req, res, next) => {
 
 module.exports = {
 	registerHoa,
+    getHoa,
 	joinHoa,
 	addGuard,
 	updateGuardStatus,

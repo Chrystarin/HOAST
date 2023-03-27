@@ -7,59 +7,57 @@ import Card from '../../components/Card/Card.js';
 import axios from '../../utils/axios';
 function Visitors() {
 
-  const [visitors, setVisitors] = useState();
+    const [visitors, setVisitors] = useState();
 
-  useEffect(() => {
-    // Retrieves Homes
-    const fetchVisitors = async () => {
-      const response = await axios
-        .get(`visitors`)
-        .then((response) => {
-          setVisitors(response.data);
-        });
-    };
+    // Retrieves All User Visitors Data onLoad
+    useEffect(() => {
+        const fetchVisitors = async () => {
+            await axios
+                .get(`visitors`)
+                .then((response) => {
+                    setVisitors(response.data);
+                });
+            };
+        fetchVisitors();
+    }, []);
 
-    fetchVisitors();
-  }, []);
-
-  console.log(visitors)
-
-    function createData(name,type,date) {
-      return { name, type,date};
-    }
-    const visitor = [
-      { name : 'Jon Angelo Llagas', type : 'Single', date : 'March 2 - March 5'},
-      { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'},
-      { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'}
-    ];
+    // Returns loading if data is not yet retrieved
+    if(!visitors) return <div>Loading...</div>
 
     return <>
-    <Navbar type="visitors"/>
-    <div id='SectionHolder'>
-      <section className='Section'>
-        <h3 className='SectionTitleDashboard'>Visitors</h3>
-        <div className='SectionController'>
-          <div id='SearchInput__Container'>
-            <SearchInput/>
-          </div>
-          <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-          <Button variant="contained" href='/visitors/add'>Add Visitors</Button>
-        </div>
+        <Navbar type="visitors"/>
+        <div id='SectionHolder'>
+            <section className='Section'>
+                <h3 className='SectionTitleDashboard'>Visitors</h3>
+                <div className='SectionController'>
+                <div id='SearchInput__Container'>
+                    <SearchInput/>
+                </div>
+                <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
+                <Button variant="contained" href='/visitors/add'>Add Visitors</Button>
+                </div>
 
-        <div className='SectionList'>
-          {visitor.map((Visitor) => (
-            <Card type="Visitor" title={Visitor.name} subTitle1={Visitor.type} subTitle2={Visitor.date} url="/visitors/:id" />
-          ))}
-
-          {/* {Visitors.length > 0 && Visitors.map((Visitor) => {
-            return (
-              <Card type="Visitor" title="Jon Angelo Llagas" subTitle1="Single" subTitle2="March 1 - March 2" url="viewvisitor" />
-            )
-          })} */}
-          
+                <div className='SectionList'>
+                    {/* Displays All User's Visitors */}
+                    {(visitors.length === 0 )?
+                        <p>No Visitors Available!</p>
+                        :
+                        <>{visitors.length > 0 && visitors.map((visitor) => {
+                            return (
+                                <Card 
+                                type="Vehicles"
+                                key={visitor.visitorId}
+                                title={visitor.name}
+                                subTitle1={visitor.arrival}
+                                subTitle2={visitor.departure}
+                                url={`/visitors/${visitor.visitorId}`}
+                                />
+                            );
+                        })}</>
+                    }
+                </div>
+            </section>
         </div>
-      </section>
-    </div>
   </>
 }
 

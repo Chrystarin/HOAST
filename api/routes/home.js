@@ -29,7 +29,8 @@ router.patch('/', authorize(roles.HOMEOWNER), updateHomeName);
  * case 2: (User)
  *     homeId
  */
-router.get('/residents', authorize(roles.ADMIN, roles.HOMEOWNER), getResidents);
+// router.get('/residents', authorize(roles.ADMIN, roles.HOMEOWNER), getResidents);
+router.get('/residents', getResidents);
 
 /**
  * homeId

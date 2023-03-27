@@ -31,7 +31,7 @@ function Scanner() {
                 await axios
                 .post(
                     `logs`,
-                    JSON.stringify({ 
+                    JSON.stringify({
                         objId: log.objId,
                         logType: log.logType,
                         hoaId: log.hoaId

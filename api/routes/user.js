@@ -23,7 +23,7 @@ router.post('/signup', signup);
  */
 router.post('/login', login);
 
-// router.use(authenticate);
+router.use(authenticate);
 
 /**
  * userId - optional

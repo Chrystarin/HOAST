@@ -1,12 +1,12 @@
 const { Schema, model } = require('mongoose');
-const { genLogId } = require('../helpers/generateId');
+const { genVisitorId } = require('../helpers/generateId');
 const { ObjectId } = Schema.Types;
 
 const visitorSchema = new Schema({
 	visitorId: {
 		type: String,
 		unique: true,
-		default: genLogId()
+		default: genVisitorId()
 	},
 	home: {
 		type: ObjectId,

@@ -1,8 +1,9 @@
-import React,{useState} from 'react';
+import React, {useState, useEffect} from 'react'
 
 import {useNavigate} from 'react-router';
 
 import './AddHome.scss';
+import './../../components/SearchInput/SearchInput.scss'
 
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
@@ -11,13 +12,21 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
 
+import SearchIcon from '@mui/icons-material/Search';
+
+
 import axios from './../../utils/axios';
 
 function AddHome() {
     const navigate = useNavigate();
-
+    
     const [stepper, setStepper] = useState(1);
+    const [hoas, setHoas] = useState();
+    const [filteredHoa, setFilteredHoa] = useState([])
+    const [searchText, setSearchText] = useState("");
+    const [selectedHoa, setSelectedHoa] = useState(null);
 
+    // Collection of form data
     const [form, setForm] = useState({
         hoaId: '',
         houseName: '',
@@ -25,6 +34,31 @@ function AddHome() {
         street: '',
         phase: ''
     });
+
+    // Retrieves All HOA Data onLoad
+    useEffect(() => {
+      const fetchHoas = async () => {
+        await axios
+          .get(`hoas`)
+          .then((response) => {
+            setHoas(response.data);
+          });
+      };
+      fetchHoas();
+    }, []);
+
+    // Runs search function onLoad for hoa
+    useEffect(() => {
+        if (searchText.length) {
+            const filterHoas = hoas.filter((hoa) => {
+                return (hoa.name).toLowerCase().includes(searchText.toLowerCase());
+            });
+            setFilteredHoa(filterHoas);
+        } 
+        else {
+            setFilteredHoa([]);
+        }
+    }, [searchText, hoas]);
 
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
@@ -34,12 +68,11 @@ function AddHome() {
             return prev;
     });}
 
-    // Submit button for login
+    // Submit Function for Adding Home Request
     async function Submit(e){
         e.preventDefault();
-
+        console.log(form)
         try{
-            // Login
             await axios
             .post(
                 `requests`,
@@ -49,95 +82,111 @@ function AddHome() {
                     houseNumber: parseInt(form.houseNumber),
                     street: form.street,
                     phase: form.phase
-                }),
-                {headers: { 'Content-Type': 'application/json' }},
-                {withCredentials: true}
-                
+                })
             )
             .then((response) => {
-                console.log(JSON.stringify(response?.data));
-                alert("Registered Successfully!");
+                alert("Request Submitted! Wait for admin to approve your request.");
                 navigate("/homes");
             })
         }
         catch(err){
-            console.error(err.message);
+            alert(err.message);
         }
     }
-    function Stepper(){
+    
+    function Stepper(props){
         switch (stepper) {
             case 1:
                 return <>
-                    <form  className='Form' id='GeneralInformation'>
-                        <div>
-                            <SearchInput/>
-                            
-                        </div>
-                        <div className='SectionList'>
-                            <div className='Card__Horizontal'>
-                                <img src={VillageIcon} alt="" />
-                                <div>
-                                    <h6>
-                                        Villa2
-                                    </h6>
-                                    <p>San Mateo Rizal</p>
-                                </div>
-                            </div>
+                    <div className='Form' id='GeneralInformation'>
+                        <TextField fullWidth label="Home Name" variant="filled" onChange={(e)=>updateForm({ houseName: e.target.value })} defaultValue={form.houseName}/>
+                        <TextField fullWidth label="Home Number" variant="filled" onChange={(e)=>updateForm({ houseNumber: e.target.value })} defaultValue={form.houseNumber}/>
+                        <div className='FormWrapper__2'>
+                            <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
+                            <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                         </div>
                         <div className='Form__Button'>
-                            <Button variant='text'>Back</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Next</Button>
+                            <Button variant='contained' type='submit' className='Submit' onClick={()=> {setStepper(2);console.log(form)}}>Next</Button>
                         </div>
-                    </form>
-                </>
-                
+                    </div>
+                </> 
                 break;
             case 2:
                 return <>
                     <form onSubmit={Submit} className='Form' id='GeneralInformation'>
-                        <TextField fullWidth  label="HOA ID" variant="filled" onChange={(e)=>updateForm({ hoaId: e.target.value })}/>
-                        <TextField fullWidth  label="Home Name" variant="filled" onChange={(e)=>updateForm({ houseName: e.target.value })}/>
-                        <TextField fullWidth  label="Home Number" variant="filled" onChange={(e)=>updateForm({ houseNumber: e.target.value })}/>
-                        <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })}/>
-                            <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })}/>
-                        </div>
-                        {/* <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Postal Code" variant="filled" />
-                            <TextField fullWidth  label="Country" variant="filled" />
-                        </div> */}
-                        <div className='Form__Button'>
-                            <Button variant='text'>Back</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Next</Button>
-                        </div>
-                    </form>
-                </>
-                break;
-            case 3:
-                return <>
-                    <form  className='Form' id='GeneralInformation'>
                         <div>
-                            <SearchInput/>
+                            <SearchInput onChange={(e)=>setSearchText(e.target.value)} value={searchText}/>
                         </div>
+                        <p>Selected Hoa: {selectedHoa}</p>
                         <div className='SectionList'>
-                            <ResidentCard UserName="Dianne Chrystalin Brandez" Type="Edit"/>
-                            <ResidentCard UserName="Vincent Brandez" Type="Edit"/>
-                            <ResidentCard UserName="Digi-An Brandez" Type="Edit"/>
-                            <ResidentCard UserName="Nicole Dianne Chrystalin Brandes" Type="Edit"/>
-                            <ResidentCard UserName="Vinnie Dianne Chrystalin Brandes" Type="Edit"/>
+                            {(props.hoas.length === 0 )?
+                                <p>No HOAs Available!</p>
+                                :
+                                <>
+                                    {(!searchText) ?
+                                        props.hoas.length > 0 && props.hoas.map((hoa) => {
+                                            return (
+                                                <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    <img src={VillageIcon} alt="" />
+                                                    <div>
+                                                        <h6>{hoa.name}</h6>
+                                                        <p>{hoa.city}</p>
+                                                    </div>
+                                                </div> 
+                                            );
+                                        })
+                                    :
+                                        filteredHoa.length > 0 && filteredHoa.map((hoa) => {
+                                            return (
+                                                <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    <img src={VillageIcon} alt="" />
+                                                    <div>
+                                                        <h6>{hoa.name}</h6>
+                                                        <p>{hoa.city}</p>
+                                                    </div>  
+                                                </div> 
+                                            );
+                                        })
+                                    }
+                                    
+                                </>
+                            }
                         </div>
                         <div className='Form__Button'>
-                            <Button variant='text'>Back</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Submit</Button>
+                        <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
+                            <Button variant='contained' type='submit' className='Submit' >Submit</Button>
                         </div>
                     </form>
                 </>
                 break;
+            // case 3:
+            //     return <>
+            //         <form onSubmit={Submit} className='Form' id='GeneralInformation'>
+            //             <div>
+            //                 <SearchInput/>
+            //             </div>
+            //             <div className='SectionList'>
+            //                 <ResidentCard UserName="Dianne Chrystalin Brandez" Type="Edit"/>
+            //                 <ResidentCard UserName="Vincent Brandez" Type="Edit"/>
+            //                 <ResidentCard UserName="Digi-An Brandez" Type="Edit"/>
+            //                 <ResidentCard UserName="Nicole Dianne Chrystalin Brandes" Type="Edit"/>
+            //                 <ResidentCard UserName="Vinnie Dianne Chrystalin Brandes" Type="Edit"/>
+            //             </div>
+            //             <div className='Form__Button'>
+            //                 <Button variant='text' onClick={()=> setStepper(2)}>Back</Button>
+            //                 <Button variant='contained' type='submit' className='Submit' >Submit</Button>
+            //             </div>
+            //         </form>
+            //     </>
+            //     break;
         
             default:
                 break;
         }
     }
+
+    if(!hoas) return <div>Loading...</div>
+
     return<>
         <Navbar type="home"/>
         <div id='SectionHolder'>
@@ -145,12 +194,12 @@ function AddHome() {
                 <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Add Home</span></h3>
 
                 <div className='SectionStepper'> 
-                    <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>Homeowners Association</Button>
-                    <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>General Information</Button>
-                    <Button variant='text'className={(stepper === 3)?"active":""} onClick={()=> setStepper(3)}>Residents</Button>
+                    <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
+                    <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>Join Homeowners Association</Button>
+                    {/* <Button variant='text'className={(stepper === 3)?"active":""} onClick={()=> setStepper(3)}>Residents</Button> */}
                 </div>
                 <div className='SectionContent'>
-                    <Stepper/>
+                    <Stepper hoas={hoas}/>
                 </div>
             </section>
         </div>
