@@ -43,7 +43,7 @@ function Scanner() {
             }
             catch(err){
                 console.error(err.message);
-                fetch('http://192.168.0.13:80/?header=fasle')
+                fetch('http://192.168.0.13:80/?header=false')
                 alert("Record Not Detected!");
             }
             finally{
