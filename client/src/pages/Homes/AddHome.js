@@ -94,97 +94,6 @@ function AddHome() {
         }
     }
     
-    function Stepper(props){
-        switch (stepper) {
-            case 1:
-                return <>
-                    <div className='Form' id='GeneralInformation'>
-                        <TextField fullWidth label="Home Name" variant="filled" onChange={(e)=>updateForm({ houseName: e.target.value })} defaultValue={form.houseName}/>
-                        <TextField fullWidth label="Home Number" variant="filled" onChange={(e)=>updateForm({ houseNumber: e.target.value })} defaultValue={form.houseNumber}/>
-                        <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
-                            <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
-                        </div>
-                        <div className='Form__Button'>
-                            <Button variant='contained' type='submit' className='Submit' onClick={()=> {setStepper(2);console.log(form)}}>Next</Button>
-                        </div>
-                    </div>
-                </> 
-                break;
-            case 2:
-                return <>
-                    <form onSubmit={Submit} className='Form' id='GeneralInformation'>
-                        <div>
-                            <SearchInput onChange={(e)=>setSearchText(e.target.value)} value={searchText}/>
-                        </div>
-                        <p>Selected Hoa: {selectedHoa}</p>
-                        <div className='SectionList'>
-                            {(props.hoas.length === 0 )?
-                                <p>No HOAs Available!</p>
-                                :
-                                <>
-                                    {(!searchText) ?
-                                        props.hoas.length > 0 && props.hoas.map((hoa) => {
-                                            return (
-                                                <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
-                                                    <img src={VillageIcon} alt="" />
-                                                    <div>
-                                                        <h6>{hoa.name}</h6>
-                                                        <p>{hoa.city}</p>
-                                                    </div>
-                                                </div> 
-                                            );
-                                        })
-                                    :
-                                        filteredHoa.length > 0 && filteredHoa.map((hoa) => {
-                                            return (
-                                                <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
-                                                    <img src={VillageIcon} alt="" />
-                                                    <div>
-                                                        <h6>{hoa.name}</h6>
-                                                        <p>{hoa.city}</p>
-                                                    </div>  
-                                                </div> 
-                                            );
-                                        })
-                                    }
-                                    
-                                </>
-                            }
-                        </div>
-                        <div className='Form__Button'>
-                        <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
-                            <Button variant='contained' type='submit' className='Submit' >Submit</Button>
-                        </div>
-                    </form>
-                </>
-                break;
-            // case 3:
-            //     return <>
-            //         <form onSubmit={Submit} className='Form' id='GeneralInformation'>
-            //             <div>
-            //                 <SearchInput/>
-            //             </div>
-            //             <div className='SectionList'>
-            //                 <ResidentCard UserName="Dianne Chrystalin Brandez" Type="Edit"/>
-            //                 <ResidentCard UserName="Vincent Brandez" Type="Edit"/>
-            //                 <ResidentCard UserName="Digi-An Brandez" Type="Edit"/>
-            //                 <ResidentCard UserName="Nicole Dianne Chrystalin Brandes" Type="Edit"/>
-            //                 <ResidentCard UserName="Vinnie Dianne Chrystalin Brandes" Type="Edit"/>
-            //             </div>
-            //             <div className='Form__Button'>
-            //                 <Button variant='text' onClick={()=> setStepper(2)}>Back</Button>
-            //                 <Button variant='contained' type='submit' className='Submit' >Submit</Button>
-            //             </div>
-            //         </form>
-            //     </>
-            //     break;
-        
-            default:
-                break;
-        }
-    }
-
     if(!hoas) return <div>Loading...</div>
 
     return<>
@@ -199,7 +108,66 @@ function AddHome() {
                     {/* <Button variant='text'className={(stepper === 3)?"active":""} onClick={()=> setStepper(3)}>Residents</Button> */}
                 </div>
                 <div className='SectionContent'>
-                    <Stepper hoas={hoas}/>
+                    {/* <Stepper hoas={hoas}/> */}
+                    {stepper==1?<>
+                        <div className='Form' id='GeneralInformation'>
+                            <TextField fullWidth label="Home Name" variant="filled" onChange={(e)=>updateForm({ houseName: e.target.value })} defaultValue={form.houseName}/>
+                            <TextField fullWidth label="Home Number" variant="filled" onChange={(e)=>updateForm({ houseNumber: e.target.value })} defaultValue={form.houseNumber}/>
+                            <div className='FormWrapper__2'>
+                                <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
+                                <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
+                            </div>
+                            <div className='Form__Button'>
+                                <Button variant='contained' type='submit' className='Submit' onClick={()=> {setStepper(2);console.log(form)}}>Next</Button>
+                            </div>
+                        </div>
+                    </>:<></>}
+                    {stepper==2?<>
+                        <form onSubmit={Submit} className='Form' id='GeneralInformation'>
+                            <div>
+                                <SearchInput onChange={(e)=>setSearchText(e.target.value)} value={searchText}/>
+                            </div>
+                            <p>Selected Hoa: {selectedHoa}</p>
+                            <div className='SectionList'>
+                                {(hoas.length === 0 )?
+                                    <p>No HOAs Available!</p>
+                                    :
+                                    <>
+                                        {(!searchText) ?
+                                            hoas.length > 0 && hoas.map((hoa) => {
+                                                return (
+                                                    <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                        <img src={VillageIcon} alt="" />
+                                                        <div>
+                                                            <h6>{hoa.name}</h6>
+                                                            <p>{hoa.city}</p>
+                                                        </div>
+                                                    </div> 
+                                                );
+                                            })
+                                        :
+                                            filteredHoa.length > 0 && filteredHoa.map((hoa) => {
+                                                return (
+                                                    <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                        <img src={VillageIcon} alt="" />
+                                                        <div>
+                                                            <h6>{hoa.name}</h6>
+                                                            <p>{hoa.city}</p>
+                                                        </div>  
+                                                    </div> 
+                                                );
+                                            })
+                                        }
+                                        
+                                    </>
+                                }
+                            </div>
+                            <div className='Form__Button'>
+                            <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
+                                <Button variant='contained' type='submit' className='Submit' >Submit</Button>
+                            </div>
+                        </form>
+                    </>:<></>}
                 </div>
             </section>
         </div>
