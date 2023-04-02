@@ -9,7 +9,6 @@ class NotFoundError extends Error {
 class UserNotFoundError extends NotFoundError {
 	constructor() {
 		super('Can not find user.');
-		this.status = 401;
 	}
 }
 
@@ -25,106 +24,58 @@ class GuardNotFoundError extends NotFoundError {
 	}
 }
 
-class SameStatusError extends Error {
+class ResidentNotFoundError extends NotFoundError {
 	constructor() {
-		super('Unable to update the status with the same status');
-		this.name = 'SameStatusError';
-		this.status = 409;
+		super('User is not resident');
 	}
 }
 
-class InvalidString extends Error {
+class VisitorNotFoundError extends NotFoundError {
+	constructor() {
+		super('Visitor not existing');
+	}
+}
+
+class RequestNotFoundError extends NotFoundError {
+	constructor() {
+		super('Request not existing');
+	}
+}
+
+class VehicleNotFoundError extends NotFoundError {
+	constructor() {
+		super('Vehicle not existing');
+	}
+}
+
+class InvalidInputError extends Error {
 	constructor(message) {
 		super(message);
-		this.name = 'InvalidString';
+		this.name = 'InvalidInputError';
 		this.status = 422;
-	}
-}
-
-class InvalidCredentialsError extends Error {
-	constructor() {
-		super('Invalid user credentials');
-		this.name = 'InvalidCredentials';
-		this.status = 401;
-	}
-}
-
-class InvalidDate extends Error {
-	constructor() {
-		super('Unable to parse date');
-		this.name = 'InvalidDate';
-		this.status = 422;
-	}
-}
-
-class InvalidEmail extends Error {
-	constructor(message) {
-		super(message || 'Invalid email');
-		this.name = 'InvalidEmail';
-		this.status = 422;
-	}
-}
-
-class InvalidAction extends Error {
-	constructor(message) {
-		super(message);
-		this.name = 'InvalidAction';
-		this.status = 403;
-	}
-}
-
-class BadRequestError extends Error {
-	constructor(message, name) {
-		super(message);
-		this.name = name || 'Bad Request';
-		this.status = 400;
 	}
 }
 
 class UnauthorizedError extends Error {
-	constructor(message, name) {
+	constructor(message) {
 		super(message);
-		this.name = name || 'Unauthorized Request';
+		this.name = 'UnauthorizedError';
 		this.status = 401;
 	}
 }
 
 class ForbiddenError extends Error {
-	constructor(message, name) {
+	constructor(message) {
 		super(message);
-		this.name = name || 'Forbidden Request';
+		this.name = 'ForbiddenError';
 		this.status = 403;
-	}
-}
-
-// class NotFoundError extends Error {
-// 	constructor(message, name) {
-// 		super(message + ' not found');
-// 		this.name = name || 'Resource Not Found';
-// 		this.status = 404;
-// 	}
-// }
-
-class ConflictError extends Error {
-	constructor(message, name) {
-		super(message);
-		this.name = name || 'Conflict in Request';
-		this.status = 409;
-	}
-}
-
-class UnprocessableContentError extends Error {
-	constructor(message, name) {
-		super(message);
-		this.name = name || 'Unprocessable Content';
-		this.status = 422;
 	}
 }
 
 class InternalServerError extends Error {
 	constructor() {
 		super('Server has encountered an unexpected condition');
-		this.name = 'Internal Server Error';
+		this.name = 'InternalServerError';
 		this.status = 500;
 	}
 }
@@ -133,18 +84,13 @@ module.exports = {
 	NotFoundError,
 	UserNotFoundError,
 	HOANotFoundError,
-	InvalidString,
 	GuardNotFoundError,
-	SameStatusError,
-	InvalidCredentialsError,
-	InvalidDate,
-	InvalidEmail,
-	InvalidAction,
-    BadRequestError,
-    UnauthorizedError,
-    ForbiddenError,
-    NotFoundError,
-    ConflictError,
-    UnprocessableContentError,
-    InternalServerError
+	RequestNotFoundError,
+	VisitorNotFoundError,
+	VehicleNotFoundError,
+	ResidentNotFoundError,
+	UnauthorizedError,
+	ForbiddenError,
+	InternalServerError,
+	InvalidInputError
 };

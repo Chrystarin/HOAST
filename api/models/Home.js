@@ -1,39 +1,38 @@
 const { Schema, model } = require('mongoose');
 const { ObjectId } = Schema.Types;
 
-const homeSchema = new Schema({
-	homeId: {
-		type: String,
-		unique: true,
-		required: true
-	},
-	owner: {
-		type: ObjectId,
-		ref: 'User',
-		required: true
-	},
-	hoa: {
-		type: ObjectId,
-		ref: 'HOA',
-		required: true
-	},
-	address: {
-		houseName: { type: String, required: true },
-		houseNumber: { type: Number, required: true },
-		street: { type: String, required: true },
-		phase: String
-	},
-	residents: [
+module.exports = model(
+	'Home',
+	new Schema(
 		{
-			user: { type: ObjectId, ref: 'User' },
-			status: {
-				type: String,
-				enum: ['active', 'inactive'],
-				default: 'active'
-			}
-		}
-	],
-	dues: [{ type: ObjectId, ref: 'Due' }]
-});
-
-module.exports = model('Home', homeSchema);
+			homeId: { type: String, unique: true, required: true },
+			name: { type: String, required: true },
+			owner: { type: ObjectId, ref: 'User', required: [true, 'Owner is required'] },
+			hoa: { type: ObjectId, ref: 'HOA', required: [true, 'HOA is required'] },
+			address: {
+				number: { type: Number, required: [true, 'Home Number is required'] },
+				street: { type: String, required: [true, 'Street is required'] },
+				phase: String
+			},
+			paidUntil: { type: Date, required: [true, 'Paid Until is required'] },
+			residents: [
+				{
+					user: {
+						type: ObjectId,
+						ref: 'User',
+						unique: true,
+						index: true,
+						sparse: true,
+						required: [true, 'User is required']
+					},
+					status: {
+						type: String,
+						enum: ['active', 'inactive'],
+						default: 'active'
+					}
+				}
+			]
+		},
+		{ timestamps: true }
+	)
+);

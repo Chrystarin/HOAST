@@ -1,128 +1,103 @@
 const HOA = require('../models/HOA');
-const User = require('../models/User');
 const Request = require('../models/Request');
 const Home = require('../models/Home');
+
 const { checkString, checkNumber } = require('../helpers/validData');
-const { HOANotFoundError, NotFoundError } = require('../helpers/errors');
+const { HOANotFoundError, RequestNotFoundError } = require('../helpers/errors');
 const { genRequestId, genHomeId } = require('../helpers/generateId');
 
-const createRequest = async (req, res, next) => {
-	const { hoaId, houseName, houseNumber, street, phase } = req.body;
+const getRequests = async (req, res, next) => {
+	const { requestId } = req.query;
+	const { type, role } = req.user;
 
-	try {
-		checkString(hoaId, 'HOA ID');
-		checkString(houseName, 'House Name');
-		checkNumber(houseNumber, 'House Number');
-		checkString(street, 'Street');
-		checkString(phase, 'Phase', true);
+	// Validate input
+	checkString(requestId, 'Request ID', true);
 
-		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new HOANotFoundError();
+	let requests;
 
-		// Create home details
-		let homeDetails = { houseName, houseNumber, street };
-		if (phase) homeDetails.phase = phase;
-
-		// Create request
-		const request = await Request.create({
-			requestId: genRequestId(),
-			hoa: hoa._id,
-			requestor: req.user._id,
-			homeDetails
-		});
-
-		res.status(201).json({
-			message: 'Request created',
-			requestId: request.requestId
-		});
-	} catch (error) {
-		next(error);
+	if (type === 'user') {
+		const { user } = req.user;
+		requests = await Request.find({ requestor: user._id });
 	}
+
+	if (role === 'admin') {
+		const { hoa } = req.user;
+		requests = await Request.find({ hoa: hoa._id });
+	}
+
+	req.json(requests);
+};
+
+const createRequest = async (req, res, next) => {
+	const { hoaId, homeName, homeNumber, street, phase } = req.body;
+	const { user } = req.user;
+
+	checkString(hoaId, 'HOA ID');
+	checkString(homeName, 'Home Name');
+	checkNumber(homeNumber, 'Home Number');
+	checkString(street, 'Street');
+	checkString(phase, 'Phase', true);
+
+	// Find HOA
+	const hoa = await HOA.findOne({ hoaId });
+	if (!hoa) throw new HOANotFoundError();
+
+	const request = await Request.create({
+		requestId: genRequestId(),
+		hoa: hoa._id,
+		requestor: user._id,
+		details: { name: homeName, number: homeNumber, street, phase }
+	});
+
+	res.status(201).json({
+		message: 'Request created',
+		requestId: request.requestId
+	});
 };
 
 const processRequest = async (req, res, next) => {
-	const { requestId, hoaId, status } = req.body;
+	const { requestId, status } = req.body;
+	const { hoa } = req.user;
 
-    console.log(req.body)
+	// Validate input
+	checkString(requestId, 'Request ID');
+	checkString(status, 'Request Status');
 
-	try {
-		checkString(requestId, 'Request ID');
-		checkString(hoaId, 'HOA ID');
-		checkString(status, 'Request Status');
+	// Find request
+	const request = await Request.findOne({
+		requestId,
+		hoa: hoa._id,
+		status: 'pending'
+	});
+	if (!request) throw new RequestNotFoundError();
 
-		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new HOANotFoundError();
+	// Response details
+	let resStatus = 200;
+	const resMessage = { message: 'Request rejected' };
 
-        console.log(hoa)
+	// Process request if approved
+	if (status === 'approved') {
+		const { name, ...address } = request.details;
 
-		// Find request
-		const request = await Request.findOne({
-			requestId,
-			status: 'pending'
+		// Create home
+		const home = await Home.create({
+			homeId: genHomeId(),
+			name,
+			owner: request.requestor,
+			hoa: hoa._id,
+			address,
+			residents: [{ user: request.requestor }]
 		});
-		if (!request) throw new NotFoundError('Request');
 
-		request.status = status;
-
-		let response = { message: `Request ${status}` };
-
-		if (status === 'approved') {
-			// Create home
-			const home = await Home.create({
-				homeId: genHomeId(),
-				owner: request.requestor,
-				hoa: hoa._id,
-				address: request.homeDetails,
-				residents: [{ user: request.requestor }]
-			});
-
-			await User.findByIdAndUpdate(home.requestor, {
-				$push: { homes: home._id }
-			});
-
-			hoa.homes.push(home._id);
-			await hoa.save();
-
-			response.homeId = home.homeId;
-		}
-
-		await request.save();
-
-		res.status(200).json(response);
-	} catch (error) {
-		next(error);
+		resStatus = 201;
+		resMessage = { message: 'Home created', homeId: home.homeId };
 	}
-};
 
-const getRequests = async (req, res, next) => {
-	const { hoaId, requestId } = req.query;
+	// Update request
+	request.status = status;
+	await request.save();
 
-	console.log(hoaId)
-
-	try {
-		checkString(hoaId, 'HOA ID');
-		checkString(requestId, 'Request ID', true);
-
-		let requestQuery = {};
-
-        requestQuery.status="pending"
-		if (hoaId) requestQuery.hoaId = hoaId;
-		if (requestId) requestQuery.requestId = requestId;
-
-        console.log(requestQuery)
-
-        results = await Request.find(requestQuery)
-                .populate('hoa', 'hoaId')
-                .populate('requestor', 'userId');
-
-        console.log(results)
-
-		res.status(200).json(results);
-	} catch (error) {
-		next(error);
-	}
+	res.status(resStatus).json(resMessage);
 };
 
 module.exports = {

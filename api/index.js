@@ -9,6 +9,7 @@ const { createServer } = require('https');
 const { readFileSync } = require('fs');
 
 const authenticate = require('./middlewares/authentication');
+const errorHandler = require('./middlewares/errorHandler');
 
 // Route Controllers
 const dueRoute = require('./routes/due');
@@ -33,8 +34,6 @@ app.use(
 	})
 );
 
-
-
 app.use('/users', userRoute);
 app.use(authenticate);
 app.use('/dues', dueRoute);
@@ -45,14 +44,7 @@ app.use('/homes', homeRoute);
 app.use('/logs', logRoute);
 app.use('/requests', requestRoute);
 
-app.use((err, req, res, next) => {
-	console.log(err);
-
-	res.status(err.status || 500).json({
-		name: err.name,
-		message: err.message
-	});
-});
+app.use(errorHandler);
 
 mongoose
 	.connect(process.env.DEV_MONGO)

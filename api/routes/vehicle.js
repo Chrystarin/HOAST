@@ -1,40 +1,32 @@
 const router = require('express').Router();
+
+const asyncHandler = require('../middlewares/asyncHandler');
 const {
-	addVehicle,
-	getVehicles,
-	updateVehicleColor,
-	deleteVehicle
-} = require('../controllers/vehicleController');
+	onlyUser,
+	allowEmployee,
+	allowResident
+} = require('../middlewares/authorization');
+
+const { getVehicles, addVehicle } = asyncHandler(
+	require('../controllers/vehicleController')
+);
 
 /**
+ * Get vehicles
+ *
+ * plateNumber - optional [one | many]
+ */
+router.get('/', allowEmployee, allowResident, getVehicles);
+
+/**
+ * Add vehicle
+ *
  * plateNumber
  * brand
  * model
  * type
  * color
  */
-router.post('/', addVehicle);
-
-/**
- * [ADMIN, GUARD, USER]
- * 
- * case ADMIN/GUARD:
- *     hoaId
- *     plateNumber - optional
- * case USER:
- *     plateNumber - optional
- */
-router.get('/', getVehicles);
-
-/**
- * plateNumber
- * color
- */
-router.patch('/', updateVehicleColor);
-
-/**
- * plateNumber
- */
-router.delete('/', deleteVehicle);
+router.post('/', onlyUser, addVehicle);
 
 module.exports = router;

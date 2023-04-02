@@ -1,112 +1,71 @@
 const Visitor = require('../models/Visitor');
-const HOA = require('../models/HOA');
 const Home = require('../models/Home');
-const User = require('../models/User');
-const { HOANotFoundError, NotFoundError } = require('../helpers/errors');
+
 const { checkString, checkDate } = require('../helpers/validData');
 const { genVisitorId } = require('../helpers/generateId');
 
 const addVisitor = async (req, res, next) => {
-	const { homeId, name, purpose, arrival, departure, note } = req.body;
+	const { name, purpose, arrival, departure, note } = req.body;
+	const { home } = req.user;
 
-	try {
-		checkString(homeId, 'Home ID');
-		checkString(name, 'Visitor Name');
-		checkString(purpose, 'Purpose');
-		checkString(note, 'Note');
-		checkDate(arrival, departure);
+	// Validate input
+	checkString(name, 'Visitor Name');
+	checkString(purpose, 'Purpose');
+	checkString(note, 'Note');
+	checkDate(arrival, 'Arrival');
+	checkDate(departure, 'Departure');
 
-		const home = await Home.findOne({
-			homeId,
-			'residents.user': req.user._id
-		});
-		if (!home) throw new NotFoundError('Home');
+	// Create visitor
+	const visitor = await Visitor.create({
+		visitorId: genVisitorId(),
+		home: home._id,
+		hoa: home.hoa,
+		name,
+		purpose,
+		arrival,
+		departure,
+		note
+	});
 
-		const visitor = await Visitor.create({
-            visitorId: genVisitorId(),
-			home: home._id,
-			hoa: home.hoa,
-			name,
-			purpose,
-			arrival,
-			departure,
-			note
-		});
-
-		res.status(201).json({
-			message: 'Visitor added',
-			visitorId: visitor.visitorId
-		});
-	} catch (err) {
-		next(err);
-	}
+	res.status(201).json({
+		message: 'Visitor added',
+		visitorId: visitor.visitorId
+	});
 };
 
 const getVisitors = async (req, res, next) => {
-	// const { hoaId, homeId, visitorId } = req.body;
-	const { hoaId, homeId, visitorId } = req.query;
+	const { visitorId } = req.query;
+	const { type } = req.user;
 
-	try {
-		checkString(visitorId, 'Visitor ID', true);
+	// Validate input
+	checkString(visitorId, 'Visitor ID', true);
 
-		// Create query for visitors
-		let visitorQuery = {};
-		let visitors ={};
+	let visitors;
 
-		if (hoaId) {
-			checkString(hoaId, 'HOA ID');
-			checkString(homeId, 'Home ID', true);
-
-			// Find HOA
-			const hoa = await HOA.findOne({ hoaId });
-			if (!hoa) throw new HOANotFoundError();
-
-			visitorQuery.hoa = hoa._id;
-
-			if (homeId) {
-				// Find Home
-				const home = await Home.findOne({ homeId });
-				if (!home) throw new NotFoundError('Home');
-
-				// Check if home is in hoa
-				if (!hoa.homes.includes(home._id))
-					throw new Error('Home not in HOA');
-
-				visitorQuery.home = home._id;
-			}
-
-			// Find visitors
-			 visitors = await Visitor.find(visitorQuery)
-			.populate('home', 'homeId')
-			.populate('hoa', 'hoaId')
-			.exec();
-		} 
-
-		else if (visitorId){
-			visitorQuery.visitorId = visitorId;
-			 visitors = await Visitor.findOne(visitorQuery)
-			.populate('home', 'homeId')
-			.populate('hoa', 'hoaId')
-			.exec();
-		}
-		
-		else {
-			visitorQuery.user = req.user._id;
-			
-			// Find visitors
-			 visitors = await Visitor.find(visitorQuery)
-			.populate('home', 'homeId')
-			.populate('hoa', 'hoaId')
-			.exec();
-		}
-
-		res.status(200).json(visitors);
-	} catch (error) {
-		next(error);
+	if (type === 'resident') {
+		const { home } = req.user;
+		visitors = await Visitor.find({ home: home._id });
 	}
+
+	if (type === 'employee') {
+		const { hoa } = req.user;
+
+		// Get homes of hoa
+		const homes = await Home.find({ hoa: hoa._id });
+
+		visitors = await Visitor.find({
+			home: { $in: homes.reduce((ids, { _id }) => [...ids, _id], []) }
+		})
+			.populate('home')
+			.exec();
+	}
+
+	// Filter visitors by visitorId
+	visitors = visitors.filter(({ visitorId: vi }) =>
+		visitorId ? visitorId === vi : true
+	);
+
+	res.status(200).json(visitors);
 };
 
-module.exports = {
-	addVisitor,
-	getVisitors
-};
+module.exports = { addVisitor, getVisitors };

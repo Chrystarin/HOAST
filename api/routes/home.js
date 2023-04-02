@@ -1,47 +1,51 @@
-const {
-	getHomes,
-	updateHomeName,
-	getResidents,
-	addResident,
-	removeResident
-} = require('../controllers/homeController');
-const authorize = require('../middlewares/authorization');
-const roles = require('../helpers/roles');
-
 const router = require('express').Router();
 
-/**
- * hoaId - optional
- * homeId - optional
- */
-// router.get('/', authorize(roles.ADMIN, roles.HOMEOWNER), getHomes);
-router.get('/', getHomes);
+const asyncHandler = require('../middlewares/asyncHandler');
+const {
+	allowResident,
+	onlyHomeowner,
+	allowEmployee,
+	inHoa
+} = require('../middlewares/authorization');
+
+const { getHomes, updateHome, addResident, removeResident, getResidents } =
+	asyncHandler(require('../controllers/homeController'));
 
 /**
+ * Get homes
+ *
+ * homeId - optional [one | many]
+ */
+router.get('/', allowEmployee, allowResident, getHomes);
+
+/**
+ * Update home details
+ *
  * homeId
  */
-router.patch('/', authorize(roles.HOMEOWNER), updateHomeName);
+router.patch('/', allowResident, onlyHomeowner, updateHome);
 
 /**
- * case 1: (HOA Admin)
- *     hoaId
- *     homeId - optional
- * case 2: (User)
- *     homeId
+ * Get residents of related home
+ *
+ * homeId
  */
-// router.get('/residents', authorize(roles.ADMIN, roles.HOMEOWNER), getResidents);
-router.get('/residents', getResidents);
+router.get('/residents', allowResident, allowEmployee, inHoa, getResidents);
 
 /**
+ * Add residents for home
+ *
  * homeId
  * userId
  */
-router.post('/residents', authorize(roles.HOMEOWNER), addResident);
+router.post('/residents', allowResident, onlyHomeowner, addResident);
 
 /**
+ * Remove resident (set inactive)
+ *
  * homeId
  * userId
  */
-router.delete('/residents', authorize(roles.HOMEOWNER), removeResident);
+router.delete('/residents', allowResident, onlyHomeowner, removeResident);
 
 module.exports = router;

@@ -1,91 +1,78 @@
-const {
-	NotFoundError,
-	HOANotFoundError,
-	UserNotFoundError
-} = require('../helpers/errors');
 const Due = require('../models/Due');
-const User = require('../models/User');
 const Home = require('../models/Home');
-const HOA = require('../models/HOA');
+
+const { NotFoundError } = require('../helpers/errors');
 const { genDueId } = require('../helpers/generateId');
-const { checkDate, checkNumber } = require('../helpers/validData');
-
-const createDue = async (req, res, next) => {
-	const { homeId, hoaId, amount, paidUntil } = req.body;
-
-	try {
-		checkString(homeId, 'Home ID');
-		checkString(hoaId, 'HOA ID');
-		checkNumber(amount);
-		checkDate(paidUntil);
-
-		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new NotFoundError('HOA');
-
-		// Find Home
-		const home = await Home.findOne({ homeId, hoa: hoa._id });
-		if (!home) throw new NotFoundError('Home');
-
-		// Create due
-		const due = await Due.create({
-			dueId: genDueId(),
-			home: home._id,
-			hoa: hoa._id,
-			amount,
-			paidUntil
-		});
-
-		res.status(201).json({
-			message: 'Due added',
-			dueId: due.dueId
-		});
-	} catch (err) {
-		next(err);
-	}
-};
+const { checkNumber } = require('../helpers/validData');
 
 const getDues = async (req, res, next) => {
-	const { homeId, hoaId, from, to } = req.body;
+	const { dueId } = req.body;
+	const { role } = req.user;
 
-	try {
-		checkString(homeId, 'Home ID');
+	// Validate input
+	checkString(dueId, 'Due ID', true);
 
-		// Find home
-		const home = await Home.findOne({ homeId }).exec();
-		if (!home) throw new NotFoundError('Home');
+	let dues;
 
-		// Check if admin
-		if (hoaId) {
-			checkString(hoaId, 'HOA ID');
-
-			const hoa = await HOA.findOne({ hoaId, homes: home._id });
-			if (!hoa) throw new HOANotFoundError('HOA');
-		}
-
-		let dueQuery = { home: home._id };
-
-		if (from && to) {
-			checkDate(from, to);
-			dueQuery.createdAt = { $gte: new Date(from), $lte: new Date(to) };
-		} else if (from) {
-			checkDate(from);
-			dueQuery.createdAt = { $gte: new Date(from) };
-		} else if (to) {
-			checkDate(to);
-			dueQuery.createdAt = { $lte: new Date(to) };
-		}
-
-		const dues = await Due.find(dueQuery)
-			.populate('hoa', 'hoaId')
-			.populate('home', 'homeId');
-		res.status(200).json(dues);
-	} catch (err) {
-		next(err);
+	if (role === 'homeowner') {
+		const { home } = req.user;
+		dues = await Due.find({ home: home._id });
 	}
+
+	if (role === 'admin') {
+		const { hoa } = req.user;
+
+		// Get homes under hoa
+		const homes = await Home.find({ hoa: hoa._id });
+
+		// Combine all dues from each home
+		dues = homes.reduce(
+			async (arr1, { _id }) => [
+				...arr1,
+				// Get dues from each home
+				...(await Due.find({ hoa: _id }))
+			],
+			[]
+		);
+	}
+
+	// Filter dues with dueId
+	dues = dues.filter(({ dueId: di }) => dueId === id);
+
+	res.json(dues);
 };
 
-module.exports = {
-	createDue,
-	getDues
+const createDue = async (req, res, next) => {
+	const { homeId, amount, months } = req.body;
+	const { hoa } = req.user;
+
+	// Validate input
+	checkString(homeId, 'Home ID');
+	checkNumber(amount, 'Amount');
+	checkNumber(months, 'Months');
+
+	// Find Home
+	const home = await Home.findOne({ homeId, hoa: hoa._id });
+	if (!home) throw new NotFoundError('Home');
+
+	// Create due
+	const due = await Due.create({
+		dueId: genDueId(),
+		home: home._id,
+		amount,
+		months,
+		from: home.paidUntil,
+		// Update paidUntil of Home
+		to:
+			(home.paidUntil.setMonth(home.paidUntil.getMonth() + months),
+			await home.save(),
+			home.paidUntil)
+	});
+
+	res.status(201).json({
+		message: 'Due added',
+		dueId: due.dueId
+	});
 };
+
+module.exports = { createDue, getDues };

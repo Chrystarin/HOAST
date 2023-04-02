@@ -1,36 +1,25 @@
 const { Schema, model } = require('mongoose');
 const { ObjectId } = Schema.Types;
 
-const requestSchema = new Schema(
-	{
-		requestId: {
-			type: String,
-			unique: true,
-			required: true
+module.exports = model(
+	'Request',
+	new Schema(
+		{
+			requestId: { type: String, unique: true, required: true },
+			hoa: { type: ObjectId, ref: 'HOA', required: [true, 'HOA is required'] },
+			requestor: { type: ObjectId, ref: 'User', required: [true, 'Requestor is required'] },
+			details: {
+				name: { type: String, required: [true, 'Home Name is required'] },
+				number: { type: Number, required: [true, 'Home Number is required'] },
+				street: { type: String, required: [true, 'Street is required'] },
+				phase: String
+			},
+			status: {
+				type: String,
+				enum: ['pending', 'approved', 'rejected'],
+				default: 'pending'
+			}
 		},
-		hoa: {
-			type: ObjectId,
-			ref: 'HOA',
-			required: true
-		},
-		requestor: {
-			type: ObjectId,
-			ref: 'User',
-			required: true
-		},
-		homeDetails: {
-			houseName: { type: String, required: true },
-			houseNumber: { type: Number, required: true },
-			street: { type: String, required: true },
-			phase: String
-		},
-		status: {
-			type: String,
-			enum: ['pending', 'approved', 'rejected'],
-			default: 'pending'
-		}
-	},
-	{ timestamps: true }
+		{ timestamps: true }
+	)
 );
-
-module.exports = model('Request', requestSchema);

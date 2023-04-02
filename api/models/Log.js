@@ -1,30 +1,19 @@
 const { Schema, model } = require('mongoose');
-const { genLogId } = require('../helpers/generateId');
 const { ObjectId } = Schema.Types;
 
-const logSchema = new Schema(
-	{
-		logId: {
-			type: String,
-			unique: true,
-			default: genLogId()
+module.exports = model(
+	'Log',
+	new Schema(
+		{
+			logId: { type: String, unique: true, required: true },
+			hoa: { type: ObjectId, ref: 'HOA', required: [true, 'HOA is required'] },
+			logType: {
+				type: String,
+				enum: ['user', 'vehicle', 'visitor'],
+				required: [true, 'Log Type is required']
+			},
+			objectId: { type: String, required: [true, 'Object ID is required'] }
 		},
-		hoa: {
-			type: ObjectId,
-			ref: 'HOA'
-		},
-		logType: {
-			type: String,
-			enum: ['User', 'Vehicle', 'Visitor'],
-			required: true
-		},
-		docId: {
-			type: ObjectId,
-			refPath: 'logType',
-			required: true
-		},
-	},
-	{ timestamps: true }
+		{ timestamps: true }
+	)
 );
-
-module.exports = model('Log', logSchema);

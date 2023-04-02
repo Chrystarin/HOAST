@@ -1,112 +1,148 @@
 const Log = require('../models/Log');
 const User = require('../models/User');
-const HOA = require('../models/HOA');
-const Vehicle = require('../models/Vehicle');
 const Visitor = require('../models/Visitor');
-const { checkString, checkDate } = require('../helpers/validData');
+const Home = require('../models/Home');
+
+const {
+	UserNotFoundError,
+	VisitorNotFoundError,
+	VehicleNotFoundError
+} = require('../helpers/errors');
+const { checkString } = require('../helpers/validData');
 const { genLogId } = require('../helpers/generateId');
-const { NotFoundError, HOANotFoundError } = require('../helpers/errors');
 
-const addRecord = async (req, res, next) => {
-	const { objId, logType, hoaId } = req.body;
-
-	try {
-		checkString(objId, 'ID');
-		checkString(logType, 'Log Type');
-		checkString(hoaId, 'HOA ID');
-
-		// Find HOA
-		const hoa = await HOA.findOne({ hoaId });
-		if (!hoa) throw new HOANotFoundError();
-
-		let docId;
-
-		// Find the id depending on which model
-		switch (logType) {
-			case 'User':
-				({ _id: docId } = await User.findOne({ userId: objId }));
-				break;
-			case 'Vehicle':
-				({ _id: docId } = await Vehicle.findOne({ plateNumber: objId }));
-				break;
-			case 'Visitor':
-				({ _id: docId } = await Visitor.findOne({ visitorId: objId }));
-				break;
-			default:
-				throw new Error('Invalid Log Type');
+const getLogsByLookup = async (logType, objects, objectId) => {
+	const logs = await Log.find({
+		logType,
+		objectId: {
+			// Get all objectId of each object
+			$in: objects.reduce((ods, { [objectId]: od }) => [...ods, od], [])
 		}
+	});
 
-		// Check if id is existing
-		if (!docId) throw new NotFoundError(`${logType} not found.`);
-
-		const log = await Log.create({
-			logId: genLogId(),
-			hoa: hoa._id,
-			docId,
-			logType
-		});
-
-		res.status(201).json({ message: 'Entry recorded', logId: log.logId });
-	} catch (error) {
-		next(error);
-	}
+	return logs.map((log) => ({
+		...log,
+		// Replace the logger with object with matched objectId
+		objectId: objects.find(({ [objectId]: od }) => log.loggerId === od)
+	}));
 };
 
 const getRecords = async (req, res, next) => {
-	const { hoaId, logId, logType, objId, from, to } = req.query;
+	const { logId } = req.query;
+	const { type } = req.user;
 
-	try {
-		checkString(hoaId, 'HOA ID', true);
-		checkString(logId, 'Log ID', true);
-		checkString(logType, 'Log Type', true);
+	// Validate input
+	checkString(logId, 'Log ID', true);
 
-		let logQuery = {};
-        
-		if (hoaId) logQuery.hoaId = hoaId;
-		if (logType) logQuery.logType = logType;
-		if (objId) logQuery.objId = objId
+	let logs;
 
-		// Find the id depending on which model
-		switch (logType) {
-			case 'User':
-				(logQuery.docId = await User.findOne({ userId: objId }));
-				break;
-			case 'Vehicle':
-				(logQuery.docId = await Vehicle.findOne({ plateNumber: objId }));
-				break;
-			case 'Visitor':
-				(logQuery.docId = await Visitor.findOne({ visitorId: objId }));
-				break;
-			default:
-				throw new Error('Invalid Log Type');
-		}
-
-		if (from && to) {
-			checkDate(from, to);
-			logQuery.createdAt = { $gte: new Date(from), $lte: new Date(to) };
-		} else if (from) {
-			checkDate(from);
-			logQuery.createdAt = { $gte: new Date(from) };
-		} else if (to) {
-			checkDate(to);
-			logQuery.createdAt = { $lte: new Date(to) };
-		}
-
-		console.log(logQuery)
-
-		res.status(200).json(
-			await Log.find(logQuery)
-				// .populate('hoa')
-				// .select('docId.userId docId.visitorId docId.plateNumber')
-				// .select({})
-				// .exec()
-		);
-	} catch (error) {
-		next(error);
+	if (type === 'user') {
+		const { user } = req.user;
+		logs = [
+			...(await Log.find({ logType: 'user', objectId: user.userId })), // user logs
+			...(await getLogsByLookup('vehicle', user.vehicles, 'plateNumber')) // vehicle logs
+		];
 	}
+
+	if (type === 'resident') {
+		const { home } = req.user;
+
+		// Get visitors of home
+		const visitors = await Visitor.find({ home: home._id });
+
+		logs = await getLogsByLookup('visitor', visitors, 'visitorId');
+	}
+
+	if (type === 'employee') {
+		const { hoa } = req.user;
+
+		// Get homes of hoa
+		const homes = await Home.find({ hoa: hoa._id })
+			.populate('residents.user')
+			.exec();
+
+		// Get visitors of each home
+		const visitors = await Visitor.find({
+			home: { $in: homes.reduce((ids, { _id }) => [...ids, _id], []) }
+		});
+
+		// Get residents of each home
+		const residents = homes.reduce(
+			(residents, { residents: { user } }) => [...residents, ...user],
+			[]
+		);
+
+		// Get all vehicles of each resident of each home
+		const vehicles = residents.reduce(
+			(vehicles, { vehicles: userVehicles }) => [
+				...vehicles,
+				...userVehicles
+			],
+			[]
+		);
+
+		logs = [
+			...(await getLogsByLookup('user', residents, 'userId')),
+			...(await getLogsByLookup('visitor', visitors, 'visitorId')),
+			...(await getLogsByLookup('vehicle', vehicles, 'plateNumber'))
+		];
+	}
+
+	// Filter logs with logId
+	logs = logs.filter(({ logId: li }) => (logId ? logId === li : true));
+
+	res.json(logs);
 };
 
-module.exports = {
-	addRecord,
-	getRecords
+const addRecord = async (req, res, next) => {
+	const { objectId, logType } = req.body;
+	const { hoa } = req.user;
+
+	// Validate input
+	checkString(objectId, 'Object ID');
+	checkString(logType, 'Log Type');
+
+	switch (logType) {
+		case 'user':
+			if (!(await User.findOne({ userId: objectId })))
+				throw new UserNotFoundError();
+			break;
+		case 'visitor':
+			if (!(await Visitor.findOne({ visitorId: objectId })))
+				throw new VisitorNotFoundError();
+			break;
+		case 'vehicle':
+			// Get homes of hoa
+			const homes = await Home.find({ hoa: hoa._id })
+				.populate('residents.user')
+				.exec();
+
+			// Get vehicles from each home of hoa
+			const vehicles = homes.reduce(
+				(arr1, { residents }) => [
+					...arr1,
+					...residents.reduce(
+						(arr2, { user: { vehicles: v } }) => [...arr2, ...v],
+						[]
+					)
+				],
+				[]
+			);
+
+			if (!vehicles.find(({ plateNumber }) => plateNumber === objectId))
+				throw new VehicleNotFoundError();
+			break;
+	}
+
+	// Create log
+	const log = await Log.create({
+		logId: genLogId(),
+		hoa: hoa._id,
+		logType,
+		objectId
+	});
+
+	res.status(201).json({ message: 'Log saved', logId: log.logId });
 };
+
+module.exports = { addRecord, getRecords };

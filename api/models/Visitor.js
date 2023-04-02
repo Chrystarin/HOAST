@@ -1,28 +1,28 @@
 const { Schema, model } = require('mongoose');
-const { genVisitorId } = require('../helpers/generateId');
 const { ObjectId } = Schema.Types;
 
-const visitorSchema = new Schema({
-	visitorId: {
-		type: String,
-		unique: true,
-		default: genVisitorId()
-	},
-	home: {
-		type: ObjectId,
-		ref: 'Home',
-		required: true
-	},
-	hoa: {
-		type: ObjectId,
-		ref: 'HOA',
-		required: true
-	},
-	name: { type: String, required: true },
-	purpose: { type: String, required: true },
-	arrival: { type: Date, required: true },
-	departure: { type: Date, required: true },
-	note: { type: String, required: true }
-});
-
-module.exports = model('Vistior', visitorSchema);
+module.exports = model(
+	'Vistior',
+	new Schema(
+		{
+			visitorId: { type: String, unique: true, required: true },
+			home: {
+				type: ObjectId,
+				ref: 'Home',
+				required: [true, 'Home is required']
+			},
+			name: {
+				type: String,
+				required: [true, 'Visitor Name is required']
+			},
+			purpose: { type: String, required: [true, 'Purpose is required'] },
+			arrival: { type: Date, required: [true, 'Arrival is required'] },
+			departure: {
+				type: Date,
+				required: [true, 'Departure is required']
+			},
+			note: String
+		},
+		{ timestamps: true }
+	)
+);

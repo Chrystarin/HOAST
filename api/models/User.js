@@ -1,39 +1,34 @@
 const { Schema, model } = require('mongoose');
-const { genUserId } = require('../helpers/generateId');
-const { ObjectId } = Schema.Types;
 
-const userSchema = new Schema(
-	{
-		userId: {
-			type: String,
-			unique: true,
-			required: true
-		},
-		name: {
-			firstName: { 
-                type: String, 
-                required: true 
-            },
-			lastName: { 
-                type: String, 
-                required: true 
-            }
-		},
-		credentials: {
-			email: {
-				type: String,
-				required: true,
-				unique: true
+module.exports = model(
+	'User',
+	new Schema(
+		{
+			userId: { type: String, unique: true, required: true },
+			name: {
+				firstName: { type: String, required: [true, 'First Name is required'] },
+				lastName: { type: String, required: [true, 'Last Name is required'] }
 			},
-			password: {
-				type: String,
-				required: true
-			}
+			credentials: {
+				email: { type: String, required: [true, 'Email is required'], unique: true },
+				password: { type: String, required: [true, 'Password is required'] }
+			},
+			vehicles: [
+				{
+					plateNumber: {
+						type: String,
+						unique: true,
+						index: true,
+						sparse: true,
+						required: [true, 'Plate Number is required']
+					},
+					brand: { type: String, required: [true, 'Brand is required'] },
+					model: { type: String, required: [true, 'Model is required'] },
+					type: { type: String, required: [true, 'Type is required'] },
+					color: { type: String, required: [true, 'Color is required'] }
+				}
+			]
 		},
-		homes: [{ type: ObjectId, ref: 'Home' }],
-		vehicles: [{ type: ObjectId, ref: 'Vehicle' }]
-	},
-	{ timestamps: true, methods: {} }
+		{ timestamps: true }
+	)
 );
-
-module.exports = model('User', userSchema);
