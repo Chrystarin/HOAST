@@ -6,8 +6,13 @@ const Home = require('../models/Home');
 const {
 	UserNotFoundError,
 	VisitorNotFoundError,
-	VehicleNotFoundError
+	VehicleNotFoundError,
+	NotFoundError
 } = require('../helpers/errors');
+const {
+	roles: { USER },
+	types: { EMPLOYEE, RESIDENT }
+} = require('../helpers/constants');
 const { checkString } = require('../helpers/validData');
 const { genLogId } = require('../helpers/generateId');
 
@@ -20,10 +25,10 @@ const getLogsByLookup = async (logType, objects, objectId) => {
 		}
 	});
 
-	return logs.map((log) => ({
+	return logs.map(({ objectId: oi, ...log }) => ({
 		...log,
-		// Replace the logger with object with matched objectId
-		objectId: objects.find(({ [objectId]: od }) => log.loggerId === od)
+		// Add the matched object from objects using objectId
+		[logType]: objects.find(({ [objectId]: od }) => oi == od)
 	}));
 };
 
@@ -36,7 +41,7 @@ const getRecords = async (req, res, next) => {
 
 	let logs;
 
-	if (type === 'user') {
+	if (type === USER) {
 		const { user } = req.user;
 		logs = [
 			...(await Log.find({ logType: 'user', objectId: user.userId })), // user logs
@@ -44,7 +49,7 @@ const getRecords = async (req, res, next) => {
 		];
 	}
 
-	if (type === 'resident') {
+	if (RESIDENT.has(type)) {
 		const { home } = req.user;
 
 		// Get visitors of home
@@ -53,7 +58,7 @@ const getRecords = async (req, res, next) => {
 		logs = await getLogsByLookup('visitor', visitors, 'visitorId');
 	}
 
-	if (type === 'employee') {
+	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get homes of hoa
@@ -88,8 +93,12 @@ const getRecords = async (req, res, next) => {
 		];
 	}
 
-	// Filter logs with logId
-	logs = logs.filter(({ logId: li }) => (logId ? logId === li : true));
+	// Get spcefic log
+	if (logId) {
+		logs = logs.find(({ logId: li }) => (logId ? logId == li : true));
+
+		if (!logs) throw new NotFoundError('Incorrect log id');
+	}
 
 	res.json(logs);
 };
@@ -104,11 +113,11 @@ const addRecord = async (req, res, next) => {
 
 	switch (logType) {
 		case 'user':
-			if (!(await User.findOne({ userId: objectId })))
+			if (!(await User.exists({ userId: objectId })))
 				throw new UserNotFoundError();
 			break;
 		case 'visitor':
-			if (!(await Visitor.findOne({ visitorId: objectId })))
+			if (!(await Visitor.exists({ visitorId: objectId })))
 				throw new VisitorNotFoundError();
 			break;
 		case 'vehicle':
@@ -129,7 +138,7 @@ const addRecord = async (req, res, next) => {
 				[]
 			);
 
-			if (!vehicles.find(({ plateNumber }) => plateNumber === objectId))
+			if (!vehicles.find(({ plateNumber }) => plateNumber == objectId))
 				throw new VehicleNotFoundError();
 			break;
 	}

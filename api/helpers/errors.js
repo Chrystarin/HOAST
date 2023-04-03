@@ -18,15 +18,9 @@ class HOANotFoundError extends NotFoundError {
 	}
 }
 
-class GuardNotFoundError extends NotFoundError {
-	constructor() {
-		super('User is not a guard of this HOA');
-	}
-}
-
 class ResidentNotFoundError extends NotFoundError {
 	constructor() {
-		super('User is not resident');
+		super('User is not an active resident');
 	}
 }
 
@@ -72,6 +66,14 @@ class ForbiddenError extends Error {
 	}
 }
 
+class DuplicateEntryError extends Error {
+	constructor(message) {
+		super(message);
+		this.name = 'DuplicateEntryError';
+		this.status = 409;
+	}
+}
+
 class InternalServerError extends Error {
 	constructor() {
 		super('Server has encountered an unexpected condition');
@@ -84,7 +86,6 @@ module.exports = {
 	NotFoundError,
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError,
 	RequestNotFoundError,
 	VisitorNotFoundError,
 	VehicleNotFoundError,
@@ -92,5 +93,6 @@ module.exports = {
 	UnauthorizedError,
 	ForbiddenError,
 	InternalServerError,
-	InvalidInputError
+	InvalidInputError,
+	DuplicateEntryError
 };

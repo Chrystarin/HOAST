@@ -3,9 +3,10 @@ const router = require('express').Router();
 const asyncHandler = require('../middlewares/asyncHandler');
 const {
 	allowResident,
-	onlyHomeowner,
-	allowEmployee,
-	inHoa
+	allowHomeowner,
+	notUser,
+	allowAdmin,
+	allowGuard
 } = require('../middlewares/authorization');
 
 const { getHomes, updateHome, addResident, removeResident, getResidents } =
@@ -15,37 +16,55 @@ const { getHomes, updateHome, addResident, removeResident, getResidents } =
  * Get homes
  *
  * homeId - optional [one | many]
+ *
+ * [User] - owned homes
+ *
+ * [Employee]
+ * hoaId
  */
-router.get('/', allowEmployee, allowResident, getHomes);
+router.get('/', allowAdmin, allowGuard, getHomes);
 
 /**
  * Update home details
  *
  * homeId
  */
-router.patch('/', allowResident, onlyHomeowner, updateHome);
+router.patch('/', allowHomeowner, notUser, updateHome);
 
 /**
  * Get residents of related home
  *
+ * residentId
+ *
+ * [Employee]
+ * hoaId
+ *
+ * [Resident]
  * homeId
  */
-router.get('/residents', allowResident, allowEmployee, inHoa, getResidents);
+router.get(
+	'/residents',
+	allowAdmin,
+	allowGuard,
+	allowResident,
+	notUser,
+	getResidents
+);
 
 /**
- * Add residents for home
+ * Add residents of home
  *
  * homeId
- * userId
+ * residentId
  */
-router.post('/residents', allowResident, onlyHomeowner, addResident);
+router.post('/residents', allowHomeowner, notUser, addResident);
 
 /**
- * Remove resident (set inactive)
+ * Set resident inactive
  *
  * homeId
- * userId
+ * residentId
  */
-router.delete('/residents', allowResident, onlyHomeowner, removeResident);
+router.patch('/residents', allowHomeowner, notUser, removeResident);
 
 module.exports = router;

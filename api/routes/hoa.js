@@ -2,23 +2,26 @@ const router = require('express').Router();
 
 const asyncHandler = require('../middlewares/asyncHandler');
 const {
-	onlyEmployee,
-	allowEmployee,
-	onlyAdmin,
-	onlyUser
+	allowAdmin,
+	allowGuard,
+	notUser,
+	allowResident,
+	notAdmin,
 } = require('../middlewares/authorization');
 
 const { registerHoa, getHoas, addGuard, retireGuard, getGuards, joinHoa } =
 	asyncHandler(require('../controllers/hoaController'));
 
 /**
+ * Register a new HOA
+ *
  * name
  * street
  * barangay
  * city
  * province
  */
-router.post('/register', onlyUser, registerHoa);
+router.post('/register', registerHoa);
 
 /**
  * Create a join request in HOA
@@ -29,28 +32,31 @@ router.post('/register', onlyUser, registerHoa);
  * street
  * phase - optional
  */
-router.post('/join', onlyUser, joinHoa);
+router.post('/join', allowAdmin, notAdmin, joinHoa);
 
 /**
- * hoaId - optional [one | many]
+ * hoaId - optional [1 | n]
  */
-router.get('/', onlyUser, getHoas);
+router.get('/', getHoas);
 
 /**
  * Get all guards
  *
  * hoaId
- * guardId - optional
+ * guardId - optional [1 | n]
+ * 
+ * [Resident]
+ * homeId
  */
-router.get('/guards', allowEmployee, onlyEmployee, getGuards);
+router.get('/guards', allowAdmin, allowGuard, allowResident, notUser, getGuards);
 
 /**
- * Add new guards
+ * Add new guard
  *
  * hoaId
  * userId
  */
-router.post('/guards', allowEmployee, onlyAdmin, addGuard);
+router.post('/guards', allowAdmin, notUser, addGuard);
 
 /**
  * Retire guard
@@ -58,6 +64,6 @@ router.post('/guards', allowEmployee, onlyAdmin, addGuard);
  * hoaId
  * guardId
  */
-router.patch('/guards', allowEmployee, onlyAdmin, retireGuard);
+router.patch('/guards', allowAdmin, notUser, retireGuard);
 
 module.exports = router;

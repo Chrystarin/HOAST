@@ -2,9 +2,10 @@ const router = require('express').Router();
 
 const asyncHandler = require('../middlewares/asyncHandler');
 const {
-	allowEmployee,
-	onlyGuard,
-	allowResident
+	allowResident,
+	allowAdmin,
+	allowGuard,
+	notUser
 } = require('../middlewares/authorization');
 
 const { addRecord, getRecords } = asyncHandler(
@@ -12,31 +13,25 @@ const { addRecord, getRecords } = asyncHandler(
 );
 
 /**
- * Admin, Guard
- * - vehicle
- * - visitor
- * - user
+ * Get logs of user
  *
- * User
- * - vehicle
- * - user
+ * logId - optional [1 | n]
  *
- * Residents of Home
- * - visitor
+ * [User] => vehicle | user
  *
+ * [Resident] => visitor
+ * homeId
+ *
+ * [Employee] => vehicle | vistior | user
  * hoaId
- * logId - optional
- * logType - optional
- * fromDate - optional
- * toDate - optional
  */
-router.get('/', allowEmployee, allowResident, getRecords);
+router.get('/', allowAdmin, allowGuard, allowResident, getRecords);
 
 /**
  * hoaId
- * objId
+ * objectId
  * logType
  */
-router.post('/', allowEmployee, onlyGuard, addRecord);
+router.post('/', allowGuard, notUser, addRecord);
 
 module.exports = router;

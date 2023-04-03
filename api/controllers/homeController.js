@@ -1,7 +1,16 @@
 const User = require('../models/User');
 const Home = require('../models/Home');
 
-const { UserNotFoundError, ForbiddenError } = require('../helpers/errors');
+const {
+	UserNotFoundError,
+	ForbiddenError,
+	ResidentNotFoundError,
+	NotFoundError
+} = require('../helpers/errors');
+const {
+	roles: { USER },
+	types: { EMPLOYEE, RESIDENT }
+} = require('../helpers/constants');
 const { checkString } = require('../helpers/validData');
 
 const getHomes = async (req, res, next) => {
@@ -13,23 +22,24 @@ const getHomes = async (req, res, next) => {
 
 	let homes;
 
-	if (type === 'user') {
+	if (type == USER) {
 		const { user } = req.user;
 		homes = await Home.find({ owner: user._id });
 	}
 
-	if (type === 'resident') {
-		const { user } = req.user;
-		homes = await Home.find({ 'residents.user': user._id });
-	}
-
-	if (type === 'employee') {
+	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 		homes = await Home.find({ hoa: hoa._id });
 	}
 
-	// Filter homes with homeId
-	homes = homes.filter(({ homeId: hi }) => (homeId ? homeId === hi : true));
+	// Get specific home
+	if (homeId) {
+		homes = homes.filter(({ homeId: hi }) =>
+			homeId ? homeId == hi : true
+		);
+
+		if (!homes) throw new NotFoundError('Incorrect home id');
+	}
 
 	req.json(homes);
 };
@@ -43,12 +53,12 @@ const getResidents = async (req, res, next) => {
 
 	let residents;
 
-	if (type === 'resident') {
+	if (RESIDENT.has(type)) {
 		const { home } = req.user;
 		residents = home.residents;
 	}
 
-	if (type === 'employee') {
+	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get homes under hoa
@@ -61,25 +71,27 @@ const getResidents = async (req, res, next) => {
 		);
 	}
 
-	// Filter residents with residentId
-	residents = residents.filter(({ residentId: ri }) =>
-		residentId ? residentId === ri : true
-	);
+	// Get specific resident
+	if (residentId) {
+		residents = residents.find(({ residentId: ri }) =>
+			residentId ? residentId == ri : true
+		);
+
+		if (!residents) throw new NotFoundError('User is not resident');
+	}
 
 	res.json(residents);
 };
 
 const updateHome = async (req, res, next) => {
 	const { name } = req.body;
-
-	// Get home from req.user
 	const { home } = req.user;
 
 	// Update home
 	home.name = name;
 	await home.save();
 
-	res.status(200).json({ message: 'Home updated' });
+	res.json({ message: 'Home updated' });
 };
 
 const addResident = async (req, res, next) => {
@@ -100,25 +112,25 @@ const addResident = async (req, res, next) => {
 };
 
 const removeResident = async (req, res, next) => {
-	const { userId } = req.body;
-	const { home, type } = req.user;
+	const { residentId } = req.body;
+	const { home, user } = req.user;
 
 	// Validate input
-	checkString(userId, 'User ID');
+	checkString(residentId, 'Resident ID');
 
-	// Check if user is admin
-	if (type === 'admin')
-		throw new ForbiddenError("Admin of Home can't be inactive");
+	// Check if user is homeowner
+	if (residentId === user.userId)
+		throw new ForbiddenError('Owner can not be inactive');
 
 	// Find user index
-	const user = home.residents.find(
-		({ user: { userId: id, status } }) =>
-			id === userId && status === 'active'
+	const resident = home.residents.find(
+		({ user: { userId, status } }) =>
+			userId == residentId && status == 'active'
 	);
-	if (!user) throw new UserNotFoundError();
+	if (!resident) throw new ResidentNotFoundError();
 
 	// Set the status of resident to inactive
-	user.status = 'inactive';
+	resident.status = 'inactive';
 	await home.save();
 
 	res.json({ message: 'Resident removed' });

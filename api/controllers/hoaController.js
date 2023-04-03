@@ -5,7 +5,8 @@ const Request = require('../models/Request');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
-	GuardNotFoundError
+	DuplicateEntryError,
+	NotFoundError
 } = require('../helpers/errors');
 const { checkString, checkNumber } = require('../helpers/validData');
 const { genHoaId, genRequestId } = require('../helpers/generateId');
@@ -38,13 +39,21 @@ const getHoas = async (req, res, next) => {
 	checkString(hoaId, 'HOA ID', true);
 
 	// Find hoas
-	const hoas = await HOA.find(hoaId ? { hoaId } : {});
+	let hoas = await HOA.find(hoaId ? { hoaId } : {});
+
+	// Get specific hoa
+	if (hoaId) {
+		[hoas] = hoas;
+
+		if (!hoas) throw new HOANotFoundError();
+	}
 
 	res.json(hoas);
 };
 
 const joinHoa = async (req, res, next) => {
 	const { hoaId, name, number, street, phase } = req.body;
+	const { user, type } = req.user;
 
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
@@ -56,11 +65,20 @@ const joinHoa = async (req, res, next) => {
 	const hoa = await HOA.findOne({ hoaId });
 	if (!hoa) throw new HOANotFoundError();
 
+	// Check if user already sent a join request
+	const requestExists = await Request.exists({
+		hoa: hoa._id,
+		requestor: user_id,
+		status: 'pending'
+	});
+	if (requestExists)
+		throw new DuplicateEntryError('Join request already sent');
+
 	// Create request
 	const request = await Request.create({
 		requestId: genRequestId(),
 		hoa: hoa._id,
-		requestor: req.user.user._id,
+		requestor: user._id,
 		details: { name, number, street, phase }
 	});
 
@@ -72,6 +90,7 @@ const joinHoa = async (req, res, next) => {
 
 const addGuard = async (req, res, next) => {
 	const { userId } = req.body;
+	const { hoa } = req.user;
 
 	// Validate input
 	checkString(userId, 'User ID');
@@ -79,9 +98,6 @@ const addGuard = async (req, res, next) => {
 	// Find user (to be guard)
 	const user = await User.findOne({ userId });
 	if (!user) throw new UserNotFoundError();
-
-	// Get HOA
-	const { hoa } = req.user;
 
 	// Add guard to HOA
 	hoa.guards.push({ guard: user._id });
@@ -92,50 +108,39 @@ const addGuard = async (req, res, next) => {
 
 const retireGuard = async (req, res, next) => {
 	const { guardId } = req.body;
+	const { hoa } = req.user;
 
 	// Validate input
 	checkString(guardId, 'Guard ID');
 
-	// Get HOA
-	const { hoa } = req.user;
-
 	// Find the active guard
 	const guard = hoa.guards.find(
 		({ user: { userId }, status }) =>
-			userId === guardId && status === 'active'
+			userId == guardId && status == 'active'
 	);
-	if (!guard) throw new GuardNotFoundError();
+	if (!guard) throw new NotFoundError('Can not find active guard');
 
 	// Update status of guard
 	guard.status = 'retired';
 	await hoa.save();
 
-	res.status(200).json({
-		message: 'Guard retired',
-		guardId: guard.user.userId
-	});
+	res.json({ message: 'Guard retired', guardId });
 };
 
 const getGuards = async (req, res, next) => {
 	const { guardId } = req.query;
+	const { hoa } = req.user;
 
 	checkString(guardId, 'Guard ID', true);
 
-	// Get the guards
-	let guards = req.user.hoa.guards;
+	let guards = hoa.guards;
 
-	// Find guard if guardId is given
+	// Get specific guard
 	if (guardId)
-		guards = req.user.hoa.guards.find(
-			({ user: { userId } }) => userId === guardId
-		);
+		guards = hoa.guards.find(({ user: { userId } }) => userId == guardId);
 
 	res.json(guards);
 };
-
-const createRequest = async (req, res, next) => {};
-
-const processRequest = async (req, res, next) => {};
 
 module.exports = {
 	registerHoa,
@@ -143,7 +148,5 @@ module.exports = {
 	joinHoa,
 	addGuard,
 	retireGuard,
-	getGuards,
-	createRequest,
-	processRequest
+	getGuards
 };

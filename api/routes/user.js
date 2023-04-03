@@ -2,7 +2,6 @@ const router = require('express').Router();
 
 const asyncHandler = require('../middlewares/asyncHandler');
 const authenticate = require('../middlewares/authentication');
-const { onlyUser } = require('../middlewares/authorization');
 
 const { signup, login, updateUser } = asyncHandler(
 	require('../controllers/userController')
@@ -36,6 +35,6 @@ router.use(authenticate);
  * email
  * password
  */
-router.patch('/', onlyUser, updateUser);
+router.patch('/', updateUser);
 
 module.exports = router;

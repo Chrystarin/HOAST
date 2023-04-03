@@ -1,9 +1,9 @@
 const router = require('express').Router();
 
 const {
-	allowEmployee,
-	onlyAdmin,
-	allowResident
+	allowAdmin,
+	allowHomeowner,
+	notUser
 } = require('../middlewares/authorization');
 const asyncHandler = require('../middlewares/asyncHandler');
 
@@ -13,16 +13,25 @@ const { createDue, getDues } = asyncHandler(
 
 /**
  * Get dues
+ *
+ * dueId - optional [1 | n]
+ *
+ * [Admin]
+ * hoaId
+ *
+ * [Homeowner]
+ * homeId
  */
-router.get('/', allowEmployee, allowResident, getDues);
+router.get('/', allowAdmin, allowHomeowner, notUser, getDues);
 
 /**
  * Create a due
  *
+ * hoaId
  * homeId
  * amount
  * months
  */
-router.post('/', allowEmployee, onlyAdmin, createDue);
+router.post('/', allowAdmin, notUser, createDue);
 
 module.exports = router;

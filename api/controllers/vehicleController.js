@@ -1,6 +1,11 @@
 const Home = require('../models/Home');
 
+const {
+	roles: { USER },
+	types: { EMPLOYEE, RESIDENT }
+} = require('../helpers/constants');
 const { checkString } = require('../helpers/validData');
+const { VehicleNotFoundError } = require('../helpers/errors');
 
 const getVehicles = async (req, res, next) => {
 	const { plateNumber } = req.query;
@@ -11,12 +16,12 @@ const getVehicles = async (req, res, next) => {
 
 	let vehicles;
 
-	if (type === 'user') {
+	if (type == USER) {
 		const { user } = req.user;
 		vehicles = user.vehicles;
 	}
 
-	if (type === 'resident') {
+	if (RESIDENT.has(type)) {
 		const { home } = req.user;
 		vehicles = home.residents.reduce(
 			(arr1, { user: { vehicles: v } }) => [...arr1, ...v],
@@ -24,7 +29,7 @@ const getVehicles = async (req, res, next) => {
 		);
 	}
 
-	if (type === 'employee') {
+	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get all homes under hoa
@@ -45,10 +50,14 @@ const getVehicles = async (req, res, next) => {
 		);
 	}
 
-	vehicles = vehicles.filter(({ plateNumber: pn }) =>
-		plateNumber ? plateNumber === pn : true
-	);
+	// Get specific vehicle
+	if (plateNumber) {
+		vehicles = vehicles.find(({ plateNumber: pn }) =>
+			plateNumber ? plateNumber == pn : true
+		);
 
+		if (!vehicles) throw new VehicleNotFoundError();
+	}
 	res.json(vehicles);
 };
 

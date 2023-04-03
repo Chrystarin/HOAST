@@ -1,8 +1,12 @@
 const Visitor = require('../models/Visitor');
 const Home = require('../models/Home');
 
+const {
+	types: { EMPLOYEE }
+} = require('../helpers/constants');
 const { checkString, checkDate } = require('../helpers/validData');
 const { genVisitorId } = require('../helpers/generateId');
+const { VisitorNotFoundError } = require('../helpers/errors');
 
 const addVisitor = async (req, res, next) => {
 	const { name, purpose, arrival, departure, note } = req.body;
@@ -42,12 +46,12 @@ const getVisitors = async (req, res, next) => {
 
 	let visitors;
 
-	if (type === 'resident') {
+	if (USER.has(type)) {
 		const { home } = req.user;
 		visitors = await Visitor.find({ home: home._id });
 	}
 
-	if (type === 'employee') {
+	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get homes of hoa
@@ -60,10 +64,14 @@ const getVisitors = async (req, res, next) => {
 			.exec();
 	}
 
-	// Filter visitors by visitorId
-	visitors = visitors.filter(({ visitorId: vi }) =>
-		visitorId ? visitorId === vi : true
-	);
+	//Get specific visitor
+	if (visitorId) {
+		visitors = visitors.find(({ visitorId: vi }) =>
+			visitorId ? visitorId == vi : true
+		);
+
+		if (!visitors) throw new VisitorNotFoundError();
+	}
 
 	res.status(200).json(visitors);
 };

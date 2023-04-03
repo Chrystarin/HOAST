@@ -1,25 +1,28 @@
 const Due = require('../models/Due');
 const Home = require('../models/Home');
 
+const {
+	roles: { ADMIN, HOMEOWNER }
+} = require('../helpers/constants');
 const { NotFoundError } = require('../helpers/errors');
 const { genDueId } = require('../helpers/generateId');
 const { checkNumber } = require('../helpers/validData');
 
 const getDues = async (req, res, next) => {
 	const { dueId } = req.body;
-	const { role } = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(dueId, 'Due ID', true);
 
 	let dues;
 
-	if (role === 'homeowner') {
+	if (type == ADMIN) {
 		const { home } = req.user;
 		dues = await Due.find({ home: home._id });
 	}
 
-	if (role === 'admin') {
+	if (type == HOMEOWNER) {
 		const { hoa } = req.user;
 
 		// Get homes under hoa
@@ -36,8 +39,12 @@ const getDues = async (req, res, next) => {
 		);
 	}
 
-	// Filter dues with dueId
-	dues = dues.filter(({ dueId: di }) => dueId === id);
+	// Get specific due
+	if (dueId) {
+		dues = dues.find(({ dueId: di }) => dueId == id);
+
+		if (!dues) throw new NotFoundError('Incorrect due id');
+	}
 
 	res.json(dues);
 };
@@ -56,18 +63,25 @@ const createDue = async (req, res, next) => {
 	if (!home) throw new NotFoundError('Home');
 
 	// Create due
-	const due = await Due.create({
+	const due = new Due({
 		dueId: genDueId(),
 		home: home._id,
 		amount,
 		months,
-		from: home.paidUntil,
-		// Update paidUntil of Home
-		to:
-			(home.paidUntil.setMonth(home.paidUntil.getMonth() + months),
-			await home.save(),
-			home.paidUntil)
+		from: home.paidUntil
 	});
+
+	// Calculate date
+	const paidUntil = home.paidUntil.setMonth(
+		home.paidUntil.getMonth() + months
+	);
+
+	// Update due's paid to
+	due.to = paidUntil;
+	await due.save();
+
+	// Update home's paid until
+	await home.save();
 
 	res.status(201).json({
 		message: 'Due added',

@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-const { genUserId } = require('../helpers/generateId');
 const { UnauthorizedError } = require('../helpers/errors');
-const { checkString, checkEmail } = require('../helpers/validData');
 const { JWT_SECRET } = process.env;
+const { genUserId } = require('../helpers/generateId');
+const { checkString, checkEmail } = require('../helpers/validData');
 
 const createToken = (userId) =>
 	jwt.sign({ userId, createdAt: new Date() }, JWT_SECRET, {
@@ -55,7 +55,6 @@ const login = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body;
-
 	const { user } = req.user;
 
 	// Update user
