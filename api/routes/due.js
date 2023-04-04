@@ -1,28 +1,37 @@
 const router = require('express').Router();
-const { createDue, getDues } = require('../controllers/dueController');
-const authorize = require('../middlewares/authorization');
-const roles = require('../helpers/roles');
+
+const {
+	allowAdmin,
+	allowHomeowner,
+	notUser
+} = require('../middlewares/authorization');
+const asyncHandler = require('../middlewares/asyncHandler');
+
+const { createDue, getDues } = asyncHandler(
+	require('../controllers/dueController')
+);
 
 /**
- * case ADMIN:
- *     hoaId
- *     homeId
- * case RESIDENT:
- *     homeId
- * 
- * from - optional
- * to - optional
+ * Get dues
+ *
+ * dueId - optional [1 | n]
+ *
+ * [Admin]
+ * hoaId
+ *
+ * [Homeowner]
+ * homeId
  */
-router.get('/', getDues);
+router.get('/', allowAdmin, allowHomeowner, notUser, getDues);
 
 /**
- * [ADMIN]
+ * Create a due
  *
  * hoaId
  * homeId
  * amount
- * paidUntil
+ * months
  */
-router.post('/', createDue);
+router.post('/', allowAdmin, notUser, createDue);
 
 module.exports = router;

@@ -1,47 +1,70 @@
-const {
-	getHomes,
-	updateHomeName,
-	getResidents,
-	addResident,
-	removeResident
-} = require('../controllers/homeController');
-const authorize = require('../middlewares/authorization');
-const roles = require('../helpers/roles');
-
 const router = require('express').Router();
 
-/**
- * hoaId - optional
- * homeId - optional
- */
-// router.get('/', authorize(roles.ADMIN, roles.HOMEOWNER), getHomes);
-router.get('/', getHomes);
+const asyncHandler = require('../middlewares/asyncHandler');
+const {
+	allowResident,
+	allowHomeowner,
+	notUser,
+	allowAdmin,
+	allowGuard
+} = require('../middlewares/authorization');
+
+const { getHomes, updateHome, addResident, removeResident, getResidents } =
+	asyncHandler(require('../controllers/homeController'));
 
 /**
+ * Get homes
+ *
+ * homeId - optional [one | many]
+ *
+ * [User] - owned homes
+ *
+ * [Employee]
+ * hoaId
+ */
+router.get('/', allowAdmin, allowGuard, getHomes);
+
+/**
+ * Update home details
+ *
  * homeId
  */
-router.patch('/', authorize(roles.HOMEOWNER), updateHomeName);
+router.patch('/', allowHomeowner, notUser, updateHome);
 
 /**
- * case 1: (HOA Admin)
- *     hoaId
- *     homeId - optional
- * case 2: (User)
- *     homeId
- */
-// router.get('/residents', authorize(roles.ADMIN, roles.HOMEOWNER), getResidents);
-router.get('/residents', getResidents);
-
-/**
+ * Get residents of related home
+ *
+ * residentId
+ *
+ * [Employee]
+ * hoaId
+ *
+ * [Resident]
  * homeId
- * userId
  */
-router.post('/residents', authorize(roles.HOMEOWNER), addResident);
+router.get(
+	'/residents',
+	allowAdmin,
+	allowGuard,
+	allowResident,
+	notUser,
+	getResidents
+);
 
 /**
+ * Add residents of home
+ *
  * homeId
- * userId
+ * residentId
  */
-router.delete('/residents', authorize(roles.HOMEOWNER), removeResident);
+router.post('/residents', allowHomeowner, notUser, addResident);
+
+/**
+ * Set resident inactive
+ *
+ * homeId
+ * residentId
+ */
+router.patch('/residents', allowHomeowner, notUser, removeResident);
 
 module.exports = router;

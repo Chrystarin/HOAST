@@ -3,156 +3,69 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
+const { UnauthorizedError } = require('../helpers/errors');
+const { JWT_SECRET } = process.env;
 const { genUserId } = require('../helpers/generateId');
-const {
-	UserNotFoundError,
-	ConflictError,
-	UnauthorizedError
-} = require('../helpers/errors');
 const { checkString, checkEmail } = require('../helpers/validData');
 
-const createToken = (userId) => {
-	return jwt.sign(
-		{
-			userId,
-			createdAt: Date.now()
-		},
-		process.env.JWT_SECRET,
-		{ expiresIn: '30d' }
-	);
-};
-const emailExist = new ConflictError('Email already used', 'Existing Email');
+const createToken = (userId) =>
+	jwt.sign({ userId, createdAt: new Date() }, JWT_SECRET, {
+		expiresIn: '7d'
+	});
+const cookieOptions = { httpOnly: true, sameSite: 'strict', secure: true };
 
 const signup = async (req, res, next) => {
-	const {
+	const { firstName, lastName, email, password } = req.body;
+
+	checkString(firstName, 'First Name');
+	checkString(lastName, 'Last Name');
+	checkString(password, 'Password');
+	checkEmail(email);
+
+	// Create user
+	const user = await User.create({
+		userId: genUserId(),
 		name: { firstName, lastName },
-        email, 
-        password
-	} = req.body;
+		credentials: { email, password: await bcrypt.hash(password, 10) }
+	});
 
-	try {
-		checkString(firstName, 'First Name');
-		checkString(lastName, 'Last Name');
-		checkString(password, 'Password');
-		checkEmail(email);
-
-		// Check if email used
-		const userEmail = await User.findOne({ credentials: { email } });
-		if (userEmail) throw emailExist;
-
-		// Create user
-		const user = await User.create({
-			userId: genUserId(),
-			name: {
-				firstName,
-				lastName
-			},
-			credentials: {
-				email,
-				password: await bcrypt.hash(password, 10)
-			}
-		});
-
-		res.status(201)
-			.cookie('access-token', createToken(user.userId), {
-				httpOnly: true,
-				sameSite: 'none',
-				secure: true
-			})
-			.json({
-				message: 'Account created',
-				userId: user.userId
-			});
-	} catch (err) {
-        console.log(firstName);
-        console.log(lastName);
-        console.log(email);
-        console.log(password);
-		next(err);
-	}
+	res.status(201)
+		.cookie('access-token', createToken(user.userId), cookieOptions)
+		.json({ message: 'Account created', userId: user.userId });
 };
 
 const login = async (req, res, next) => {
 	const { email, password } = req.body;
 
-    console.log(req.body);
+	checkEmail(email);
+	checkString(password, 'Password');
 
-	try {
-		checkEmail(email);
-		checkString(password, 'Password');
+	// Find email
+	const user = await User.findOne({ 'credentials.email': email }).exec();
+	if (!user) throw new UnauthorizedError('Incorrect email or password');
 
-		// Find email
-		const user = await User.findOne({ 'credentials.email': email }).exec();
-		if (!user) throw new UnauthorizedError('Incorrect email or password');
+	// Check password
+	if (!bcrypt.compare(password, user.credentials.password))
+		throw new UnauthorizedError('Incorrect email or password');
 
-		// Check password
-		const verify = await bcrypt.compare(
-			password,
-			user.credentials.password
-		);
-		if (!verify) throw new UnauthorizedError('Incorrect email or password');
-
-		const token = createToken(user.userId)
-
-		res.status(201)
-			.cookie('access-token', token, {
-				httpOnly: true,
-				sameSite: 'none',
-				secure: true
-			})
-			.json({ id: user.userId, user: user.credentials.email, token: token, roles: ['user', 'admin']  });
-		
-	} catch (err) {
-		next(err);
-	}
+	res.status(201)
+		.cookie('access-token', createToken(user.userId), cookieOptions)
+		.json({ message: 'Logged in' });
 };
 
-const getUser = async (req, res, next) => {
-	const { userId } = req.query;
+const updateUser = async (req, res, next) => {
+	const { firstName, lastName, email, password } = req.body;
+	const { user } = req.user;
 
-	try {
-		checkString(userId, 'User ID', true);
-
-		const user = await User.findOne(
-			userId ? { userId } : { _id: req.user._id }
-		)
-			.populate('vehicles homes')
-			.select('-credentials');
-		if (!user) throw new UserNotFoundError();
-
-		res.status(200).json(user);
-	} catch (error) {
-		next(error);
-	}
-};
-
-const editUser = async (req, res, next) => {
-	const {
+	// Update user
+	user = {
+		...user,
 		name: { firstName, lastName },
-		email,
-		password
-	} = req.body;
+		credentials: { email, password }
+	};
+	await user.save();
 
-	try {
-		// Check if email used
-		const userEmail = await User.findOne({ 'credentials.email': email });
-		if (userEmail) throw emailExist;
-
-		// Update user
-		await User.findByIdAndUpdate(req.user._id, {
-			name: { firstName, lastName },
-			credentials: { email, password }
-		});
-
-		res.status(200).json({ message: 'User profile updated' });
-	} catch (err) {
-		next(err);
-	}
+	res.json({ message: 'User updated' });
 };
 
-module.exports = {
-	signup,
-	login,
-	getUser,
-	editUser
-};
+module.exports = { signup, login, updateUser };

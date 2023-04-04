@@ -1,35 +1,32 @@
-const {
-	createRequest,
-	getRequests,
-	processRequest
-} = require('../controllers/requestController');
-const roles = require('../helpers/roles');
-const authorization = require('../middlewares/authorization');
-
 const router = require('express').Router();
 
-/**
- * hoaId
- * requestId - optional
- */
-// router.get('/', authorization(roles.ADMIN), getRequests);
-router.get('/', getRequests);
+const asyncHandler = require('../middlewares/asyncHandler');
+const {
+    allowAdmin,
+    notUser
+} = require('../middlewares/authorization');
+
+const { getRequests, processRequest } = asyncHandler(
+	require('../controllers/requestController')
+);
 
 /**
+ * Get requests
+ * 
+ * requestId - optional [1 | n]
+ * 
+ * [Admin]
  * hoaId
- * homeName
- * houseNumber
- * street
- * phase - optional
  */
-router.post('/', createRequest);
+router.get('/', allowAdmin, getRequests);
 
 /**
+ * Process the request
+ *
  * hoaId
  * requestId
  * status
  */
-// router.patch('/', authorization(roles.ADMIN), processRequest);
-router.patch('/', processRequest);
+router.patch('/', allowAdmin, notUser, processRequest);
 
 module.exports = router;

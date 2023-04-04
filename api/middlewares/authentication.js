@@ -1,26 +1,25 @@
 const jwt = require('jsonwebtoken');
 
-const { UserNotFoundError } = require('../helpers/errors');
 const User = require('../models/User');
 
-module.exports = async (req, res, next) => {
+const { UserNotFoundError, UnauthorizedError } = require('../helpers/errors');
+const { asyncHandler } = require('./asyncHandler');
+const { JWT_SECRET } = process.env;
+
+module.exports = asyncHandler(async (req, res, next) => {
 	const { 'access-token': accessToken } = req.cookies;
 
-	try {
-		// Check if there is access token in request
-		if (!accessToken) throw new UserNotFoundError();
+	// Check if there is access token in request
+	if (!accessToken) throw new UnauthorizedError('Log in first');
 
-		// Verify access-token
-		const { userId } = jwt.verify(accessToken, process.env.JWT_SECRET);
+	// Verify access-token
+	const { userId } = jwt.verify(accessToken, JWT_SECRET);
 
-		// Find user
-		const user = await User.findOne({ userId });
-		if (!user) throw new UserNotFoundError();
+	// Find user
+	const user = await User.findOne({ userId });
+	if (!user) throw new UserNotFoundError();
 
-		req.user = { userId: user.userId, _id: user._id };
+	req.user = { user, type: 'user' };
 
-		next();
-	} catch (error) {
-		next(error);
-	}
-};
+	next();
+});

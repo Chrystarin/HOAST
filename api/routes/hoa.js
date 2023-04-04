@@ -1,56 +1,69 @@
-const {
-	registerHoa,
-    getHoa,
-	addGuard,
-	updateGuardStatus,
-	getGuards,
-	joinHoa
-} = require('../controllers/hoaController');
-const authorize = require('../middlewares/authorization');
-const roles = require('../helpers/roles');
-
 const router = require('express').Router();
 
-router.get('/', getHoa);
+const asyncHandler = require('../middlewares/asyncHandler');
+const {
+	allowAdmin,
+	allowGuard,
+	notUser,
+	allowResident,
+	notAdmin,
+} = require('../middlewares/authorization');
+
+const { registerHoa, getHoas, addGuard, retireGuard, getGuards, joinHoa } =
+	asyncHandler(require('../controllers/hoaController'));
 
 /**
+ * Register a new HOA
+ *
  * name
- * address
- *     street
- *     barangay
- *     city
- *     province
+ * street
+ * barangay
+ * city
+ * province
  */
 router.post('/register', registerHoa);
 
 /**
+ * Create a join request in HOA
+ *
  * hoaId
- * address
- *     houseName
- *     houseNumber
- *     street
- *     phase - optional
+ * name
+ * number
+ * street
+ * phase - optional
  */
-router.post('/join', joinHoa);
+router.post('/join', allowAdmin, notAdmin, joinHoa);
 
 /**
- * hoaId
- * guardId - optional
+ * hoaId - optional [1 | n]
  */
-router.get('/guards', authorize(roles.ADMIN), getGuards);
+router.get('/', getHoas);
 
 /**
+ * Get all guards
+ *
+ * hoaId
+ * guardId - optional [1 | n]
+ * 
+ * [Resident]
+ * homeId
+ */
+router.get('/guards', allowAdmin, allowGuard, allowResident, notUser, getGuards);
+
+/**
+ * Add new guard
+ *
  * hoaId
  * userId
  */
-// router.post('/guards', authorize(roles.ADMIN), addGuard);
-router.post('/guards', addGuard);
+router.post('/guards', allowAdmin, notUser, addGuard);
 
 /**
+ * Retire guard
+ *
  * hoaId
  * guardId
- * status
  */
-router.patch('/guards', authorize(roles.ADMIN), updateGuardStatus);
+router.patch('/guards', allowAdmin, notUser, retireGuard);
 
 module.exports = router;

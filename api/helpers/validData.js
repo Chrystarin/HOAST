@@ -1,40 +1,47 @@
-const { InvalidString, InvalidDate, InvalidEmail } = require('./errors');
+const { InvalidInputError } = require('./errors');
 
 const checkString = (str, property, canbeUndefined = false) => {
-	if (canbeUndefined) return;
+	// Check if string is defined
+	if (str) {
+		// Check if input is type of string
+		if (typeof str !== 'string')
+			throw new InvalidInputError(`'${property}' is not a string`);
 
-	if (!(typeof str === 'string' || str instanceof String))
-		throw new InvalidString(property + ' is not a string');
+		// Check if string is not empty
+		if (!str.trim()) throw new InvalidInputError(`'${property}' is empty`);
 
-	if (!str) throw new InvalidString(property + ' is empty');
-};
-
-const isDate = (date) => {
-	if (isNaN(new Date(date))) throw new InvalidDate();
-	return new Date(date);
-};
-
-const checkDate = (fromDate, toDate) => {
-	fromDate = isDate(fromDate);
-
-	if (toDate) {
-		toDate = isDate(toDate);
-
-		if (fromDate > toDate) throw new InvalidDate();
+		return;
 	}
+
+	// Check if canbeUndefined is true if string is undefined
+	if (!canbeUndefined)
+		throw new InvalidInputError(`'${property}' is not defined`);
+};
+
+const checkNumber = (n, property, canbeUndefined) => {
+	// Check if n is defined
+	if (n) {
+		// Check if input is type of number
+		if (typeof n !== 'number')
+			throw new InvalidInput(`'${property}' is not a number`);
+
+		return;
+	}
+
+	// Check if canbeUndefined is true if n is undefined
+	if (!canbeUndefined) throw new InvalidInput(`'${property}' is not defined`);
+};
+
+const checkDate = (date, property) => {
+	if (isNaN(new Date(date)))
+		throw new InvalidInputError(`'${property} is in invalid date format'`);
 };
 
 const checkEmail = (email) => {
 	checkString(email, 'Email');
 
 	if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email))
-		throw new InvalidEmail();
-};
-
-const checkNumber = (n) => {
-	if (typeof n === 'number' || n instanceof Number) return;
-
-	throw new TypeError('Invalid Number');
+		throw new InvalidInputError('Invalid email format');
 };
 
 module.exports = {

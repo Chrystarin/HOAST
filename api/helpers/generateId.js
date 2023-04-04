@@ -18,6 +18,20 @@ const toHexBuffer = (n) => {
 };
 
 /**
+ * Properly converts nonce into buffer
+ *
+ * @param {number} n nonce
+ * @returns {Buffer}
+ */
+const toNonceBuffer = (n) =>
+	Buffer.from(
+		[...toHexBuffer(n)]
+			.map((b) => `${b >> 6}${_alphabet[b & 63]}`)
+			.join(''),
+		'utf-8'
+	);
+
+/**
  * Converts the given buffer to a string
  *
  * @param {Buffer} buffer Buffer to convert to string
@@ -43,21 +57,29 @@ const randomBuffer = () => {
 	return pool;
 };
 
+/**
+ * Generates id from given nonce
+ *
+ * @param {number} nonce Nonce
+ * @returns {string}
+ */
+const generateId = (prefix, nonce) =>
+	bufferToString(
+		Buffer.concat([
+			Buffer.from(prefix, 'utf-8'),
+			toHexBuffer(Date.now()),
+			randomBuffer(),
+			toNonceBuffer(nonce)
+		])
+	);
+
 let hoaNonce = 0;
 /**
  * Generates a unique id exclusive for HOAs
  *
  * @returns {string}
  */
-const genHoaId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++hoaNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genHoaId = () => generateId('HOA', ++hoaNonce);
 
 let userNonce = 0;
 /**
@@ -65,15 +87,7 @@ let userNonce = 0;
  *
  * @returns {string}
  */
-const genUserId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++userNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genUserId = () => generateId('USR', ++userNonce);
 
 let visitorNonce = 0;
 /**
@@ -81,15 +95,7 @@ let visitorNonce = 0;
  *
  * @returns {string}
  */
-const genVisitorId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++visitorNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genVisitorId = () => generateId('VST', ++visitorNonce);
 
 let logNonce = 0;
 /**
@@ -97,15 +103,7 @@ let logNonce = 0;
  *
  * @returns {string}
  */
-const genLogId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++logNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genLogId = () => generateId('LOG', ++logNonce);
 
 let dueNonce = 0;
 /**
@@ -113,15 +111,7 @@ let dueNonce = 0;
  *
  * @returns {string}
  */
-const genDueId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++dueNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genDueId = () => generateId('DUE', ++dueNonce);
 
 let requestNonce = 0;
 /**
@@ -129,15 +119,7 @@ let requestNonce = 0;
  *
  * @returns {string}
  */
-const genRequestId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++requestNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genRequestId = () => generateId('REQ', ++requestNonce);
 
 let homeNonce = 0;
 /**
@@ -145,15 +127,7 @@ let homeNonce = 0;
  *
  * @returns {string}
  */
-const genHomeId = () => {
-	return bufferToString(
-		Buffer.concat([
-			randomBuffer(),
-			toHexBuffer(++homeNonce),
-			toHexBuffer(Date.now())
-		])
-	);
-};
+const genHomeId = () => generateId('HOM', ++homeNonce);
 
 module.exports = {
 	genHoaId,
@@ -161,6 +135,6 @@ module.exports = {
 	genVisitorId,
 	genLogId,
 	genDueId,
-    genRequestId,
-    genHomeId
+	genRequestId,
+	genHomeId
 };

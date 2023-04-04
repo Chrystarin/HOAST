@@ -1,51 +1,56 @@
 const { Schema, model } = require('mongoose');
-const { genHoaId } = require('../helpers/generateId');
 const { ObjectId } = Schema.Types;
 
-const hoaSchema = new Schema(
-	{
-		hoaId: {
-			type: String,
-			unique: true,
-			default: genHoaId()
-		},
-		name: { type: String, required: true },
-		address: {
-			street: { type: String, required: true },
-			barangay: { type: String, required: true },
-			city: { type: String, required: true },
-			province: { type: String, required: true }
-		},
-		admin: {
-			type: ObjectId,
-			ref: 'User',
-			required: true
-		},
-		homes: [
-			{
-				type: ObjectId,
-				ref: 'Home'
-			}
-		],
-		guards: [
-			{
-				guard: {
-					type: ObjectId,
-					ref: 'User'
-				},
-				status: {
+module.exports = model(
+	'HOA',
+	new Schema(
+		{
+			hoaId: { type: String, unique: true, required: true },
+			name: { type: String, required: [true, 'HOA Name is required'] },
+			address: {
+				street: {
 					type: String,
-					enum: ['active', 'retired'],
-					default: 'active'
+					required: [true, 'Street is required']
 				},
-				addedAt: {
-					type: Date,
-					default: new Date()
+				barangay: {
+					type: String,
+					required: [true, 'Barangay is required']
+				},
+				city: { type: String, required: [true, 'City is required'] },
+				province: {
+					type: String,
+					required: [true, 'Province is required']
 				}
-			}
-		]
-	},
-	{ timestamps: true }
+			},
+			paymentDate: {
+				month: { type: Number, required: [true, 'Month is required'] },
+				day: { type: Number, required: [true, 'Day is required'] }
+			},
+			admin: {
+				type: ObjectId,
+				ref: 'User',
+				unique: true,
+				required: [true, 'User is required']
+			},
+			guards: [
+				{
+					user: {
+						type: ObjectId,
+						ref: 'User',
+						required: [true, 'User is required'],
+						unique: true,
+						index: true,
+						sparse: true
+					},
+					status: {
+						type: String,
+						enum: ['active', 'retired'],
+						default: 'active'
+					},
+					hiredAt: { type: Date, default: new Date() }
+				}
+			]
+		},
+		{ timestamps: true }
+	)
 );
-
-module.exports = model('HOA', hoaSchema);

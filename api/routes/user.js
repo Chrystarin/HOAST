@@ -1,23 +1,25 @@
 const router = require('express').Router();
-const authenticate = require('../middlewares/authentication');
-const {
-	signup,
-	login,
-	editUser,
-    getUser
-} = require('../controllers/userController');
 
+const asyncHandler = require('../middlewares/asyncHandler');
+const authenticate = require('../middlewares/authentication');
+
+const { signup, login, updateUser } = asyncHandler(
+	require('../controllers/userController')
+);
 
 /**
- * name
- *     firstName
- *     lastName
+ * Signup user
+ *
+ * firstName
+ * lastName
  * email
  * password
  */
 router.post('/signup', signup);
 
 /**
+ * Login user
+ *
  * email
  * password
  */
@@ -26,17 +28,13 @@ router.post('/login', login);
 router.use(authenticate);
 
 /**
- * userId - optional
- */
-router.get('/', getUser);
-
-/**
- * name
- *     firstName
- *     lastName
+ * Edit user info
+ *
+ * firstName
+ * lastName
  * email
  * password
  */
-router.patch('/edit', editUser);
+router.patch('/', updateUser);
 
 module.exports = router;

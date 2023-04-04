@@ -1,29 +1,39 @@
 const router = require('express').Router();
-const { addVisitor, getVisitors } = require('../controllers/visitorController');
+
+const asyncHandler = require('../middlewares/asyncHandler');
+const {
+	allowResident,
+	notUser,
+	allowGuard,
+    allowAdmin
+} = require('../middlewares/authorization');
+
+const { addVisitor, getVisitors } = asyncHandler(
+	require('../controllers/visitorController')
+);
 
 /**
- * [RESIDENT]
- * 
- * homeId
+ * Create a visitor
+ *
  * name
  * purpose
  * arrivalDate
  * departureDate
  * note
  */
-router.post('/', addVisitor);
+router.post('/', allowResident, notUser, addVisitor);
 
 /**
- * [ADMIN, GUARD, RESIDENT]
- * 
- * case ADMIN
- *     hoaId
- *     homeId - optional
- *     visitorId - optional
- * case RESIDENT
- *     homeId
- *     visitorId - optional
+ * Get visitors
+ *
+ * visitorId - optional [1 | n]
+ *
+ * [Employee]
+ * hoaId
+ *
+ * [Resident]
+ * homeId
  */
-router.get('/', getVisitors);
+router.get('/', allowAdmin, allowGuard, allowResident, notUser, getVisitors);
 
 module.exports = router;
