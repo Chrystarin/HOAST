@@ -14,6 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 function LandingPage() {
+  const element = document.getElementById('section-1');
   return (
     <>
       <div id='landingPage'>

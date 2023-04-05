@@ -4,6 +4,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+html {
+    scroll-behavior: smooth;
+}
 :root{
     --primary-color: #3084e4;
     --secondary-color:#2A5D7A;
@@ -129,7 +132,7 @@ a:active{
                 list-style: none;
                 margin-top: 40px;
                 position: sticky;
-                top: 20px;
+                top: 100px;
                 li{
                     a{
                         display: block;
@@ -239,6 +242,39 @@ a:active{
                     color: rgb(37, 37, 37);
                 }
             }
+        }
+    }
+}
+.ModalHidden{
+    display: none;
+}
+.Filter{
+    width: 400px;
+    .Filter__Title{
+        padding: .5em 1em;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.211);
+    }
+    ul{
+        list-style: none;
+        li{
+            padding: .9em 1em;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.087);
+            .Filter__Titles{
+            }
+        }
+    }
+    .Filter__Buttons{
+        display: flex;
+        padding: .5em 1em;
+        gap: 15px;
+        div{
+            button{
+                color: rgb(212, 49, 49);
+            }
+            flex-grow: 1;
         }
     }
 }

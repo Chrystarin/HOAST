@@ -3,10 +3,7 @@ import {useNavigate} from 'react-router';
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import SearchInput from '../../components/SearchInput/SearchInput';
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import VillageIcon from '../../images/icons/Village.png'
-import ResidentCard from '../../components/ResidentCard/ResidentCard';
+
 
 import axios from './../../utils/axios';
 

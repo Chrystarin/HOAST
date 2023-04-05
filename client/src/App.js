@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Error404 from './pages/Error/Error404.js';
@@ -30,10 +30,11 @@ import Scanner from './pages/HomeOwnerAssociation/Scanner.js';
 
 import ProtectedRoute from './utils/ProtectedRoute.js'
 
-import RegisterHoa from './pages/RegisterHoa.js';
+import RegisterHoa from './pages/HomeOwnerAssociation/RegisterHoa.js';
 import JoinRequests from './pages/JoinRequests.js';
-import AddGuard from './pages/AddGuard';
+import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 
+import Guard from './pages/HomeOwnerAssociation/Guard.js';
 function App() {
 
     return (
@@ -46,7 +47,6 @@ function App() {
             <Route path='/register' element={<Register/>}/>
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
-                <Route path='/hoa/addguard' element={<AddGuard/>}/>
                 <Route path='/hoa/register' element={<RegisterHoa/>}/>
                 <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
@@ -75,6 +75,9 @@ function App() {
                 {/* Private Routes for Admin */}
                 <Route element={<ProtectedRoute/>} >
                     <Route path='/associationdues' element={<AssociationDues/>}/>
+                    <Route path='/guard' element={<Guard/>}/>
+                    <Route path='/addguard' element={<AddGuard/>}/>
+
                 </Route>
 
                 {/* Private Routes for Guard */}

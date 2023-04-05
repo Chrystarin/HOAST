@@ -3,20 +3,31 @@ import NavBar from '../../layouts/NavBar';
 import './Scanner.scss';
 import SideBar from './SideBar';
 import Button from '@mui/material/Button';
-import ScannerImg from '../../images/Placeholder/Scanner.PNG';
 import Modal from '@mui/material/Modal';
-
+import Menu from '@mui/material/Menu';
 import QrReader from 'react-qr-scanner'
-
+import Fab from '@mui/material/Fab';
 import axios from '../../utils/axios';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import ScannerConfirmationModal from './ScannerConfirmationModal';
+import TextField from '@mui/material/TextField';
 
 function Scanner() {
     const [data, setData] = useState(null);
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [openFullScreen, setOpenFullScreen] = useState(false);
 
     let log = null;
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
     // Function upon scanning
     async function handleScan(data){
@@ -25,7 +36,7 @@ function Scanner() {
                 log = JSON.parse(data.text)
                 console.log(log)
                 alert("QR Code Detected!")
-
+                
                 // Add Record of Log
                 await axios
                 .post(
@@ -59,17 +70,25 @@ function Scanner() {
             <section className='Section SectionManage'>
                 <SideBar active="Scanner"/>
                 <div id='HOA__Content'>
-                    <h3 className='SectionTitleDashboard'><span><a href="">Scanner</a></span></h3>
+                    <h3 className='SectionTitleDashboard'><span><a >Scanner</a></span></h3>
                     <div className='SectionList' id='QRScanner'>
-                        <div id='Scanner'>
-                            {/* <img src={ScannerImg} alt="" /> */}
-                            <QrReader
-                                delay={10000}
-                                onError={handleError}
-                                onScan={handleScan}
-                                style={{ width: '100%' }}
-                                facingmode='front'
-                            />
+                        <div id="QRScanner__Holder" >
+                            <div id={openFullScreen?"ScannerModal":""}>
+                                <div id='ScannerModal__Container'>
+                                    <QrReader
+                                        delay={10000}
+                                        onError={handleError}
+                                        onScan={handleScan}
+                                        style={{ width: '100%' }}
+                                        facingmode='front'
+                                    />
+                                    <div id='ScannerModal__Buttons'>
+                                        <Fab  aria-label="add" onClick={()=>{setOpenFullScreen(!openFullScreen)}}>
+                                            {!openFullScreen? <FullscreenIcon />:<FullscreenExitIcon/>}
+                                        </Fab>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div id='SidePanel'>
                             <div className='SidePanel__Container' id='DateTime'>
@@ -82,35 +101,34 @@ function Scanner() {
                                     <h5>June 1, 2019</h5>
                                 </div>
                             </div>
-                            <Button variant='contained'>Manual Check</Button>
-
+                            <Button variant='contained' onClick={handleClick}>Manual Check</Button>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <div id='ManualInput'>
+                                    <TextField className='input' id="filled-basic"  label="Input ID" variant="filled" />
+                                    <Button variant='contained' onClick={()=> setOpenConfirmation(true)}>Search</Button>
+                                </div>
+                            </Menu>
                         </div>
                     </div>
                 </div>
             </section>
-
             <Modal
-            open={open}
-            onClose={handleClose}
+            open={openConfirmation || openFullScreen}
+            onClose={()=>{setOpenConfirmation(false); setOpenFullScreen(false)}}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description">
-                <div id='ManualCheck__Modal'>
-                    <div>
-                        <h5>#123456</h5>
-                        <h5>Harold James Castillo</h5>
-                        <p>Homeowner</p>
-                        <p>Tue, 07 Feb 20 23 02:37:40 GMT</p>
-                    </div>
-                    <select name="" id="">
-                        <option value="Enter">Enter</option>
-                        <option value="Exit">Exit</option>
-                    </select>
-                    <div>
-                        <Button variant='outlined'>Reject</Button>
-                        <Button variant='contained'>Accept</Button>
-                    </div>
-                </div>
+                <div></div>
             </Modal>
+            {openConfirmation?<><ScannerConfirmationModal type={"visitor"} close={()=>setOpenConfirmation(false)}/></>:<></>}
         </div>
     </>
 }

@@ -14,10 +14,10 @@ function Header() {
             </div>
             <ul>
                 <li>
-                    <Button variant="text">About</Button>
+                    <Button variant="" href='#Section1'>About</Button>
                 </li>
                 <li>
-                    <Button variant="text">FAQ's</Button>
+                    <Button variant="" href='#Section2'>FAQ's</Button>
                 </li>
                 <li>
                     <Button variant="outlined" href='/login'>Login</Button>

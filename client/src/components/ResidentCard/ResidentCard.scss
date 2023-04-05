@@ -6,7 +6,13 @@
     padding: 1.5em 1em;
     gap: 15px;
     border-radius: 10px;
-    #ResidentCard__Name{
+    a{
         flex-grow: 1;
+        gap: 15px;
+        align-items: center;
+        display: flex;
+    }
+    
+    #ResidentCard__Buttons{
     }
 }

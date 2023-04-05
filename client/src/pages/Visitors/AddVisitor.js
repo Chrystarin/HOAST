@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+
 function AddVisitor() {
     const navigate = useNavigate();
 
@@ -22,8 +23,8 @@ function AddVisitor() {
         homeId: '',
         name: '',
         purpose: '',
-        arrival: '',
-        departure: '',
+        arrival: "(3-34-45)",
+        departure: null,
         note: '',
     });
 
@@ -78,40 +79,7 @@ function AddVisitor() {
         switch (stepper) {
             case 1:
                 return <>
-                    <form onSubmit={Submit} className='Form'>
-                        <FormControl fullWidth>
-                            <InputLabel variant="filled" id="home-select">Home</InputLabel>
-                            <Select
-                                labelId="home-select"
-                                value={form.homeId}
-                                label="Home"
-                                onChange={(e)=>setForm({...form, homeId: e.target.value})}
-                            >
-                                {props.homes.length > 0 &&
-                                    props.homes.map((home) => {
-                                    return (
-                                        <MenuItem key={home.homeId} value={home.homeId}>
-                                            {home.address.houseName}
-                                        </MenuItem> 
-                                    );
-                                })}
-                            </Select>
-                        </FormControl>
-                        <TextField fullWidth  label="Name" variant="filled" onChange={(e)=>updateForm({ name: e.target.value })}/>
-                        <div className='FormWrapper__2'>
-                            <TextField fullWidth type="date" label="Arrival Date" variant="filled" onChange={(e)=>updateForm({ arrival: e.target.value })}/>
-                            <TextField fullWidth type="date" label="Departure Date" variant="filled" onChange={(e)=>updateForm({ departure: e.target.value })}/>
-                        </div>
-                        <div className='FormWrapper__2'>
-                            <TextField fullWidth  label="Purpose" variant="filled" onChange={(e)=>updateForm({ purpose: e.target.value })}/>
-                            <TextField fullWidth  label="Note" variant="filled" onChange={(e)=>updateForm({ note: e.target.value })}/>
-                        </div>
-                        <div className='Form__Button'>
-                            <Button variant='text'>Cancel</Button>
-                            <Button variant='text' onClick={()=>console.log(form)}>Check Value</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Submit</Button>
-                        </div>
-                    </form>
+                    
                 </>
                 break;
             default:
@@ -131,7 +99,40 @@ function AddVisitor() {
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
                 </div>
                 <div className='SectionContent'>
-                    <Stepper homes={homes}/>
+                <form onSubmit={Submit} className='Form'>
+                        <FormControl variant="filled" fullWidth>
+                            <InputLabel  id="home-select">Home</InputLabel>
+                            <Select
+                                labelId="home-select"
+                                value={form.homeId}
+                                label="Home"
+                                onChange={(e)=>setForm({...form, homeId: e.target.value})}
+                            >
+                                {homes.length > 0 &&
+                                    homes.map((home) => {
+                                    return (
+                                        <MenuItem key={home.homeId} value={home.homeId}>
+                                            {home.address.houseName}
+                                        </MenuItem> 
+                                    );
+                                })}
+                            </Select>
+                        </FormControl>
+                        <TextField fullWidth  label="Name" variant="filled" onChange={(e)=>updateForm({ name: e.target.value })}/>
+                        <div className='FormWrapper__2'>
+                            <TextField id="filled-number" InputLabelProps={{shrink: true}} fullWidth type="date" label="Arrival Date" variant="filled" onChange={(e)=>updateForm({ arrival: e.target.value })} defaultValue/>
+                            <TextField  id="filled-number" InputLabelProps={{shrink: true}} fullWidth type="date" label="Departure Date" variant="filled" onChange={(e)=>updateForm({ departure: e.target.value })}/>
+                        </div>
+                        <div className='FormWrapper__2'>
+                            <TextField fullWidth  label="Purpose" variant="filled" onChange={(e)=>updateForm({ purpose: e.target.value })}/>
+                            <TextField fullWidth  label="Note" variant="filled" onChange={(e)=>updateForm({ note: e.target.value })}/>
+                        </div>
+                        <div className='Form__Button'>
+                            <Button variant='text'>Cancel</Button>
+                            <Button variant='text' onClick={()=>console.log(form)}>Check Value</Button>
+                            <Button variant='contained' type='submit' className='Submit'>Submit</Button>
+                        </div>
+                    </form>
                 </div>
             </section>
         </div>
