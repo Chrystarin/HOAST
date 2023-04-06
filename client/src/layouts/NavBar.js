@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import './NavBar.scss';
 import Logo from '../images/logo.PNG';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -17,10 +17,10 @@ import { useNavigate } from "react-router-dom";
 function NavBar(props) {
 
   const navigate = useNavigate();
-  const [anchorAvatarDropDown, setAnchorAvatarDropDown] = React.useState(null);
+  const [anchorAvatarDropDown, setAnchorAvatarDropDown] = useState(null);
   const openAvatarDropDown = Boolean(anchorAvatarDropDown);
 
-  const [anchorNotificationDropDown, setAnchorNotificationDropDown] = React.useState(null);
+  const [anchorNotificationDropDown, setAnchorNotificationDropDown] = useState(null);
   const openNotificationDropDown = Boolean(anchorNotificationDropDown);
 
   const logout = () => {
@@ -82,7 +82,7 @@ function NavBar(props) {
                     },
                 },
                 }}
-              
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
                   <div id='Notification'>

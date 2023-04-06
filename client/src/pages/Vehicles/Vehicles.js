@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import axios from '../../utils/axios';
 
-import Navbar from '../../layouts/NavBar';
+
 import Button from '@mui/material/Button';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import Navbar from '../../layouts/NavBar';
 import SearchInput from '../../components/SearchInput/SearchInput';
-
 import Card from '../../components/Card/Card.js';
 
-import axios from '../../utils/axios';
 function Vehicles() {
     
     const [vehicles, setVehicles] = useState();
@@ -36,7 +35,6 @@ function Vehicles() {
                 <div id='SearchInput__Container'>
                     <SearchInput/>
                 </div>
-                <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
                 <Button variant="contained" href='/vehicles/add'>Add Vehicles</Button>
             </div>
 
