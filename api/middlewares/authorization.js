@@ -12,7 +12,7 @@ const {
 } = require('../helpers/constants');
 
 const allowAdmin = async (req, res, next) => {
-	const hoaId = req.body?.homeId || req.query?.homeId;
+	const hoaId = req.body?.hoaId || req.query?.hoaId;
 	const { user, type } = req.user;
 
 	if (type != USER) return next();
@@ -29,13 +29,14 @@ const allowAdmin = async (req, res, next) => {
 
 		req.user.type = ADMIN;
 		req.user.hoa = hoa;
+	} catch (error) {
 	} finally {
 		next();
 	}
 };
 
 const allowGuard = async (req, res, next) => {
-	const hoaId = req.body?.homeId || req.query?.homeId;
+	const hoaId = req.body?.hoaId || req.query?.hoaId;
 	const { user, type } = req.user;
 
 	if (type != USER) return next();
@@ -56,6 +57,7 @@ const allowGuard = async (req, res, next) => {
 
 		req.user.type = GUARD;
 		req.user.hoa = hoa;
+	} catch (error) {
 	} finally {
 		next();
 	}
@@ -72,11 +74,14 @@ const allowHomeowner = async (req, res, next) => {
 		checkString(homeId, 'Home ID');
 
 		// Find home
-		const home = await Home.findOne({ homeId, owner: user._id });
+		const home = await Home.findOne({ homeId, owner: user._id })
+			.populate('residents.user')
+			.exec();
 		if (!home) throw new HomeNotFoundError();
 
 		req.user.type = HOMEOWNER;
 		req.user.home = home;
+	} catch (error) {
 	} finally {
 		next();
 	}
@@ -97,11 +102,14 @@ const allowResident = async (req, res, next) => {
 			homeId,
 			'residents.user': user._id,
 			'residents.status': 'active'
-		});
+		})
+			.populate('residents.user')
+			.exec();
 		if (!home) throw new HomeNotFoundError();
 
 		req.user.type = RESIDENT;
 		req.user.home = home;
+	} catch (error) {
 	} finally {
 		next();
 	}
@@ -109,7 +117,7 @@ const allowResident = async (req, res, next) => {
 
 const notUser = async (req, res, next) => {
 	if (req.user.type != USER) return next();
-	next(new ForbiddenError('User not joined in any HOA'));
+	next(new ForbiddenError('Can not identify user type'));
 };
 
 const notAdmin = async (req, res, next) => {
@@ -123,5 +131,5 @@ module.exports = {
 	allowHomeowner,
 	allowResident,
 	notUser,
-    notAdmin
+	notAdmin
 };

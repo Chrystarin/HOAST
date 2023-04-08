@@ -24,24 +24,26 @@ const getHomes = async (req, res, next) => {
 
 	if (type == USER) {
 		const { user } = req.user;
-		homes = await Home.find({ owner: user._id });
+		homes = await Home.find({ owner: user._id })
+			.populate('residents.user')
+			.exec();
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
-		homes = await Home.find({ hoa: hoa._id });
+		homes = await Home.find({ hoa: hoa._id })
+			.populate('residents.user')
+			.exec();
 	}
 
 	// Get specific home
 	if (homeId) {
-		homes = homes.filter(({ homeId: hi }) =>
-			homeId ? homeId == hi : true
-		);
+		homes = homes.find(({ homeId: hi }) => (homeId ? homeId == hi : true));
 
 		if (!homes) throw new NotFoundError('Incorrect home id');
 	}
 
-	req.json(homes);
+	res.json(homes);
 };
 
 const getResidents = async (req, res, next) => {
@@ -62,7 +64,9 @@ const getResidents = async (req, res, next) => {
 		const { hoa } = req.user;
 
 		// Get homes under hoa
-		const homes = await Home.find({ hoa: hoa._id });
+		const homes = await Home.find({ hoa: hoa._id })
+			.populate('residents.user')
+			.exec();
 
 		// Get residents for each home
 		residents = homes.reduce(
@@ -73,8 +77,8 @@ const getResidents = async (req, res, next) => {
 
 	// Get specific resident
 	if (residentId) {
-		residents = residents.find(({ residentId: ri }) =>
-			residentId ? residentId == ri : true
+		residents = residents.find(({ user: { userId } }) =>
+			residentId ? residentId == userId : true
 		);
 
 		if (!residents) throw new NotFoundError('User is not resident');

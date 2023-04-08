@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const { ObjectId } = Schema.Types;
 
 module.exports = model(
-	'Vistior',
+	'Visitor',
 	new Schema(
 		{
 			visitorId: { type: String, unique: true, required: true },
