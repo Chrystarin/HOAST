@@ -149,7 +149,7 @@ function VisitorsList() {
                                 </div>
                                 <div className='SectionList'>
                                     {history.map((vistor) => (
-                                        <Card type="Visitor" title={vistor.name} subTitle1={vistor.type} subTitle2={vistor.date} url="viewvisitor" />
+                                        <Card type="visitor" title={vistor.name} subTitle1={vistor.type} subTitle2={vistor.date} url="viewvisitor" />
                                     ))}
                                 </div>
                             </>:<></>}

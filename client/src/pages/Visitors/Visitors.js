@@ -102,7 +102,7 @@ function Visitors() {
                         <>{visitors.length > 0 && visitors.map((visitor) => {
                             return (
                                 <Card 
-                                type="Vehicles"
+                                type="Visitor"
                                 key={visitor.visitorId}
                                 title={visitor.name}
                                 subTitle1={visitor.arrival}
