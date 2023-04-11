@@ -125,7 +125,7 @@ function AddVisitor() {
         <Navbar type="vehicle"/>
         <div id='SectionHolder'>
             <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/visitors">Visitors</a></span>  > <span>Add Visitors</span></h3>
+                <h3 className='SectionTitleDashboard'><span><a href="/visitors">Visitors</a></span> <span>Add Visitors</span></h3>
 
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>

@@ -78,7 +78,7 @@ function VisitorView() {
                                     </div>
                                     <div className='GeneralInformation__InfoContainer'>
                                         <h6>Arrival Date: </h6>
-                                        <h5>{visitor.arrival}</h5>
+                                        <h5>{ new Date(visitor.arrival).toLocaleString() }</h5>
                                     </div>
                                 </div>
                                 <div className='Input__Wrapper2'>
@@ -88,7 +88,7 @@ function VisitorView() {
                                     </div>
                                     <div className='GeneralInformation__InfoContainer'>
                                         <h6>Departure Date: </h6>
-                                        <h5>{visitor.departure}</h5>
+                                        <h5>{new Date(visitor.departure).toLocaleString()}</h5>
                                     </div>
                                 </div>
                                 <div className='Input__Wrapper2'>
@@ -127,7 +127,7 @@ function VisitorView() {
                                                             <TableCell component="th" scope="row" align='center'>
                                                                 {log.logId}
                                                             </TableCell>
-                                                            <TableCell align="center">{log.createdAt}</TableCell>
+                                                            <TableCell align="center">{new Date(log.createdAt).toLocaleString()}</TableCell>
                                                         </TableRow>
                                                     );
                                                 })}

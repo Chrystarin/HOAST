@@ -8,6 +8,7 @@ import Register from './pages/Register/Register.js';
 import Homes from './pages/Homes/Homes';
 import AddHome from './pages/Homes/AddHome.js';
 import ResidentsView from './pages/ResidentsView/ResidentsView.js';
+import AddResident from './pages/ResidentsView/AddResident.js';
 import ViewHome from './pages/Homes/ViewHome.js';
 
 import Vehicles from './pages/Vehicles/Vehicles.js';
@@ -20,7 +21,8 @@ import VisitorView from './pages/Visitors/VisitorView.js';
 
 import Dashboard from './pages/HomeOwnerAssociation/Dashboard.js';
 import AssociationDues from './pages/HomeOwnerAssociation/AssociationDues.js';
-import Logs from './pages/HomeOwnerAssociation/Logs.js';
+// import Logs from './pages/HomeOwnerAssociation/Logs.js';
+import Logs from './pages/Logging/ViewLogs.js';
 import VisitorsList from './pages/HomeOwnerAssociation/VisitorsList.js';
 import ResidentsList from './pages/HomeOwnerAssociation/ResidentsList.js';
 import VehicleList from './pages/HomeOwnerAssociation/VehicleList.js';
@@ -51,6 +53,7 @@ function App() {
                 <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
                 <Route path='/resident/:id' element={<ResidentsView/>}/>
+                <Route path='/homes/visitors/add' element={<AddResident/>}/>
 
                 <Route path='/homes'>
                     <Route path='' element={<Homes/>}/>
