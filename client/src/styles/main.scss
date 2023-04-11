@@ -195,6 +195,8 @@ a:active{
 }
 .SectionView{
     padding-bottom: 40px;
+    display: flex;
+    gap:25px;
     .SectionView__Content{
         flex-grow: 1;
         display: flex;
