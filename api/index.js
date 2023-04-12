@@ -30,7 +30,7 @@ app.use(
 	cors({
 		credentials: true,
 		// methods: ['POST', 'PUT', 'GET', 'PATCH', 'OPTIONS', 'HEAD'],
-		origin: 'http://127.0.0.1:8080'
+		origin: 'http://localhost:3000'
 	})
 );
 
@@ -44,26 +44,36 @@ app.use('/homes', homeRoute);
 app.use('/logs', logRoute);
 app.use('/requests', requestRoute);
 
+app.use((err, req, res, next) => {
+	console.log(err);
+
+	res.status(err.status || 500).json({
+		name: err.name,
+		message: err.message
+	});
+});
+
+
 app.use(errorHandler);
 
 mongoose
 	.connect(process.env.DEV_MONGO)
 	.then(() => {
 		console.log('Connected to database');
-		// app.listen(process.env.PORT, (err) => {
-		// 	if (err) return console.log('Error', err);
-		// 	console.log('Listening on port', process.env.PORT);
-		// });
-		createServer(
-			{
-				key: readFileSync('./test/localhost.key'),
-				cert: readFileSync('./test/localhost.crt')
-			},
-			app
-		).listen(process.env.PORT, (err) => {
-			if (err) return console.log('Failed launching server\n', err);
+		app.listen(process.env.PORT, (err) => {
+			if (err) return console.log('Error', err);
 			console.log('Listening on port', process.env.PORT);
 		});
+		// createServer(
+		// 	{
+		// 		key: readFileSync('./test/localhost.key'),
+		// 		cert: readFileSync('./test/localhost.crt')
+		// 	},
+		// 	app
+		// ).listen(process.env.PORT, (err) => {
+		// 	if (err) return console.log('Failed launching server\n', err);
+		// 	console.log('Listening on port', process.env.PORT);
+		// });
 	})
 	.catch((err) => {
 		console.log('Failed connecting to database\n', err);

@@ -2,7 +2,7 @@ const Visitor = require('../models/Visitor');
 const Home = require('../models/Home');
 
 const {
-	types: { EMPLOYEE }
+	types: { EMPLOYEE, RESIDENT }
 } = require('../helpers/constants');
 const { checkString, checkDate } = require('../helpers/validData');
 const { genVisitorId } = require('../helpers/generateId');
@@ -46,7 +46,7 @@ const getVisitors = async (req, res, next) => {
 
 	let visitors;
 
-	if (USER.has(type)) {
+	if (RESIDENT.has(type)) {
 		const { home } = req.user;
 		visitors = await Visitor.find({ home: home._id });
 	}
@@ -73,6 +73,7 @@ const getVisitors = async (req, res, next) => {
 		if (!visitors) throw new VisitorNotFoundError();
 	}
 
+    console.log(visitors)
 	res.status(200).json(visitors);
 };
 
