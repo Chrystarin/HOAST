@@ -28,10 +28,10 @@ module.exports = model(
 				},
 				phase: String
 			},
-			paidUntil: {
-				type: Date,
-				required: [true, 'Paid Until is required']
-			},
+			// paidUntil: {
+			// 	type: Date,
+			// 	required: [true, 'Paid Until is required']
+			// },
 			residents: [
 				{
 					user: {

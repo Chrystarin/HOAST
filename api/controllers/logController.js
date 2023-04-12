@@ -25,7 +25,7 @@ const getLogsByLookup = async (logType, objects, objectId) => {
 		}
 	});
 
-	return logs.map(({ objectId: oi, ...log }) => ({
+	return logs.toJSON().map(({ objectId: oi, ...log }) => ({
 		...log,
 		// Add the matched object from objects using objectId
 		[logType]: objects.find(({ [objectId]: od }) => oi == od)
@@ -104,20 +104,22 @@ const getRecords = async (req, res, next) => {
 };
 
 const addRecord = async (req, res, next) => {
-	const { objectId, logType } = req.body;
+	const { objId, logType } = req.body;
 	const { hoa } = req.user;
 
+	console.log(req.body);
+
 	// Validate input
-	checkString(objectId, 'Object ID');
+	checkString(objId, 'Object ID');
 	checkString(logType, 'Log Type');
 
 	switch (logType) {
 		case 'user':
-			if (!(await User.exists({ userId: objectId })))
+			if (!(await User.exists({ userId: objId })))
 				throw new UserNotFoundError();
 			break;
 		case 'visitor':
-			if (!(await Visitor.exists({ visitorId: objectId })))
+			if (!(await Visitor.exists({ visitorId: objId })))
 				throw new VisitorNotFoundError();
 			break;
 		case 'vehicle':
@@ -138,7 +140,7 @@ const addRecord = async (req, res, next) => {
 				[]
 			);
 
-			if (!vehicles.find(({ plateNumber }) => plateNumber == objectId))
+			if (!vehicles.find(({ plateNumber }) => plateNumber == objId))
 				throw new VehicleNotFoundError();
 			break;
 	}
@@ -148,7 +150,7 @@ const addRecord = async (req, res, next) => {
 		logId: genLogId(),
 		hoa: hoa._id,
 		logType,
-		objectId
+		objectId: objId
 	});
 
 	res.status(201).json({ message: 'Log saved', logId: log.logId });

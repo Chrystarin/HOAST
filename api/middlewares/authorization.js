@@ -15,6 +15,7 @@ const allowAdmin = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
 	const { user, type } = req.user;
 
+
 	if (type != USER) return next();
 
 	try {
