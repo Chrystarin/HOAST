@@ -87,9 +87,9 @@ const getRecords = async (req, res, next) => {
 		);
 
 		logs = [
-			...(await getLogsByLookup('user', residents, 'userId')),
-			...(await getLogsByLookup('visitor', visitors, 'visitorId')),
-			...(await getLogsByLookup('vehicle', vehicles, 'plateNumber'))
+			...(await getLogsByLookup('user', residents, 'userId')), // user logs
+			...(await getLogsByLookup('visitor', visitors, 'visitorId')), // visitor logs
+			...(await getLogsByLookup('vehicle', vehicles, 'plateNumber')) // vehicle logs
 		];
 	}
 

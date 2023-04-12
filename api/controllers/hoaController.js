@@ -10,23 +10,33 @@ const {
 } = require('../helpers/errors');
 const { checkString, checkNumber } = require('../helpers/validData');
 const { genHoaId, genRequestId } = require('../helpers/generateId');
+const { checkDate } = require('../helpers/validData');
 
 const registerHoa = async (req, res, next) => {
-	const { name, street, barangay, city, province } = req.body;
+	const { name, street, barangay, city, province, paymentMonth, paymentDay } =
+		req.body;
+	const { user } = req.user;
 
 	// Validate strings
-	checkString(name, 'HOA Name');
-	checkString(street, 'Street');
 	checkString(barangay, 'Barangay');
 	checkString(city, 'City');
+	checkString(name, 'HOA Name');
 	checkString(province, 'Province');
+	checkString(street, 'Street');
+	checkDate(`${paymentMonth}-${paymentDay}`, 'Payment Date');
+
+	const date = new Date(`${paymentMonth}-${paymentDay}`);
 
 	// Create HOA
 	const hoa = await HOA.create({
 		hoaId: genHoaId(),
 		name,
 		address: { street, barangay, city, province },
-		admin: req.user.id
+		admin: user._id,
+		paymentDate: {
+			month: date.getMonth(),
+			day: date.getDate()
+		}
 	});
 
 	res.status(201).json({ message: 'HOA created', hoaId: hoa.hoaId });
@@ -53,7 +63,7 @@ const getHoas = async (req, res, next) => {
 
 const joinHoa = async (req, res, next) => {
 	const { hoaId, name, number, street, phase } = req.body;
-	const { user, type } = req.user;
+	const { user } = req.user;
 
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
@@ -68,7 +78,7 @@ const joinHoa = async (req, res, next) => {
 	// Check if user already sent a join request
 	const requestExists = await Request.exists({
 		hoa: hoa._id,
-		requestor: user_id,
+		requestor: user._id,
 		status: 'pending'
 	});
 	if (requestExists)

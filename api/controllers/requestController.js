@@ -23,7 +23,7 @@ const getRequests = async (req, res, next) => {
 		requests = await Request.find({ requestor: user._id });
 	}
 
-	if (role == ADMIN) {
+	if (type == ADMIN) {
 		const { hoa } = req.user;
 		requests = await Request.find({ hoa: hoa._id });
 	}
@@ -37,7 +37,7 @@ const getRequests = async (req, res, next) => {
 		if (!requests) throw new RequestNotFoundError();
 	}
 
-	req.json(requests);
+	res.json(requests);
 };
 
 const processRequest = async (req, res, next) => {
@@ -58,11 +58,15 @@ const processRequest = async (req, res, next) => {
 
 	// Response details
 	let resStatus = 200;
-	const resMessage = { message: 'Request rejected' };
+	let resMessage = { message: 'Request rejected' };
 
 	// Process request if approved
 	if (status == 'approved') {
 		const { name, ...address } = request.details;
+
+		const paidUntil = new Date();
+        paidUntil.setMonth(hoa.paymentDate.month);
+        paidUntil.setDate(hoa.paymentDate.day);
 
 		// Create home
 		const home = await Home.create({
@@ -71,6 +75,7 @@ const processRequest = async (req, res, next) => {
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
+			paidUntil,
 			residents: [{ user: request.requestor }]
 		});
 

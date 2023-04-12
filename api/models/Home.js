@@ -7,23 +7,47 @@ module.exports = model(
 		{
 			homeId: { type: String, unique: true, required: true },
 			name: { type: String, required: true },
-			owner: { type: ObjectId, ref: 'User', required: [true, 'Owner is required'] },
-			hoa: { type: ObjectId, ref: 'HOA', required: [true, 'HOA is required'] },
+			owner: {
+				type: ObjectId,
+				ref: 'User',
+				required: [true, 'Owner is required']
+			},
+			hoa: {
+				type: ObjectId,
+				ref: 'HOA',
+				required: [true, 'HOA is required']
+			},
 			address: {
-				number: { type: Number, required: [true, 'Home Number is required'] },
-				street: { type: String, required: [true, 'Street is required'] },
+				number: {
+					type: Number,
+					required: [true, 'Home Number is required']
+				},
+				street: {
+					type: String,
+					required: [true, 'Street is required']
+				},
 				phase: String
 			},
-			paidUntil: { type: Date, required: [true, 'Paid Until is required'] },
+			paidUntil: {
+				type: Date,
+				required: [true, 'Paid Until is required']
+			},
 			residents: [
 				{
 					user: {
 						type: ObjectId,
 						ref: 'User',
-						unique: true,
-						index: true,
-						sparse: true,
-						required: [true, 'User is required']
+						required: [true, 'User is required'],
+						validate: {
+							validator: function (value) {
+                                if(this.residents)
+                                    return !this.residents.find(({ user }) =>
+                                        user.equals(value)
+                                    );
+                                return true;
+							},
+							message: 'User is already a resident'
+						}
 					},
 					status: {
 						type: String,
