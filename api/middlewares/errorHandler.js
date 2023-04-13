@@ -1,4 +1,6 @@
 module.exports = (error, req, res, next) => {
+	// console.log(error);
+
 	const { code } = error;
 	let { name } = error;
 
@@ -9,7 +11,7 @@ module.exports = (error, req, res, next) => {
 		error = {
 			...error,
 			name,
-			errors: Object.values(errors).reduce(
+			message: Object.values(errors).reduce(
 				(output, { path, message }) => [...output, { path, message }],
 				[]
 			),
