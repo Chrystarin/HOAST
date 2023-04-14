@@ -32,6 +32,6 @@ router.get('/', allowAdmin, allowGuard, allowResident, getRecords);
  * objectId
  * logType
  */
-router.post('/', allowGuard, notUser, addRecord);
+router.post('/', allowAdmin, allowGuard, notUser, addRecord);
 
 module.exports = router;

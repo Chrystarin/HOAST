@@ -27,6 +27,7 @@ function Register() {
         return setRegisterForm((prev) => {
             const [key, value] = Object.entries(e)[0];
             prev[key] = value;
+            console.log(registerForm)
             return prev;
         
     });}
@@ -41,10 +42,8 @@ function Register() {
             .post(
                 `users/signup`,
                 JSON.stringify({ 
-                    name: {
-                        firstName: registerForm.firstName,
-                        lastName: registerForm.lastName
-                    },
+                    firstName: registerForm.firstName,
+                    lastName: registerForm.lastName,
                     email: registerForm.email,
                     password: registerForm.password
                 }),

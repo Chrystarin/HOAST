@@ -20,12 +20,14 @@ const getRequests = async (req, res, next) => {
 
 	if (type == USER) {
 		const { user } = req.user;
-		requests = await Request.find({ requestor: user._id });
+		requests = await Request.find({ requestor: user._id })
+			.populate('hoa')
+			.exec();
 	}
 
 	if (type == ADMIN) {
 		const { hoa } = req.user;
-		requests = await Request.find({ hoa: hoa._id });
+		requests = await Request.find({ hoa: hoa._id }).populate('hoa').exec();
 	}
 
 	// Get specific request
@@ -64,9 +66,9 @@ const processRequest = async (req, res, next) => {
 	if (status == 'approved') {
 		const { name, ...address } = request.details;
 
-		const paidUntil = new Date();
-        paidUntil.setMonth(hoa.paymentDate.month);
-        paidUntil.setDate(hoa.paymentDate.day);
+		// const paidUntil = new Date();
+		// paidUntil.setMonth(hoa.paymentDate.month);
+		// paidUntil.setDate(hoa.paymentDate.day);
 
 		// Create home
 		const home = await Home.create({
@@ -75,7 +77,7 @@ const processRequest = async (req, res, next) => {
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
-			paidUntil,
+			// paidUntil,
 			residents: [{ user: request.requestor }]
 		});
 

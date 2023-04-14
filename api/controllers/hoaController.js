@@ -23,9 +23,9 @@ const registerHoa = async (req, res, next) => {
 	checkString(name, 'HOA Name');
 	checkString(province, 'Province');
 	checkString(street, 'Street');
-	checkDate(`${paymentMonth}-${paymentDay}`, 'Payment Date');
+	// checkDate(`${paymentMonth}-${paymentDay}`, 'Payment Date');
 
-	const date = new Date(`${paymentMonth}-${paymentDay}`);
+	// const date = new Date(`${paymentMonth}-${paymentDay}`);
 
 	// Create HOA
 	const hoa = await HOA.create({
@@ -33,10 +33,10 @@ const registerHoa = async (req, res, next) => {
 		name,
 		address: { street, barangay, city, province },
 		admin: user._id,
-		paymentDate: {
-			month: date.getMonth(),
-			day: date.getDate()
-		}
+		// paymentDate: {
+		// 	month: date.getMonth(),
+		// 	day: date.getDate()
+		// }
 	});
 
 	res.status(201).json({ message: 'HOA created', hoaId: hoa.hoaId });

@@ -34,6 +34,6 @@ router.post('/', allowResident, notUser, addVisitor);
  * [Resident]
  * homeId
  */
-router.get('/', allowAdmin, allowGuard, allowResident, notUser, getVisitors);
+router.get('/', allowAdmin, allowGuard, allowResident, getVisitors);
 
 module.exports = router;
