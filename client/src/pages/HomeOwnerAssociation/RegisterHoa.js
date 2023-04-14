@@ -15,7 +15,9 @@ export default function RegisterHoa() {
         street: '',
         barangay: '',
         city: '',
-        province: ''
+        province: '',
+        paymentMonth: '',
+        paymentDay: ''
     });
 
     // Retrieves data from text input then assigns to form
@@ -23,14 +25,13 @@ export default function RegisterHoa() {
         return setRegisterForm((prev) => {
             const [key, value] = Object.entries(e)[0];
             prev[key] = value;
+            console.log(registerForm)
             return prev;
-        
     });}
 
     // Submit button for login
     async function Submit(e){
         e.preventDefault();
-
         try{
             // Login
             await axios
@@ -38,12 +39,13 @@ export default function RegisterHoa() {
                 `hoas/register`,
                 JSON.stringify({ 
                     name: registerForm.name,
-                    address: {
-                        street : registerForm.street,
-                        barangay : registerForm.barangay,
-                        city : registerForm.city,
-                        province : registerForm. province
-                    }
+                    street : registerForm.street,
+                    barangay : registerForm.barangay,
+                    city : registerForm.city,
+                    province : registerForm.province,
+                    paymentMonth: registerForm.paymentMonth,
+                    paymentDay: registerForm.paymentDay
+                    
                 })
             )
             .then((response) => {
@@ -56,7 +58,6 @@ export default function RegisterHoa() {
             alert("Invalid Credentials!");
             console.error(err.message);
         }
-
     }
 
     return <>
@@ -107,6 +108,25 @@ export default function RegisterHoa() {
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ province: e.target.value })}
+                    />
+                </div>
+
+                <div className='FormWrapper__2'>
+                    <TextField
+                        id="filled-password-input"
+                        label="Payment Month"
+                        type="text"
+                        autoComplete="current-password"
+                        variant="filled"
+                        onChange={(e)=>updateForm({ paymentMonth: e.target.value })}
+                    />
+                    <TextField
+                        id="filled-password-input"
+                        label="Payment Day"
+                        type="text"
+                        autoComplete="current-password"
+                        variant="filled"
+                        onChange={(e)=>updateForm({ paymentDay: e.target.value })}
                     />
                 </div>
                 
