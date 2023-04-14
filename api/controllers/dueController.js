@@ -26,14 +26,14 @@ const getDues = async (req, res, next) => {
 		const { hoa } = req.user;
 
 		// Get homes under hoa
-		const homes = await Home.find({ hoa: hoa._id });
+		const homes = await Home.find({ hoa: hoa._id }).lean();
 
 		// Combine all dues from each home
 		dues = homes.reduce(
-			async (arr1, { _id }) => [
-				...arr1,
+			async (home, { _id }) => [
+				...home,
 				// Get dues from each home
-				...(await Due.find({ hoa: _id }))
+				...(await Due.find({ hoa: _id }).lean())
 			],
 			[]
 		);
@@ -41,7 +41,7 @@ const getDues = async (req, res, next) => {
 
 	// Get specific due
 	if (dueId) {
-		dues = dues.find(({ dueId: di }) => dueId == id);
+		dues = dues.find(({ dueId: di }) => dueId == di);
 
 		if (!dues) throw new NotFoundError('Incorrect due id');
 	}
@@ -83,10 +83,7 @@ const createDue = async (req, res, next) => {
 	// Update home's paid until
 	await home.save();
 
-	res.status(201).json({
-		message: 'Due added',
-		dueId: due.dueId
-	});
+	res.status(201).json({ message: 'Due added', dueId: due.dueId });
 };
 
 module.exports = { createDue, getDues };

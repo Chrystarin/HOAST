@@ -15,7 +15,6 @@ const allowAdmin = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
 	const { user, type } = req.user;
 
-
 	if (type != USER) return next();
 
 	try {
@@ -76,7 +75,7 @@ const allowHomeowner = async (req, res, next) => {
 
 		// Find home
 		const home = await Home.findOne({ homeId, owner: user._id })
-			.populate('residents.user')
+			.populate('hoa residents.user')
 			.exec();
 		if (!home) throw new HomeNotFoundError();
 
@@ -104,7 +103,7 @@ const allowResident = async (req, res, next) => {
 			'residents.user': user._id,
 			'residents.status': 'active'
 		})
-			.populate('residents.user')
+			.populate('hoa residents.user')
 			.exec();
 		if (!home) throw new HomeNotFoundError();
 

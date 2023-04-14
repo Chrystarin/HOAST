@@ -1,7 +1,4 @@
 const Log = require('../models/Log');
-const User = require('../models/User');
-const Visitor = require('../models/Visitor');
-const Home = require('../models/Home');
 
 const {
 	UserNotFoundError,
@@ -15,6 +12,7 @@ const {
 } = require('../helpers/constants');
 const { checkString } = require('../helpers/validData');
 const { genLogId } = require('../helpers/generateId');
+const extractHomes = require('../helpers/extractHomes');
 
 const getLogsByLookup = async (logType, objects, objectId) => {
 	const logs = await Log.find({
@@ -23,9 +21,9 @@ const getLogsByLookup = async (logType, objects, objectId) => {
 			// Get all objectId of each object
 			$in: objects.reduce((ods, { [objectId]: od }) => [...ods, od], [])
 		}
-	});
+	}).lean();
 
-	return logs.toJSON().map(({ objectId: oi, ...log }) => ({
+	return logs.map(({ objectId: oi, ...log }) => ({
 		...log,
 		// Add the matched object from objects using objectId
 		[logType]: objects.find(({ [objectId]: od }) => oi == od)
@@ -41,50 +39,31 @@ const getRecords = async (req, res, next) => {
 
 	let logs;
 
-	if (type === USER) {
+	if (type == USER) {
 		const { user } = req.user;
 		logs = [
-			...(await Log.find({ logType: 'user', objectId: user.userId })), // user logs
-			...(await getLogsByLookup('vehicle', user.vehicles, 'plateNumber')) // vehicle logs
+			// user logs
+			...(await Log.find({
+				logType: 'user',
+				objectId: user.userId
+			}).lean()),
+			// vehicle logs
+			...(await getLogsByLookup('vehicle', user.vehicles, 'plateNumber'))
 		];
 	}
 
 	if (RESIDENT.has(type)) {
 		const { home } = req.user;
-
-		// Get visitors of home
-		const visitors = await Visitor.find({ home: home._id });
-
-		logs = await getLogsByLookup('visitor', visitors, 'visitorId');
+		logs = await getLogsByLookup('visitor', home.visitors, 'visitorId');
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
-		// Get homes of hoa
-		const homes = await Home.find({ hoa: hoa._id })
-			.populate('residents.user')
-			.exec();
-
-		// Get visitors of each home
-		const visitors = await Visitor.find({
-			home: { $in: homes.reduce((ids, { _id }) => [...ids, _id], []) }
+		// Extract all data from homes under hoa
+		const { residents, visitors, vehicles } = await extractHomes({
+			hoa: hoa._id
 		});
-
-		// Get residents of each home
-		const residents = homes.reduce(
-			(residents, { residents: { user } }) => [...residents, ...user],
-			[]
-		);
-
-		// Get all vehicles of each resident of each home
-		const vehicles = residents.reduce(
-			(vehicles, { vehicles: userVehicles }) => [
-				...vehicles,
-				...userVehicles
-			],
-			[]
-		);
 
 		logs = [
 			...(await getLogsByLookup('user', residents, 'userId')), // user logs
@@ -95,7 +74,7 @@ const getRecords = async (req, res, next) => {
 
 	// Get spcefic log
 	if (logId) {
-		logs = logs.find(({ logId: li }) => (logId ? logId == li : true));
+		logs = logs.find(({ logId: li }) => logId == li);
 
 		if (!logs) throw new NotFoundError('Incorrect log id');
 	}
@@ -104,45 +83,28 @@ const getRecords = async (req, res, next) => {
 };
 
 const addRecord = async (req, res, next) => {
-	const { objId, logType } = req.body;
+	const { objectId, logType } = req.body;
 	const { hoa } = req.user;
 
-	console.log(req.body);
-
 	// Validate input
-	checkString(objId, 'Object ID');
+	checkString(objectId, 'Object ID');
 	checkString(logType, 'Log Type');
+
+	// Extract all data from homes under hoa
+	const { residents, visitors, vehicles } = extractHomes({ hoa: hoa._id });
 
 	switch (logType) {
 		case 'user':
-			if (!(await User.exists({ userId: objId })))
-				throw new UserNotFoundError();
-			break;
+			if (residents.find(({ user: { userId } }) => userId == objectId))
+				break;
+			throw new UserNotFoundError();
 		case 'visitor':
-			if (!(await Visitor.exists({ visitorId: objId })))
-				throw new VisitorNotFoundError();
-			break;
+			if (visitors.find(({ visitorId }) => visitorId == objectId)) break;
+			throw new VisitorNotFoundError();
 		case 'vehicle':
-			// Get homes of hoa
-			const homes = await Home.find({ hoa: hoa._id })
-				.populate('residents.user')
-				.exec();
-
-			// Get vehicles from each home of hoa
-			const vehicles = homes.reduce(
-				(arr1, { residents }) => [
-					...arr1,
-					...residents.reduce(
-						(arr2, { user: { vehicles: v } }) => [...arr2, ...v],
-						[]
-					)
-				],
-				[]
-			);
-
-			if (!vehicles.find(({ plateNumber }) => plateNumber == objId))
-				throw new VehicleNotFoundError();
-			break;
+			if (vehicles.find(({ plateNumber }) => plateNumber == objectId))
+				break;
+			throw new VehicleNotFoundError();
 	}
 
 	// Create log
@@ -150,7 +112,7 @@ const addRecord = async (req, res, next) => {
 		logId: genLogId(),
 		hoa: hoa._id,
 		logType,
-		objectId: objId
+		objectId
 	});
 
 	res.status(201).json({ message: 'Log saved', logId: log.logId });

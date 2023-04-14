@@ -4,8 +4,7 @@ const asyncHandler = require('../middlewares/asyncHandler');
 const {
 	allowResident,
 	allowAdmin,
-	allowGuard,
-	allowHomeowner
+	allowGuard
 } = require('../middlewares/authorization');
 
 const { getVehicles, addVehicle } = asyncHandler(
@@ -16,7 +15,7 @@ const { getVehicles, addVehicle } = asyncHandler(
  * Get vehicles
  *
  * plateNumber - optional [1 | n]
- * 
+ *
  * [User] - owned vehicles
  *
  * [Employee]
@@ -25,13 +24,7 @@ const { getVehicles, addVehicle } = asyncHandler(
  * [Resident]
  * homeId
  */
-router.get(
-	'/',
-	allowAdmin,
-	allowGuard,
-	allowResident,
-	getVehicles
-);
+router.get('/', allowAdmin, allowGuard, allowResident, getVehicles);
 
 /**
  * Add vehicle

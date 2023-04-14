@@ -17,6 +17,8 @@ const hoaRoute = require('./routes/hoa');
 const homeRoute = require('./routes/home');
 const logRoute = require('./routes/log');
 const requestRoute = require('./routes/request');
+const residentRoute = require('./routes/resident');
+const roleRoute = require('./routes/role');
 const userRoute = require('./routes/user');
 const vehicleRoute = require('./routes/vehicle');
 const visitorRoute = require('./routes/visitor');
@@ -36,13 +38,18 @@ app.use(
 
 app.use('/users', userRoute);
 app.use(authenticate);
-app.use('/dues', dueRoute);
-app.use('/visitors', visitorRoute);
-app.use('/vehicles', vehicleRoute);
+app.use('/roles', roleRoute);
+
 app.use('/hoas', hoaRoute);
 app.use('/homes', homeRoute);
+
+app.use('/dues', dueRoute);
 app.use('/logs', logRoute);
 app.use('/requests', requestRoute);
+
+app.use('/residents', residentRoute);
+app.use('/vehicles', vehicleRoute);
+app.use('/visitors', visitorRoute);
 
 app.use((err, req, res, next) => {
 	console.log(err);
@@ -52,7 +59,6 @@ app.use((err, req, res, next) => {
 		message: err.message
 	});
 });
-
 
 app.use(errorHandler);
 

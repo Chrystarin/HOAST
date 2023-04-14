@@ -6,26 +6,49 @@ module.exports = model(
 		{
 			userId: { type: String, unique: true, required: true },
 			name: {
-				firstName: { type: String, required: [true, 'First Name is required'] },
-				lastName: { type: String, required: [true, 'Last Name is required'] }
+				firstName: {
+					type: String,
+					required: [true, 'First Name is required']
+				},
+				lastName: {
+					type: String,
+					required: [true, 'Last Name is required']
+				}
 			},
 			credentials: {
-				email: { type: String, required: [true, 'Email is required'], unique: true },
-				password: { type: String, required: [true, 'Password is required'] }
+				email: {
+					type: String,
+					required: [true, 'Email is required'],
+					unique: true
+				},
+				password: {
+					type: String,
+					required: [true, 'Password is required']
+				}
 			},
 			vehicles: [
 				{
 					plateNumber: {
 						type: String,
-						unique: true,
-						index: true,
-						sparse: true,
+						index: { unique: true, sparse: true },
 						required: [true, 'Plate Number is required']
 					},
-					brand: { type: String, required: [true, 'Brand is required'] },
-					model: { type: String, required: [true, 'Model is required'] },
-					type: { type: String, required: [true, 'Type is required'] },
-					color: { type: String, required: [true, 'Color is required'] }
+					brand: {
+						type: String,
+						required: [true, 'Brand is required']
+					},
+					model: {
+						type: String,
+						required: [true, 'Model is required']
+					},
+					type: {
+						type: String,
+						required: [true, 'Type is required']
+					},
+					color: {
+						type: String,
+						required: [true, 'Color is required']
+					}
 				}
 			]
 		},

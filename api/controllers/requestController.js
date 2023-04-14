@@ -2,9 +2,9 @@ const HOA = require('../models/HOA');
 const Request = require('../models/Request');
 const Home = require('../models/Home');
 
-const { checkString, checkNumber } = require('../helpers/validData');
+const { checkString } = require('../helpers/validData');
 const { RequestNotFoundError } = require('../helpers/errors');
-const { genRequestId, genHomeId } = require('../helpers/generateId');
+const { genHomeId } = require('../helpers/generateId');
 const {
 	roles: { USER, ADMIN }
 } = require('../helpers/constants');
@@ -66,9 +66,9 @@ const processRequest = async (req, res, next) => {
 	if (status == 'approved') {
 		const { name, ...address } = request.details;
 
-		// const paidUntil = new Date();
-		// paidUntil.setMonth(hoa.paymentDate.month);
-		// paidUntil.setDate(hoa.paymentDate.day);
+		const paidUntil = new Date();
+		paidUntil.setMonth(hoa.paymentDate.month);
+		paidUntil.setDate(hoa.paymentDate.day);
 
 		// Create home
 		const home = await Home.create({
@@ -77,7 +77,7 @@ const processRequest = async (req, res, next) => {
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
-			// paidUntil,
+			paidUntil,
 			residents: [{ user: request.requestor }]
 		});
 

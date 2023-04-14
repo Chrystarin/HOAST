@@ -17,15 +17,17 @@ const registerHoa = async (req, res, next) => {
 		req.body;
 	const { user } = req.user;
 
+	let date = `${paymentMonth}-${paymentDay}`;
+
 	// Validate strings
 	checkString(barangay, 'Barangay');
 	checkString(city, 'City');
 	checkString(name, 'HOA Name');
 	checkString(province, 'Province');
 	checkString(street, 'Street');
-	// checkDate(`${paymentMonth}-${paymentDay}`, 'Payment Date');
+	checkDate(date, 'Payment Date');
 
-	// const date = new Date(`${paymentMonth}-${paymentDay}`);
+	date = new Date(date);
 
 	// Create HOA
 	const hoa = await HOA.create({
@@ -33,10 +35,10 @@ const registerHoa = async (req, res, next) => {
 		name,
 		address: { street, barangay, city, province },
 		admin: user._id,
-		// paymentDate: {
-		// 	month: date.getMonth(),
-		// 	day: date.getDate()
-		// }
+		paymentDate: {
+			month: date.getMonth(),
+			day: date.getDate()
+		}
 	});
 
 	res.status(201).json({ message: 'HOA created', hoaId: hoa.hoaId });
@@ -49,7 +51,7 @@ const getHoas = async (req, res, next) => {
 	checkString(hoaId, 'HOA ID', true);
 
 	// Find hoas
-	let hoas = await HOA.find(hoaId ? { hoaId } : {});
+	let hoas = await HOA.find({ hoaId });
 
 	// Get specific hoa
 	if (hoaId) {
@@ -146,8 +148,11 @@ const getGuards = async (req, res, next) => {
 	let guards = hoa.guards;
 
 	// Get specific guard
-	if (guardId)
+	if (guardId) {
 		guards = hoa.guards.find(({ user: { userId } }) => userId == guardId);
+
+		if (!guards) throw new NotFoundError('Incorrect guard id');
+	}
 
 	res.json(guards);
 };

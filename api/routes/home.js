@@ -1,16 +1,16 @@
 const router = require('express').Router();
 
-const asyncHandler = require('../middlewares/asyncHandler');
 const {
-	allowResident,
-	allowHomeowner,
-	notUser,
 	allowAdmin,
-	allowGuard
+	allowGuard,
+	allowHomeowner,
+	notUser
 } = require('../middlewares/authorization');
+const asyncHandler = require('../middlewares/asyncHandler');
 
-const { getHomes, updateHome, addResident, removeResident, getResidents } =
-	asyncHandler(require('../controllers/homeController'));
+const { getHomes, updateHome } = asyncHandler(
+	require('../controllers/homeController')
+);
 
 /**
  * Get homes
@@ -30,41 +30,5 @@ router.get('/', allowAdmin, allowGuard, getHomes);
  * homeId
  */
 router.patch('/', allowHomeowner, notUser, updateHome);
-
-/**
- * Get residents of related home
- *
- * residentId
- *
- * [Employee]
- * hoaId
- *
- * [Resident]
- * homeId
- */
-router.get(
-	'/residents',
-	allowAdmin,
-	allowGuard,
-	allowResident,
-	notUser,
-	getResidents
-);
-
-/**
- * Add residents of home
- *
- * homeId
- * residentId
- */
-router.post('/residents', allowHomeowner, notUser, addResident);
-
-/**
- * Set resident inactive
- *
- * homeId
- * residentId
- */
-router.patch('/residents', allowHomeowner, notUser, removeResident);
 
 module.exports = router;

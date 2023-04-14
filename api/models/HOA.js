@@ -22,10 +22,10 @@ module.exports = model(
 					required: [true, 'Province is required']
 				}
 			},
-			// paymentDate: {
-			// 	month: { type: Number, required: [true, 'Month is required'] },
-			// 	day: { type: Number, required: [true, 'Day is required'] }
-			// },
+			paymentDate: {
+				month: { type: Number, required: [true, 'Month is required'] },
+				day: { type: Number, required: [true, 'Day is required'] }
+			},
 			admin: {
 				type: ObjectId,
 				ref: 'User',
@@ -38,9 +38,7 @@ module.exports = model(
 						type: ObjectId,
 						ref: 'User',
 						required: [true, 'User is required'],
-						unique: true,
-						index: true,
-						sparse: true
+						index: { unique: true, sprse: true }
 					},
 					status: {
 						type: String,

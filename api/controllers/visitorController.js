@@ -1,6 +1,3 @@
-const Visitor = require('../models/Visitor');
-const Home = require('../models/Home');
-
 const {
 	roles: { USER },
 	types: { EMPLOYEE, RESIDENT }
@@ -8,6 +5,7 @@ const {
 const { checkString, checkDate } = require('../helpers/validData');
 const { genVisitorId } = require('../helpers/generateId');
 const { VisitorNotFoundError } = require('../helpers/errors');
+const extractHomes = require('../helpers/extractHomes');
 
 const addVisitor = async (req, res, next) => {
 	const { name, purpose, arrival, departure, note } = req.body;
@@ -21,16 +19,17 @@ const addVisitor = async (req, res, next) => {
 	checkDate(departure, 'Departure');
 
 	// Create visitor
-	const visitor = await Visitor.create({
+	const visitor = {
 		visitorId: genVisitorId(),
-		home: home._id,
-		hoa: home.hoa,
 		name,
 		purpose,
 		arrival,
 		departure,
 		note
-	});
+	};
+
+	home.visitors.push(visitor);
+	await home.save();
 
 	res.status(201).json({
 		message: 'Visitor added',
@@ -40,72 +39,42 @@ const addVisitor = async (req, res, next) => {
 
 const getVisitors = async (req, res, next) => {
 	const { visitorId } = req.query;
-	const { type, user } = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(visitorId, 'Visitor ID', true);
 
-	console.log(user);
-
 	let visitors;
 
 	if (type == USER) {
-		// Get homes where user is resident
-		const homes = await Home.find({ 'residents.user': user._id })
-			.populate('hoa')
-			.exec();
+		const { user } = req.user;
 
-		visitors = await Visitor.find({
-			home: { $in: homes.reduce((ids, { _id }) => [...ids, _id], []) }
-		})
-			.populate({
-				path: 'home',
-				populate: {
-					path: 'hoa',
-					model: 'HOA'
-				}
-			})
-			.exec();
+		// Get visitors from homes
+		({ visitors } = await extractHomes({ 'residents.user': user._id }));
 	}
 
 	if (RESIDENT.has(type)) {
 		const { home } = req.user;
-		visitors = await Visitor.find({ home: home._id })
-			.populate('home')
-			.exec();
+
+		// Get visitors under home
+		visitors = home.visitors;
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
-		// Get homes of hoa
-		const homes = await Home.find({ hoa: hoa._id }).populate('hoa').exec();
-		console.log(hoa);
-
-		visitors = await Visitor.find({
-			home: { $in: homes.reduce((ids, { _id }) => [...ids, _id], []) }
-		})
-			.populate({
-				path: 'home',
-				populate: {
-					path: 'hoa',
-					model: 'HOA'
-				}
-			})
-			.exec();
+		// Get vistiors of each home under hoa
+		({ visitors } = await extractHomes({ hoa: hoa._id }));
 	}
 
 	//Get specific visitor
 	if (visitorId) {
-		visitors = visitors.find(({ visitorId: vi }) =>
-			visitorId ? visitorId == vi : true
-		);
+		visitors = visitors.find(({ visitorId: vi }) => visitorId == vi);
 
 		if (!visitors) throw new VisitorNotFoundError();
 	}
 
-	// console.log(visitors);
-	res.status(200).json(visitors);
+	res.json(visitors);
 };
 
 module.exports = { addVisitor, getVisitors };

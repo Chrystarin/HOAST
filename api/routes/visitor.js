@@ -5,23 +5,12 @@ const {
 	allowResident,
 	notUser,
 	allowGuard,
-    allowAdmin
+	allowAdmin
 } = require('../middlewares/authorization');
 
 const { addVisitor, getVisitors } = asyncHandler(
 	require('../controllers/visitorController')
 );
-
-/**
- * Create a visitor
- *
- * name
- * purpose
- * arrivalDate
- * departureDate
- * note
- */
-router.post('/', allowResident, notUser, addVisitor);
 
 /**
  * Get visitors
@@ -35,5 +24,16 @@ router.post('/', allowResident, notUser, addVisitor);
  * homeId
  */
 router.get('/', allowAdmin, allowGuard, allowResident, getVisitors);
+
+/**
+ * Create a visitor
+ *
+ * name
+ * purpose
+ * arrivalDate
+ * departureDate
+ * note
+ */
+router.post('/', allowResident, notUser, addVisitor);
 
 module.exports = router;
