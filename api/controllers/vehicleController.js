@@ -1,15 +1,17 @@
-const Home = require('../models/Home');
-
 const {
 	roles: { USER },
 	types: { EMPLOYEE, RESIDENT }
 } = require('../helpers/constants');
 const { checkString } = require('../helpers/validData');
 const { VehicleNotFoundError } = require('../helpers/errors');
+const extractHomes = require('../helpers/extractHomes');
 
 const getVehicles = async (req, res, next) => {
 	const { plateNumber } = req.query;
-	const { type } = req.user;
+	const {
+		details,
+		details: { type }
+	} = req.user;
 
 	// Validate iput
 	checkString(plateNumber, 'Plate Number', true);
@@ -23,47 +25,30 @@ const getVehicles = async (req, res, next) => {
 
 	if (RESIDENT.has(type)) {
 		const { home } = req.user;
-		vehicles = home.residents.reduce(
-			(arr1, { user: { vehicles: v } }) => [...arr1, ...v],
-			[]
-		);
+
+		// Get each of residents' vehicles
+		vehicles = await extractHomes([home]);
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
-		// Get all homes under hoa
-		const homes = await Home.find({ hoa: hoa._id })
-			.populate('residents.user')
-			.exec();
-
 		// Get all vehicles of each resident of each home
-		vehicles = homes.reduce(
-			(arr1, { residents }) => [
-				...arr1,
-				...residents.reduce(
-					(arr2, { user: { vehicles: v } }) => [...arr2, ...v],
-					[]
-				)
-			],
-			[]
-		);
+		vehicles = await extractHomes({ hoa: hoa._id });
 	}
 
 	// Get specific vehicle
 	if (plateNumber) {
-		vehicles = vehicles.find(({ plateNumber: pn }) =>
-			plateNumber ? plateNumber == pn : true
-		);
+		vehicles = vehicles.find(({ plateNumber: pn }) => plateNumber == pn);
 
 		if (!vehicles) throw new VehicleNotFoundError();
 	}
-	res.json(vehicles);
+	res.json({ details, vehicles });
 };
 
 const addVehicle = async (req, res, next) => {
 	const { plateNumber, brand, model, type, color } = req.body;
-	const { user } = req.user;
+	const { user, details } = req.user;
 
 	checkString(plateNumber, 'Plate Number');
 	checkString(brand, 'Brand');
@@ -75,7 +60,7 @@ const addVehicle = async (req, res, next) => {
 	user.vehicles.push({ plateNumber, brand, model, type, color });
 	await user.save();
 
-	res.status(201).json({ message: 'Vehicle added' });
+	res.status(201).json({ message: 'Vehicle added', details });
 };
 
 module.exports = { getVehicles, addVehicle };

@@ -10,7 +10,10 @@ const { checkNumber } = require('../helpers/validData');
 
 const getDues = async (req, res, next) => {
 	const { dueId } = req.body;
-	const { type } = req.user;
+	const {
+		details,
+		details: { type }
+	} = req.user;
 
 	// Validate input
 	checkString(dueId, 'Due ID', true);
@@ -26,14 +29,14 @@ const getDues = async (req, res, next) => {
 		const { hoa } = req.user;
 
 		// Get homes under hoa
-		const homes = await Home.find({ hoa: hoa._id });
+		const homes = await Home.find({ hoa: hoa._id }).lean();
 
 		// Combine all dues from each home
 		dues = homes.reduce(
-			async (arr1, { _id }) => [
-				...arr1,
+			async (home, { _id }) => [
+				...home,
 				// Get dues from each home
-				...(await Due.find({ hoa: _id }))
+				...(await Due.find({ hoa: _id }).lean())
 			],
 			[]
 		);
@@ -41,17 +44,17 @@ const getDues = async (req, res, next) => {
 
 	// Get specific due
 	if (dueId) {
-		dues = dues.find(({ dueId: di }) => dueId == id);
+		dues = dues.find(({ dueId: di }) => dueId == di);
 
 		if (!dues) throw new NotFoundError('Incorrect due id');
 	}
 
-	res.json(dues);
+	res.json({ details, dues });
 };
 
 const createDue = async (req, res, next) => {
 	const { homeId, amount, months } = req.body;
-	const { hoa } = req.user;
+	const { hoa, details } = req.user;
 
 	// Validate input
 	checkString(homeId, 'Home ID');
@@ -85,7 +88,8 @@ const createDue = async (req, res, next) => {
 
 	res.status(201).json({
 		message: 'Due added',
-		dueId: due.dueId
+		dueId: due.dueId,
+		details
 	});
 };
 

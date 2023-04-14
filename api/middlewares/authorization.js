@@ -13,8 +13,10 @@ const {
 
 const allowAdmin = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
-	const { user, type } = req.user;
-
+	const {
+		user,
+		details: { type }
+	} = req.user;
 
 	if (type != USER) return next();
 
@@ -30,6 +32,7 @@ const allowAdmin = async (req, res, next) => {
 
 		req.user.type = ADMIN;
 		req.user.hoa = hoa;
+		req.details.hoa = hoa.hoaId;
 	} catch (error) {
 	} finally {
 		next();
@@ -38,7 +41,10 @@ const allowAdmin = async (req, res, next) => {
 
 const allowGuard = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
-	const { user, type } = req.user;
+	const {
+		user,
+		details: { type }
+	} = req.user;
 
 	if (type != USER) return next();
 
@@ -58,6 +64,7 @@ const allowGuard = async (req, res, next) => {
 
 		req.user.type = GUARD;
 		req.user.hoa = hoa;
+		req.details.hoa = hoa.hoaId;
 	} catch (error) {
 	} finally {
 		next();
@@ -66,7 +73,10 @@ const allowGuard = async (req, res, next) => {
 
 const allowHomeowner = async (req, res, next) => {
 	const homeId = req.body?.homeId || req.query?.homeId;
-	const { user, type } = req.user;
+	const {
+		user,
+		details: { type }
+	} = req.user;
 
 	if (type != USER) return next();
 
@@ -76,12 +86,13 @@ const allowHomeowner = async (req, res, next) => {
 
 		// Find home
 		const home = await Home.findOne({ homeId, owner: user._id })
-			.populate('residents.user')
+			.populate('hoa residents.user')
 			.exec();
 		if (!home) throw new HomeNotFoundError();
 
 		req.user.type = HOMEOWNER;
 		req.user.home = home;
+		req.details.home = home.homeId;
 	} catch (error) {
 	} finally {
 		next();
@@ -90,7 +101,10 @@ const allowHomeowner = async (req, res, next) => {
 
 const allowResident = async (req, res, next) => {
 	const homeId = req.body?.homeId || req.query?.homeId;
-	const { user, type } = req.user;
+	const {
+		user,
+		details: { type }
+	} = req.user;
 
 	if (type != USER) return next();
 
@@ -104,12 +118,13 @@ const allowResident = async (req, res, next) => {
 			'residents.user': user._id,
 			'residents.status': 'active'
 		})
-			.populate('residents.user')
+			.populate('hoa residents.user')
 			.exec();
 		if (!home) throw new HomeNotFoundError();
 
 		req.user.type = RESIDENT;
 		req.user.home = home;
+		req.details.home = home.homeId;
 	} catch (error) {
 	} finally {
 		next();

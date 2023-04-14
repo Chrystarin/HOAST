@@ -6,7 +6,6 @@ const {
 	allowGuard,
 	notUser,
 	allowResident,
-	notAdmin,
 } = require('../middlewares/authorization');
 
 const { registerHoa, getHoas, addGuard, retireGuard, getGuards, joinHoa } =
@@ -32,7 +31,7 @@ router.post('/register', registerHoa);
  * street
  * phase - optional
  */
-router.post('/join', allowAdmin, notAdmin, joinHoa);
+router.post('/join', joinHoa);
 
 /**
  * hoaId - optional [1 | n]

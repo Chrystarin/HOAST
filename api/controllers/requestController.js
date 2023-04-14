@@ -11,7 +11,10 @@ const {
 
 const getRequests = async (req, res, next) => {
 	const { requestId } = req.query;
-	const { type } = req.user;
+	const {
+		details,
+		details: { type }
+	} = req.user;
 
 	// Validate input
 	checkString(requestId, 'Request ID', true);
@@ -39,12 +42,12 @@ const getRequests = async (req, res, next) => {
 		if (!requests) throw new RequestNotFoundError();
 	}
 
-	res.json(requests);
+	res.json({ details, requests });
 };
 
 const processRequest = async (req, res, next) => {
 	const { requestId, status } = req.body;
-	const { hoa } = req.user;
+	const { hoa, details } = req.user;
 
 	// Validate input
 	checkString(requestId, 'Request ID');
@@ -66,9 +69,9 @@ const processRequest = async (req, res, next) => {
 	if (status == 'approved') {
 		const { name, ...address } = request.details;
 
-		// const paidUntil = new Date();
-		// paidUntil.setMonth(hoa.paymentDate.month);
-		// paidUntil.setDate(hoa.paymentDate.day);
+		const paidUntil = new Date();
+		paidUntil.setMonth(hoa.paymentDate.month);
+		paidUntil.setDate(hoa.paymentDate.day);
 
 		// Create home
 		const home = await Home.create({
@@ -77,7 +80,7 @@ const processRequest = async (req, res, next) => {
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
-			// paidUntil,
+			paidUntil,
 			residents: [{ user: request.requestor }]
 		});
 
@@ -89,7 +92,7 @@ const processRequest = async (req, res, next) => {
 	request.status = status;
 	await request.save();
 
-	res.status(resStatus).json(resMessage);
+	res.status(resStatus).json({ ...resMessage, details });
 };
 
 module.exports = { processRequest, getRequests };
