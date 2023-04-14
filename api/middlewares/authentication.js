@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 		const user = await User.findOne({ userId });
 		if (!user) throw new UserNotFoundError();
 
-		req.user = { user, details: { type: 'user', user: user.userId } };
+		req.user = { user, type: 'user' };
 
 		next();
 	} catch (error) {

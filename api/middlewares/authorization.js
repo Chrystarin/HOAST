@@ -13,10 +13,7 @@ const {
 
 const allowAdmin = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
-	const {
-		user,
-		details: { type }
-	} = req.user;
+	const { user, type } = req.user;
 
 	if (type != USER) return next();
 
@@ -32,7 +29,6 @@ const allowAdmin = async (req, res, next) => {
 
 		req.user.type = ADMIN;
 		req.user.hoa = hoa;
-		req.details.hoa = hoa.hoaId;
 	} catch (error) {
 	} finally {
 		next();
@@ -41,10 +37,7 @@ const allowAdmin = async (req, res, next) => {
 
 const allowGuard = async (req, res, next) => {
 	const hoaId = req.body?.hoaId || req.query?.hoaId;
-	const {
-		user,
-		details: { type }
-	} = req.user;
+	const { user, type } = req.user;
 
 	if (type != USER) return next();
 
@@ -64,7 +57,6 @@ const allowGuard = async (req, res, next) => {
 
 		req.user.type = GUARD;
 		req.user.hoa = hoa;
-		req.details.hoa = hoa.hoaId;
 	} catch (error) {
 	} finally {
 		next();
@@ -73,10 +65,7 @@ const allowGuard = async (req, res, next) => {
 
 const allowHomeowner = async (req, res, next) => {
 	const homeId = req.body?.homeId || req.query?.homeId;
-	const {
-		user,
-		details: { type }
-	} = req.user;
+	const { user, type } = req.user;
 
 	if (type != USER) return next();
 
@@ -92,7 +81,6 @@ const allowHomeowner = async (req, res, next) => {
 
 		req.user.type = HOMEOWNER;
 		req.user.home = home;
-		req.details.home = home.homeId;
 	} catch (error) {
 	} finally {
 		next();
@@ -101,10 +89,7 @@ const allowHomeowner = async (req, res, next) => {
 
 const allowResident = async (req, res, next) => {
 	const homeId = req.body?.homeId || req.query?.homeId;
-	const {
-		user,
-		details: { type }
-	} = req.user;
+	const { user, type } = req.user;
 
 	if (type != USER) return next();
 
@@ -124,7 +109,6 @@ const allowResident = async (req, res, next) => {
 
 		req.user.type = RESIDENT;
 		req.user.home = home;
-		req.details.home = home.homeId;
 	} catch (error) {
 	} finally {
 		next();

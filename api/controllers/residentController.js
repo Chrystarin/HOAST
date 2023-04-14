@@ -14,10 +14,7 @@ const extractHomes = require('../helpers/extractHomes');
 
 const getResidents = async (req, res, next) => {
 	const { residentId } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(residentId, 'Resident ID', true);
@@ -45,12 +42,12 @@ const getResidents = async (req, res, next) => {
 		if (!residents) throw new NotFoundError('User is not resident');
 	}
 
-	res.json({ details, residents });
+	res.json(residents);
 };
 
 const addResident = async (req, res, next) => {
 	const { userId } = req.body;
-	const { home, details } = req.user;
+	const { home } = req.user;
 
 	// Validate input
 	checkString(userId, 'User ID');
@@ -62,12 +59,12 @@ const addResident = async (req, res, next) => {
 	home.residents.push({ user: user._id });
 	await home.save();
 
-	res.status(201).json({ message: 'Resident added', details });
+	res.status(201).json({ message: 'Resident added' });
 };
 
 const removeResident = async (req, res, next) => {
 	const { residentId } = req.body;
-	const { home, user, details } = req.user;
+	const { home, user } = req.user;
 
 	// Validate input
 	checkString(residentId, 'Resident ID');
@@ -87,7 +84,7 @@ const removeResident = async (req, res, next) => {
 	resident.status = 'inactive';
 	await home.save();
 
-	res.json({ message: 'Resident removed', details });
+	res.json({ message: 'Resident removed' });
 };
 
 module.exports = { getResidents, addResident, removeResident };

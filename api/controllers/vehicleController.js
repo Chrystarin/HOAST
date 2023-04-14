@@ -8,10 +8,7 @@ const extractHomes = require('../helpers/extractHomes');
 
 const getVehicles = async (req, res, next) => {
 	const { plateNumber } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate iput
 	checkString(plateNumber, 'Plate Number', true);
@@ -43,12 +40,12 @@ const getVehicles = async (req, res, next) => {
 
 		if (!vehicles) throw new VehicleNotFoundError();
 	}
-	res.json({ details, vehicles });
+	res.json(vehicles);
 };
 
 const addVehicle = async (req, res, next) => {
 	const { plateNumber, brand, model, type, color } = req.body;
-	const { user, details } = req.user;
+	const { user } = req.user;
 
 	checkString(plateNumber, 'Plate Number');
 	checkString(brand, 'Brand');
@@ -60,7 +57,7 @@ const addVehicle = async (req, res, next) => {
 	user.vehicles.push({ plateNumber, brand, model, type, color });
 	await user.save();
 
-	res.status(201).json({ message: 'Vehicle added', details });
+	res.status(201).json({ message: 'Vehicle added' });
 };
 
 module.exports = { getVehicles, addVehicle };

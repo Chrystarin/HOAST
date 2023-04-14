@@ -9,10 +9,7 @@ const { checkString } = require('../helpers/validData');
 
 const getHomes = async (req, res, next) => {
 	const { homeId } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(homeId, 'Home ID', true);
@@ -40,18 +37,18 @@ const getHomes = async (req, res, next) => {
 		if (!homes) throw new NotFoundError('Incorrect home id');
 	}
 
-	res.json({ details, homes });
+	res.json(homes);
 };
 
 const updateHome = async (req, res, next) => {
 	const { name } = req.body;
-	const { home, details } = req.user;
+	const { home } = req.user;
 
 	// Update home
 	home.name = name;
 	await home.save();
 
-	res.json({ message: 'Home updated', details });
+	res.json({ message: 'Home updated' });
 };
 
 module.exports = { getHomes, updateHome };

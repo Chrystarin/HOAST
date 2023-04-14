@@ -2,19 +2,16 @@ const HOA = require('../models/HOA');
 const Request = require('../models/Request');
 const Home = require('../models/Home');
 
-const { checkString, checkNumber } = require('../helpers/validData');
+const { checkString } = require('../helpers/validData');
 const { RequestNotFoundError } = require('../helpers/errors');
-const { genRequestId, genHomeId } = require('../helpers/generateId');
+const { genHomeId } = require('../helpers/generateId');
 const {
 	roles: { USER, ADMIN }
 } = require('../helpers/constants');
 
 const getRequests = async (req, res, next) => {
 	const { requestId } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(requestId, 'Request ID', true);
@@ -42,12 +39,12 @@ const getRequests = async (req, res, next) => {
 		if (!requests) throw new RequestNotFoundError();
 	}
 
-	res.json({ details, requests });
+	res.json(requests);
 };
 
 const processRequest = async (req, res, next) => {
 	const { requestId, status } = req.body;
-	const { hoa, details } = req.user;
+	const { hoa } = req.user;
 
 	// Validate input
 	checkString(requestId, 'Request ID');
@@ -92,7 +89,7 @@ const processRequest = async (req, res, next) => {
 	request.status = status;
 	await request.save();
 
-	res.status(resStatus).json({ ...resMessage, details });
+	res.status(resStatus).json(resMessage);
 };
 
 module.exports = { processRequest, getRequests };

@@ -10,10 +10,7 @@ const { checkNumber } = require('../helpers/validData');
 
 const getDues = async (req, res, next) => {
 	const { dueId } = req.body;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(dueId, 'Due ID', true);
@@ -49,12 +46,12 @@ const getDues = async (req, res, next) => {
 		if (!dues) throw new NotFoundError('Incorrect due id');
 	}
 
-	res.json({ details, dues });
+	res.json(dues);
 };
 
 const createDue = async (req, res, next) => {
 	const { homeId, amount, months } = req.body;
-	const { hoa, details } = req.user;
+	const { hoa } = req.user;
 
 	// Validate input
 	checkString(homeId, 'Home ID');
@@ -86,11 +83,7 @@ const createDue = async (req, res, next) => {
 	// Update home's paid until
 	await home.save();
 
-	res.status(201).json({
-		message: 'Due added',
-		dueId: due.dueId,
-		details
-	});
+	res.status(201).json({ message: 'Due added', dueId: due.dueId });
 };
 
 module.exports = { createDue, getDues };

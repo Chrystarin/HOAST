@@ -9,7 +9,7 @@ const extractHomes = require('../helpers/extractHomes');
 
 const addVisitor = async (req, res, next) => {
 	const { name, purpose, arrival, departure, note } = req.body;
-	const { home, details } = req.user;
+	const { home } = req.user;
 
 	// Validate input
 	checkString(name, 'Visitor Name');
@@ -33,17 +33,13 @@ const addVisitor = async (req, res, next) => {
 
 	res.status(201).json({
 		message: 'Visitor added',
-		visitorId: visitor.visitorId,
-		details
+		visitorId: visitor.visitorId
 	});
 };
 
 const getVisitors = async (req, res, next) => {
 	const { visitorId } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(visitorId, 'Visitor ID', true);
@@ -78,7 +74,7 @@ const getVisitors = async (req, res, next) => {
 		if (!visitors) throw new VisitorNotFoundError();
 	}
 
-	res.status(200).json({ details, visitors });
+	res.json(visitors);
 };
 
 module.exports = { addVisitor, getVisitors };

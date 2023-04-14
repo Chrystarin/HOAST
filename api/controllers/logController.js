@@ -1,6 +1,4 @@
 const Log = require('../models/Log');
-const User = require('../models/User');
-const Home = require('../models/Home');
 
 const {
 	UserNotFoundError,
@@ -34,10 +32,7 @@ const getLogsByLookup = async (logType, objects, objectId) => {
 
 const getRecords = async (req, res, next) => {
 	const { logId } = req.query;
-	const {
-		details,
-		details: { type }
-	} = req.user;
+	const { type } = req.user;
 
 	// Validate input
 	checkString(logId, 'Log ID', true);
@@ -84,12 +79,12 @@ const getRecords = async (req, res, next) => {
 		if (!logs) throw new NotFoundError('Incorrect log id');
 	}
 
-	res.json({ details, logs });
+	res.json(logs);
 };
 
 const addRecord = async (req, res, next) => {
 	const { objectId, logType } = req.body;
-	const { hoa, details } = req.user;
+	const { hoa } = req.user;
 
 	// Validate input
 	checkString(objectId, 'Object ID');
@@ -120,7 +115,7 @@ const addRecord = async (req, res, next) => {
 		objectId
 	});
 
-	res.status(201).json({ message: 'Log saved', logId: log.logId, details });
+	res.status(201).json({ message: 'Log saved', logId: log.logId });
 };
 
 module.exports = { addRecord, getRecords };
