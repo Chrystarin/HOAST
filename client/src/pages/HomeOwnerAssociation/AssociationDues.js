@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from '../../layouts/NavBar'
 import './Dashboard.scss';
+import NavBar from '../../layouts/NavBar';
 import DuesIcon from '../../images/icons/due-date.png'
 import SideBar from './SideBar';
 

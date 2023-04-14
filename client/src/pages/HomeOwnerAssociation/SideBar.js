@@ -29,6 +29,9 @@ function SideBar(props) {
                     <a href="/logs" className={(props.active=="Logs")?"active":""}><h6>Logs</h6></a>
                 </li>
                 <li>
+                    <a href="guard" className={(props.active=="Guard")?"active":""}><h6>Guards</h6></a>
+                </li>
+                <li>
                     <a href="/visitorslist" className={(props.active=="VisitorsList")?"active":""}><h6>Visitors List</h6></a>
                 </li>
                 <li>
@@ -40,6 +43,7 @@ function SideBar(props) {
                 <li>
                     <a href="homelist" className={(props.active=="HomesList")?"active":""}><h6>Homes List</h6></a>
                 </li>
+                
             </ul>
         </div>
     )

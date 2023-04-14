@@ -1,10 +1,32 @@
-import React from 'react';
-import Logo from '../images/logo.PNG';
+import React,{useState} from 'react';
 import './NavBar.scss';
+import Logo from '../images/logo.PNG';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
+import SecurityIcon from '@mui/icons-material/Security';
+
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import AvatarDrowDown from '../components/AvatarDropDown/AvatarDropDown';
+import Logout from '@mui/icons-material/Logout';
+import { useNavigate } from "react-router-dom";
+
 function NavBar(props) {
+
+  const navigate = useNavigate();
+  const [anchorAvatarDropDown, setAnchorAvatarDropDown] = useState(null);
+  const openAvatarDropDown = Boolean(anchorAvatarDropDown);
+
+  const [anchorNotificationDropDown, setAnchorNotificationDropDown] = useState(null);
+  const openNotificationDropDown = Boolean(anchorNotificationDropDown);
+
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
+  }
 
   return (
     <div id='NavBar'>
@@ -25,11 +47,140 @@ function NavBar(props) {
               <a href="/visitors" className={(props.type==="visitors")?"active":""}>Visitors</a>
             </li>
             <li>
-              <IconButton aria-label="delete" size="large">
+              <IconButton onClick={(event)=>setAnchorNotificationDropDown(event.currentTarget)}>
                 <NotificationsIcon />
               </IconButton>
+              <Menu
+                anchorEl={anchorNotificationDropDown}
+                id="account-menu"
+                open={openNotificationDropDown}
+                onClose={()=>setAnchorNotificationDropDown(null)}
+                onClick={()=>setAnchorNotificationDropDown(null)}
+                PaperProps={{
+                elevation: 0,
+                sx: {
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                    mt: 1.5,
+                    '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                    },
+                    '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                    },
+                },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                  <div id='Notification'>
+                    <h5 id='Notification__Title'>Notification</h5>
+                    <ul>
+                      <li>
+                        <a href="/" className='active'>
+                          <Avatar/>
+                          <p className="BodyText3">Notification daw kuno</p> 
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/">
+                          <Avatar/>
+                          <p className="BodyText3">Notification daw kuno</p> 
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/">
+                          <Avatar/>
+                          <p className="BodyText3">Notification daw kuno</p> 
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+              </Menu>
             </li>
-            <li><AvatarDrowDown/></li>
+            <li>
+              <IconButton onClick={(event)=>setAnchorAvatarDropDown(event.currentTarget)}>
+                <Avatar/>
+              </IconButton>
+              <Menu
+                anchorEl={anchorAvatarDropDown}
+                id="account-menu"
+                open={openAvatarDropDown}
+                onClose={()=>setAnchorAvatarDropDown(null)}
+                onClick={()=>setAnchorAvatarDropDown(null)}
+                PaperProps={{
+                elevation: 0,
+                sx: {
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                    mt: 1.5,
+                    '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                    },
+                    '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                    },
+                },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                  <a href='/profile'>
+                      <MenuItem >
+                          <Avatar /> Profile
+                      </MenuItem>
+                  </a>
+                  <Divider />
+                  <a href='/dashboard'>
+                      <MenuItem>
+                          <ListItemIcon>
+                              <MapsHomeWorkIcon fontSize="small" />
+                          </ListItemIcon>
+                          Homeowners Associations
+                      </MenuItem>
+                  </a>
+                  <a href='/scanner'>
+                      <MenuItem >
+                          <ListItemIcon>
+                              <SecurityIcon fontSize="small" />
+                          </ListItemIcon>
+                          Guard
+                      </MenuItem>
+                  </a>
+                  <a href='/'>
+                      <MenuItem onClick={logout}>
+                          <ListItemIcon>
+                              <Logout fontSize="small" />
+                          </ListItemIcon>
+                          Logout
+                      </MenuItem>
+                  </a>
+              </Menu>
+            </li>
           </ul>
         </div>
     </div>

@@ -17,10 +17,8 @@ function SearchInput(props) {
 
     return (
         <div id='SearchInput'>
-            <div>
-                <input type="text" onChange={props.onChange} value={props.value}/>
-                <SearchIcon/>
-            </div>
+            <input type="text" onChange={props.onChange} value={props.value} placeholder={props.placeholder}/>
+            <SearchIcon/>
         </div>
     )
 }

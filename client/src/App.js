@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Error404 from './pages/Error/Error404.js';
@@ -28,143 +28,75 @@ import HomeList from './pages/HomeOwnerAssociation/HomeList.js';
 
 import Scanner from './pages/HomeOwnerAssociation/Scanner.js';
 
-import ProtectedRoute from './utils/ProtectedRoute.js';
+import ProtectedRoute from './utils/ProtectedRoute.js'
 
-import RegisterHoa from './pages/RegisterHoa.js';
+import RegisterHoa from './pages/HomeOwnerAssociation/RegisterHoa.js';
 import JoinRequests from './pages/JoinRequests.js';
-import AddGuard from './pages/AddGuard';
+import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 
+import Guard from './pages/HomeOwnerAssociation/Guard.js';
 function App() {
-	return (
-		<Routes>
-			{/* Public Routes */}
-			<Route
-				path="/"
-				element={<LandingPage />}
-			/>
-			<Route
-				path="*"
-				element={<Error404 />}
-			/>
-			<Route
-				path="/login"
-				element={<Login />}
-			/>
-			<Route
-				path="/register"
-				element={<Register />}
-			/>
-			{/* Private Routes for Users */}
-			<Route element={<ProtectedRoute />}>
-				<Route
-					path="/hoa/addguard"
-					element={<AddGuard />}
-				/>
-				<Route
-					path="/hoa/register"
-					element={<RegisterHoa />}
-				/>
-				<Route
-					path="/hoa/:id/requests"
-					element={<JoinRequests />}
-				/>
 
-				<Route
-					path="/resident/:id"
-					element={<ResidentsView />}
-				/>
+    return (
+        <Routes>
 
-				<Route path="/homes">
-					<Route
-						path=""
-						element={<Homes />}
-					/>
-					<Route
-						path="add"
-						element={<AddHome />}
-					/>
-					<Route
-						path=":id"
-						element={<ViewHome />}
-					/>
-				</Route>
+        {/* Public Routes */}
+            <Route path='/' element={<LandingPage/>}/>
+            <Route path='*' element={<Error404/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
+        {/* Private Routes for Users */}
+            <Route element={<ProtectedRoute/>} >
+                <Route path='/hoa/register' element={<RegisterHoa/>}/>
+                <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
-				<Route path="/vehicles">
-					<Route
-						path=""
-						element={<Vehicles />}
-					/>
-					<Route
-						path="add"
-						element={<AddVehicle />}
-					/>
-					<Route
-						path=":id"
-						element={<VehicleView />}
-					/>
-				</Route>
+                <Route path='/resident/:id' element={<ResidentsView/>}/>
 
-				<Route path="/visitors">
-					<Route
-						path=""
-						element={<Visitors />}
-					/>
-					<Route
-						path="add"
-						element={<AddVisitor />}
-					/>
-					<Route
-						path=":id"
-						element={<VisitorView />}
-					/>
-				</Route>
+                <Route path='/homes'>
+                    <Route path='' element={<Homes/>}/>
+                    <Route path='add' element={<AddHome/>}/>
+                    <Route path=':id' element={<ViewHome/>}/>
+                </Route>
 
-				{/* Private Routes for Admin */}
-				<Route element={<ProtectedRoute />}>
-					<Route
-						path="/associationdues"
-						element={<AssociationDues />}
-					/>
-				</Route>
+                <Route path='/vehicles'>
+                    <Route path='' element={<Vehicles/>}/>
+                    <Route path='add' element={<AddVehicle/>}/>
+                    <Route path=':id' element={<VehicleView/>}/>
+                </Route>
 
-				{/* Private Routes for Guard */}
-				<Route element={<ProtectedRoute />}>
-					<Route
-						path="/scanner"
-						element={<Scanner />}
-					/>
-				</Route>
+                <Route path='/visitors'>
+                    <Route path='' element={<Visitors/>}/>
+                    <Route path='add' element={<AddVisitor/>}/>
+                    <Route path=':id' element={<VisitorView/>}/>
+                </Route>
 
-				{/* Private Routes for Admin and Guard */}
-				<Route element={<ProtectedRoute />}>
-					<Route
-						path="/dashboard"
-						element={<Dashboard />}
-					/>
-					<Route
-						path="/visitorslist"
-						element={<VisitorsList />}
-					/>
-					<Route
-						path="/logs"
-						element={<Logs />}
-					/>
-					<Route
-						path="/residentslist"
-						element={<ResidentsList />}
-					/>
-					<Route
-						path="/vehiclelist"
-						element={<VehicleList />}
-					/>
-					<Route
-						path="/homelist"
-						element={<HomeList />}
-					/>
-				</Route>
-			</Route>
-		</Routes>
-	);
+                
+
+                {/* Private Routes for Admin */}
+                <Route element={<ProtectedRoute/>} >
+                    <Route path='/associationdues' element={<AssociationDues/>}/>
+                    <Route path='/guard' element={<Guard/>}/>
+                    <Route path='/addguard' element={<AddGuard/>}/>
+
+                </Route>
+
+                {/* Private Routes for Guard */}
+                <Route element={<ProtectedRoute/>} >
+                    <Route path='/scanner' element={<Scanner/>}/>
+                </Route>
+                
+                {/* Private Routes for Admin and Guard */}
+                <Route element={<ProtectedRoute/>} >
+                    <Route path='/dashboard' element={<Dashboard/>}/>
+                    <Route path='/visitorslist' element={<VisitorsList/>}/>
+                    <Route path='/logs' element={<Logs/>}/>
+                    <Route path='/residentslist' element={<ResidentsList/>}/>
+                    <Route path='/vehiclelist' element={<VehicleList/>}/>
+                    <Route path='/homelist' element={<HomeList/>}/>
+                </Route>
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;
