@@ -54,7 +54,7 @@ function HomeOwnerAssociation() {
                                         <img src={DuesIcon} alt="" />
                                         <div id=''>
                                             <h6>Payment Date</h6>
-                                            <p>{hoa.paymentDate.month}{' '}{hoa.paymentDate.day}</p>
+                                            {/* <p>{hoa.paymentDate.month}{' '}{hoa.paymentDate.day}</p> */}
                                         </div>
                                     </div>
                                     <div></div>

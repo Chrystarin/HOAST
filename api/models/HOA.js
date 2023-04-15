@@ -34,7 +34,7 @@ module.exports = model(
 						type: ObjectId,
 						ref: 'User',
 						required: [true, 'User is required'],
-						index: { unique: true, sprse: true }
+						index: { unique: true, sparse: true }
 					},
 					status: {
 						type: String,

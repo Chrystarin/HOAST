@@ -15,9 +15,7 @@ export default function RegisterHoa() {
         street: '',
         barangay: '',
         city: '',
-        province: '',
-        paymentMonth: '',
-        paymentDay: ''
+        province: ''
     });
 
     // Retrieves data from text input then assigns to form
@@ -42,16 +40,15 @@ export default function RegisterHoa() {
                     street : registerForm.street,
                     barangay : registerForm.barangay,
                     city : registerForm.city,
-                    province : registerForm.province,
-                    paymentMonth: registerForm.paymentMonth,
-                    paymentDay: registerForm.paymentDay
+                    province : registerForm.province
                     
                 })
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
                 alert("Registered Successfully!");
-                navigate("/homes");
+                navigate("/dashboard");
+                window.location.reload();
             })
         }
         catch(err){
@@ -108,25 +105,6 @@ export default function RegisterHoa() {
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ province: e.target.value })}
-                    />
-                </div>
-
-                <div className='FormWrapper__2'>
-                    <TextField
-                        id="filled-password-input"
-                        label="Payment Month"
-                        type="text"
-                        autoComplete="current-password"
-                        variant="filled"
-                        onChange={(e)=>updateForm({ paymentMonth: e.target.value })}
-                    />
-                    <TextField
-                        id="filled-password-input"
-                        label="Payment Day"
-                        type="text"
-                        autoComplete="current-password"
-                        variant="filled"
-                        onChange={(e)=>updateForm({ paymentDay: e.target.value })}
                     />
                 </div>
                 
