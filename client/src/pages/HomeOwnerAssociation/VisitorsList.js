@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import './Dashboard.scss';
 
 import NavBar from '../../layouts/NavBar';
@@ -10,17 +10,12 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 
+import axios from '../../utils/axios';
 
 function VisitorsList() {
-    const visitors = [
-        { name : 'Jon Angelo Llagas', type : 'Single', date : 'March 2 - March 5'},
-        { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'},
-        { name : 'Gian, Mary, John, D...', type : 'Multiple', date : 'May 7 - May 18'}
-    ];
-    const history = [
-        { name : 'David', type : 'Single', date : 'March 2 - March 5'},
-        { name : 'Dianne Chrystalin', type : 'Single', date : 'May 7 - May 18'},
-    ];
+
+    const [visitors, setVisitors] = useState();
+    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
     
     // States for Tabs
     const [stepper, setStepper] = useState(1);
@@ -28,7 +23,23 @@ function VisitorsList() {
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
 
+    useEffect(() => {
+		const fetchVisitors = async () => {
+			await axios
+				.get(`visitors`, {
+					params: {
+						hoaId: hoaId
+					}
+				})
+				.then((response) => {
+					setVisitors(response.data);
+				});
+		};
+        fetchVisitors();
+	}, []);
   
+    if(!visitors) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -93,9 +104,25 @@ function VisitorsList() {
                                     </Menu>
                                 </div>
                                 <div className='SectionList'>
-                                    {visitors.map((vistor) => (
-                                        <Card type="Visitor" title={vistor.name} subTitle1={vistor.type} subTitle2={vistor.date} url="viewvisitor" />
-                                    ))}
+                                {(visitors.length === 0 )?
+                                    <p>No Visitors Available!</p>
+                                    :
+                                    <>{visitors.length > 0 && visitors.map((visitor) => {
+                                        if(new Date(visitor.departure).getTime() >= new Date().getTime()){
+                                            return (
+                                                <Card 
+                                                type="Visitor"
+                                                key={visitor.visitorId}
+                                                title={visitor.name}
+                                                subTitle1={visitor.arrival}
+                                                subTitle2={visitor.departure}
+                                                url={`/visitors/${visitor.visitorId}`}
+                                                />
+                                            );
+                                        }
+                                        
+                                    })}</>
+                                }
                                 </div>
                             </>:<></>}
                             {stepper===2?<>
@@ -148,9 +175,24 @@ function VisitorsList() {
                                     </Menu>
                                 </div>
                                 <div className='SectionList'>
-                                    {history.map((vistor) => (
-                                        <Card type="visitor" title={vistor.name} subTitle1={vistor.type} subTitle2={vistor.date} url="viewvisitor" />
-                                    ))}
+                                    {(visitors.length === 0 )?
+                                        <p>No Visitors Available!</p>
+                                        :
+                                        <>{visitors.length > 0 && visitors.map((visitor) => {
+                                            if(new Date(visitor.departure).getTime() <= new Date().getTime()){
+                                                return (
+                                                    <Card 
+                                                    type="Visitor"
+                                                    key={visitor.visitorId}
+                                                    title={visitor.name}
+                                                    subTitle1={visitor.arrival}
+                                                    subTitle2={visitor.departure}
+                                                    url={`/visitors/${visitor.visitorId}`}
+                                                    />
+                                                );
+                                            }
+                                        })}</>
+                                    }
                                 </div>
                             </>:<></>}
                         </div>

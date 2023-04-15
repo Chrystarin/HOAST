@@ -37,20 +37,20 @@ export default function AddGuard() {
                 `/hoas/guards`,
                 JSON.stringify({ 
                     userId: form.userId,
+                    hoa: form.hoaId,
                     hoaId: form.hoaId
                 })
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
                 alert("Added Guard Succesfully!");
-                navigate("/homes");
+                navigate("/guard");
             })
         }
         catch(err){
             alert("Error Occured!");
             console.error(err.message);
         }
-
     }
 
     return <>

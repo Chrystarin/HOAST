@@ -42,7 +42,7 @@ function Scanner() {
                 .post(
                     `logs`,
                     JSON.stringify({
-                        objId: log.objId,
+                        objectId: log.objId,
                         logType: log.logType,
                         hoaId: log.hoaId
                     })

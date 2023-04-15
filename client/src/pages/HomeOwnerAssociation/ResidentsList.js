@@ -18,18 +18,12 @@ function ResidentsList() {
         { name : 'Dianne Chrystalin', type : 'Homeowner'},
         { name : 'Historia Jalicent Castillo ', type : 'Resident'},
     ];
-    const Requests = [
-        { name : 'Jon Angelo Llagas', type : 'Homeowner'},
-        { name : 'Mary Joyce Reparip', type : 'Resident'},
-        { name : 'Gian Carlo Dela Cruz', type : 'Resident'},
-        { name : 'John Michael Hipolito', type : 'Resident'},
-    ];
 
     const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
 
 
     const [requests, setRequests] = useState();
-    let id = "g1w_aRCLesmE7de1"
+    const [residents, setResidents] = useState();
 
     useEffect(() => {
         // Retrieves Requests
@@ -42,9 +36,22 @@ function ResidentsList() {
                 })
                 .then((response) => {
                     setRequests(response.data);
-                    console.log(response.data)
             });
         };
+
+        const fetchResidents = async () => {
+            await axios
+                .get(`residents`, { 
+                    params: { 
+                        hoaId: hoaId
+                    } 
+                })
+                .then((response) => {
+                    setResidents(response.data);
+            });
+        };
+
+        fetchResidents();
         fetchRequests();
         
     }, []);
@@ -76,7 +83,7 @@ function ResidentsList() {
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
 
-    if(!requests) return <div>Requests Loading...</div>
+    if(!requests || !residents) return <div>Requests Loading...</div>
 
     return <>
         <NavBar/>
@@ -140,14 +147,22 @@ function ResidentsList() {
                                         </div>
                                     </div>
                                 </Menu>
-                                <Button variant="contained">Add Resident</Button>
                             </div>
                             <div className='SectionList'>
-                                {Residents.map((resident) => (
-                                    <ResidentCard username={resident.name} type={"View"}/>
-                                ))}
+                                {(residents.length === 0 )?
+                                    <p>No residents found!</p>
+                                :
+                                    <>
+                                        
+                                        {residents.length > 0 &&
+                                        residents.map((resident) => {
+                                            return (
+                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type={"View"}/>
+                                            );
+                                        })}
+                                    </>
+                                }
                             </div>
-
                         </>:<></>}
                         {stepper==2?<>
                             <div className='SectionController'>

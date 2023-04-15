@@ -25,7 +25,6 @@ function HomeList() {
 				})
 				.then((response) => {
 					setHomes(response.data);
-                    console.log(response.data)
 				});
 		};
     fetchHomes();

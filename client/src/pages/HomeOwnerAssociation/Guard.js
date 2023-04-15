@@ -1,20 +1,35 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import './Guard.scss'
+
+import axios from '../../utils/axios';
 
 import NavBar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import SideBar from './SideBar';
 import ResidentCard from '../../components/ResidentCard/ResidentCard.js'
+
 function Guard() {
 
-    const Residents = [
-        { name : 'David', type : 'Homeowner'},
-        { name : 'Harold James Castillo'},
-        { name : 'Damian Criston Castillo'},
-        { name : 'Dianne Chrystalin'},
-        { name : 'Historia Jalicent Castillo '},
-    ];
+    const [guards, setGuards] = useState()
+
+    useEffect(() => {
+		const fetchGuards = async () => {
+			await axios
+				.get(`hoas/guards`, {
+					params: {
+						hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
+					}
+				})
+				.then((response) => {
+					setGuards(response.data)
+				});
+		};
+        fetchGuards();
+	}, []);
+
+    if (!guards) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -32,9 +47,19 @@ function Guard() {
                     <div id='Guard' className='SectionView'>
                         <div className='SectionList'>
                             
-                            {Residents.map((resident) => (
-                                <ResidentCard    username={resident.name} type={"Edit"}/>
-                            ))}
+                                {(guards.length === 0 )?
+                                    <p>No guards found!</p>
+                                :
+                                    <>
+                                        
+                                        {guards.length > 0 &&
+                                        guards.map((guard) => {
+                                            return (
+                                                <ResidentCard key={guard._id} username={guard.user.name.firstName + ' ' + guard.user.name.lastName} type={"View"}/>
+                                            );
+                                        })}
+                                    </>
+                                }
                         </div>
                     </div>
                 </div>

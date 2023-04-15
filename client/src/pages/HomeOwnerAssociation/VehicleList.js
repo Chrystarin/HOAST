@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+
 import NavBar from '../../layouts/NavBar';
 import './Dashboard.scss';
 import SideBar from './SideBar';
@@ -8,15 +9,35 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
+
+import axios from '../../utils/axios';
+
 function VehicleList() {
-    const Vehicles = [
-        { plateNumber : 'ASC231S', model:"Sportivo", brand:"Isuzu"},
-        { plateNumber : 'ABC231', model:"Sivic", brand:"Honda"},
-        { plateNumber : 'BEW231', model:"L300", brand:"Toyota"}
-    ];
+
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
+
+    const [vehicles, setVehicles] = useState();
+
+    // Retrieve All User Vehicles Data
+    useEffect(() => {
+      const fetchVehicles = async () => {
+        await axios
+            .get(`vehicles`, {
+                params: {
+                    hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
+                }
+            })
+            .then((response) => {
+                setVehicles(response.data.vehicles);
+            });
+      };
+      fetchVehicles();
+    }, []);
+
+    if (!vehicles) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -73,9 +94,26 @@ function VehicleList() {
                         </Menu>
                     </div>
                     <div className='SectionList'>
-                        {Vehicles.map((Vehicle) => (
-                            <Card type="Vehicles" title={Vehicle.plateNumber} subTitle1={Vehicle.model} subTitle2={Vehicle.brand} url="viewvisitor" />
-                        ))}
+                    {(vehicles.length === 0 )?
+                        <p>No Vehicles found!</p>
+                        :
+                        <>
+                            {vehicles.length > 0 &&
+                            vehicles.map((vehicle) => {
+                            return (
+                                <Card 
+                                type="Vehicles"
+                                key={vehicle.plateNumber}
+                                id={vehicle.plateNumber}
+                                title={vehicle.plateNumber}
+                                subTitle1={vehicle.brand}
+                                subTitle2={vehicle.model}
+                                url={`/vehicles/${vehicle.plateNumber}`}
+                                />
+                            );
+                            })}
+                        </>
+                    }
                     </div>
                 </div>
             </section>

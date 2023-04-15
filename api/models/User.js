@@ -52,6 +52,14 @@ module.exports = model(
 				}
 			]
 		},
-		{ timestamps: true }
+		{
+			timestamps: true,
+			toJSON: {
+				transform: function(doc, ret) {
+					delete ret.credentials
+					return ret
+				}
+			}
+		}
 	)
 );

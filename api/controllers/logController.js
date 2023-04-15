@@ -86,6 +86,10 @@ const addRecord = async (req, res, next) => {
 	const { objectId, logType } = req.body;
 	const { hoa } = req.user;
 
+    console.log("test")
+    console.log(objectId)
+    console.log(logType)
+
 	// Validate input
 	checkString(objectId, 'Object ID');
 	checkString(logType, 'Log Type');

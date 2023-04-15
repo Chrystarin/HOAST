@@ -111,7 +111,7 @@ const addGuard = async (req, res, next) => {
 	if (!user) throw new UserNotFoundError();
 
 	// Add guard to HOA
-	hoa.guards.push({ guard: user._id });
+	hoa.guards.push({ user: user._id });
 	await hoa.save();
 
 	res.status(201).json({ message: 'Guard added' });

@@ -37,7 +37,6 @@ const getVehicles = async (req, res, next) => {
 	// Get specific vehicle
 	if (plateNumber) {
 		vehicles = vehicles.find(({ plateNumber: pn }) => plateNumber == pn);
-
 		if (!vehicles) throw new VehicleNotFoundError();
 	}
 	res.json(vehicles);

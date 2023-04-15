@@ -126,7 +126,7 @@ function Logs() {
                                     <TableBody>
 
                                         {logs.length === 0 ? (
-													<p>No Logs Recorded</p>
+													<></>
                                         ) : (
                                             <>
                                                 {logs.length > 0 &&
