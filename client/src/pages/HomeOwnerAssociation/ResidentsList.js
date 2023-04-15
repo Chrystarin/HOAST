@@ -25,6 +25,8 @@ function ResidentsList() {
         { name : 'John Michael Hipolito', type : 'Resident'},
     ];
 
+    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
+
 
     const [requests, setRequests] = useState();
     let id = "g1w_aRCLesmE7de1"
@@ -32,10 +34,10 @@ function ResidentsList() {
     useEffect(() => {
         // Retrieves Requests
         const fetchRequests = async () => {
-            const response = await axios
+            await axios
                 .get(`requests`, { 
                     params: { 
-                        hoaId: id
+                        hoaId: hoaId
                     } 
                 })
                 .then((response) => {
@@ -48,8 +50,6 @@ function ResidentsList() {
     }, []);
 
     async function approveRequest(hoaId, reqId){
-        console.log(hoaId)
-        console.log(reqId)
         try{
             await axios
             .patch(`requests`, 
@@ -70,15 +70,14 @@ function ResidentsList() {
         }
     }
 
-
-    // if(!requests) return <div>Requests Loading...</div>
-
-
     // States for Tabs
     const [stepper, setStepper] = useState(1);
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
+
+    if(!requests) return <div>Requests Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -198,23 +197,24 @@ function ResidentsList() {
                                         </div>
                                     </div>
                                 </Menu>
-                                <Button variant="contained">Add Resident</Button>
                             </div> 
                             <div className='SectionList'>
-                            {(requests.length === 0 )?
+                                {(requests.length === 0 )?
                                     <p>No Requests found!</p>
                                 :
                                     <>
                                         
                                         {requests.length > 0 &&
                                         requests.map((request) => {
-                                        return (
-                                            <div key={request.requestId} style={{ border: '1px solid rgba(0, 0, 0, 1)', padding: "5px", margin: "5px" }}>
-                                                <h3>{request.homeDetails.houseName}</h3>
-                                                <h4>{request.requestor.userId}</h4>
-                                                <button onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Approve</button>
-                                            </div>
-                                        );
+                                            if (request.status=='pending'){
+                                                return (
+                                                    <div key={request.requestId} style={{ border: '1px solid rgba(0, 0, 0, 1)', padding: "5px", margin: "5px" }}>
+                                                        <h3>{request.details.name}</h3>
+                                                        <h4>{request.requestor.name.firstName}{' '}{request.requestor.name.lastName}</h4>
+                                                        <button onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Approve</button>
+                                                    </div>
+                                                );
+                                            }
                                         })}
                                     </>
                                 }

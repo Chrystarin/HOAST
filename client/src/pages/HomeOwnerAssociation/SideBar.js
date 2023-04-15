@@ -1,14 +1,15 @@
 import React,{useState} from 'react'
 import './Dashboard.scss';
 
-
 function SideBar(props) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = JSON.parse(localStorage.getItem("role"));
     const access ="wew"
     return (
         <div className='SectionManage__SideNav'>
             <ul>
                 {
-                    (access === "admin")? <>
+                    (role.role === "admin")? <>
                         <li>
                             <a href="/dashboard" className={(props.active=="Dashboard")?"active":""}><h6>Dashboard</h6></a>
                         </li>

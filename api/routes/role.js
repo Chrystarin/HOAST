@@ -9,12 +9,22 @@ const { getRoles } = asyncHandler({
 	getRoles: async (req, res, next) => {
 		const { user } = req.user;
 
+        let role = {}
+        let hoas = {}
+
 		const homes = await Home.find({ owner: user._id })
 			.lean()
 			.select('homeId');
-		const hoas = await HOA.find({ admin: user._id }).lean().select('hoaId');
+		const adminHoa = await HOA.find({ admin: user._id }).lean().select('hoaId');
 
-		res.json({ homes, hoas });
+        const guardHoa = await HOA.find({ guards: user._id }).lean().select('hoaId');
+
+        if (adminHoa.length>0) role = 'admin'
+        if (guardHoa.length>0) role = 'guard'
+        if (role=='admin') hoas = adminHoa
+        if (hoas=='guard') hoas = guardHoa
+
+		res.json({ role, homes, hoas});
 	}
 });
 

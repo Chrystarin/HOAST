@@ -75,11 +75,11 @@ function AddHome() {
         try{
             await axios
             .post(
-                `requests`,
+                `hoas/join`,
                 JSON.stringify({ 
                     hoaId: form.hoaId,
-                    houseName: form.houseName,
-                    houseNumber: parseInt(form.houseNumber),
+                    name: form.houseName,
+                    number: parseInt(form.houseNumber),
                     street: form.street,
                     phase: form.phase
                 })

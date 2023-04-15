@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import NavBar from '../../layouts/NavBar';
 import './Dashboard.scss';
 import SideBar from './SideBar';
@@ -8,7 +8,30 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
+import axios from '../../utils/axios';
 function HomeList() {
+
+    const [homes, setHomes] = useState();
+    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
+
+    useEffect(() => {
+		// Retrieves Homes
+		const fetchHomes = async () => {
+			await axios
+				.get(`homes`, {
+					params: {
+						hoaId: hoaId
+					}
+				})
+				.then((response) => {
+					setHomes(response.data);
+                    console.log(response.data)
+				});
+		};
+    fetchHomes();
+	}, []);
+
+
     const Houses = [
         { name : 'Llagas', address:"Ucaliptus", residents:"8"},
         { name : 'Castillo', address:"Saint Dominic", residents:"8"},
@@ -17,6 +40,9 @@ function HomeList() {
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
+
+    if(!homes) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -74,9 +100,26 @@ function HomeList() {
                     </div>
                     <div className='SectionList'>
                         
-                        {Houses.map((House) => (
-                            <Card type="Home" title={House.name +" Residence"} subTitle1={House.address} subTitle2={House.residents} url="viewvisitor" />
-                        ))}
+                        {(homes.length === 0 )?
+                            <p>No homes found!</p>
+                            :
+                            <>
+                                {homes.length > 0 &&
+                                    homes.map((home) => {
+                                    return (
+                                    <Card 
+                                        type="Home"
+                                        key={home.homeId}
+                                        id={home.homeId}
+                                        title={home.name}
+                                        subTitle1={home.address.number}
+                                        subTitle2={home.address.street}
+                                        url={`/homes/${home.homeId}`}
+                                    />
+                                    );
+                                })}
+                            </>
+                        }
                     </div>
                 </div>
             </section>

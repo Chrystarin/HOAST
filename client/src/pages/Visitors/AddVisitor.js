@@ -112,7 +112,7 @@ function AddVisitor() {
                                     homes.map((home) => {
                                     return (
                                         <MenuItem key={home.homeId} value={home.homeId}>
-                                            {home.address.houseName}
+                                            {home.name}
                                         </MenuItem> 
                                     );
                                 })}
@@ -129,7 +129,6 @@ function AddVisitor() {
                         </div>
                         <div className='Form__Button'>
                             <Button variant='text'>Cancel</Button>
-                            <Button variant='text' onClick={()=>console.log(form)}>Check Value</Button>
                             <Button variant='contained' type='submit' className='Submit'>Submit</Button>
                         </div>
                     </form>

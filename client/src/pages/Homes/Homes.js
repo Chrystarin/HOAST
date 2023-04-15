@@ -22,7 +22,7 @@ function Homes() {
   useEffect(() => {
 		// Retrieves Homes
 		const fetchHomes = async () => {
-			const response = await axios
+			await axios
 				.get(`homes`)
 				.then((response) => {
 					setHomes(response.data);

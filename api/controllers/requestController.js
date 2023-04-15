@@ -27,7 +27,7 @@ const getRequests = async (req, res, next) => {
 
 	if (type == ADMIN) {
 		const { hoa } = req.user;
-		requests = await Request.find({ hoa: hoa._id }).populate('hoa').exec();
+		requests = await Request.find({ hoa: hoa._id }).populate('hoa requestor').exec();
 	}
 
 	// Get specific request

@@ -45,6 +45,7 @@ function App() {
             <Route path='*' element={<Error404/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
+            
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
                 <Route path='/hoa/register' element={<RegisterHoa/>}/>
@@ -87,12 +88,12 @@ function App() {
                 
                 {/* Private Routes for Admin and Guard */}
                 <Route element={<ProtectedRoute/>} >
-                    <Route path='/dashboard' element={<Dashboard/>}/>
-                    <Route path='/visitorslist' element={<VisitorsList/>}/>
-                    <Route path='/logs' element={<Logs/>}/>
-                    <Route path='/residentslist' element={<ResidentsList/>}/>
-                    <Route path='/vehiclelist' element={<VehicleList/>}/>
-                    <Route path='/homelist' element={<HomeList/>}/>
+                    <Route path='dashboard' element={<Dashboard/>}/>
+                    <Route path='visitorslist' element={<VisitorsList/>}/>
+                    <Route path='logs' element={<Logs/>}/>
+                    <Route path='residentslist' element={<ResidentsList/>}/>
+                    <Route path='vehiclelist' element={<VehicleList/>}/>
+                    <Route path='homelist' element={<HomeList/>}/>
                 </Route>
             </Route>
         </Routes>

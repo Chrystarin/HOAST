@@ -51,14 +51,13 @@ const getHoas = async (req, res, next) => {
 	checkString(hoaId, 'HOA ID', true);
 
 	// Find hoas
-	let hoas = await HOA.find({ hoaId });
+	let hoas = await HOA.find();
 
 	// Get specific hoa
 	if (hoaId) {
-		[hoas] = hoas;
-
+		hoas = await HOA.findOne({ hoaId });
 		if (!hoas) throw new HOANotFoundError();
-	}
+	} 
 
 	res.json(hoas);
 };

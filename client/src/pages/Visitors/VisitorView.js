@@ -187,9 +187,8 @@ function VisitorView() {
 							<QRCodeCard
 								objId={visitor.visitorId}
 								logType={'visitor'}
-								hoaId={visitor.home.hoa.hoaId}
+								hoaId={visitor.home.hoa}
 							/>
-							{visitor.home.hoa.hoaId}
 						</div>
 					</div>
 				</section>

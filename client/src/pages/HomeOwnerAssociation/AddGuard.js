@@ -14,8 +14,9 @@ export default function AddGuard() {
     const [searchText, setSearchText] = useState("");
     const [form, setForm] = useState({
         userId: '',
-        hoaId: '',
+        hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
     });
+
     const [stepper, setStepper] = useState(1);
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
@@ -62,12 +63,10 @@ export default function AddGuard() {
                     <div className='SectionContent'>
                         <form onSubmit={Submit} className='Form'>
 
-                            <div>
+                            {/* <div>
                                 <SearchInput onChange={(e)=>setSearchText(e.target.value)} value={searchText} placeholder="Search User"/>
                                 
-                            </div>
-                            <p>Selected User:</p>
-
+                            </div> */}
                             {/* <div className='SectionList'>
                                 {(hoas.length === 0 )?
                                     <p>No HOAs Available!</p>
@@ -104,11 +103,11 @@ export default function AddGuard() {
                             </div> */}
                             <TextField
                                 id="filled-password-input"
-                                label="HOA ID"
+                                label="User ID"
                                 type="text"
                                 autoComplete="current-password"
                                 variant="filled"
-                                onChange={(e)=>updateForm({ hoaId: e.target.value })}
+                                onChange={(e)=>updateForm({ userId: e.target.value })}
                             />
                             <div className='Form__Button'>
                                 <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>

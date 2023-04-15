@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import NavBar from '../../layouts/NavBar'
 import './Dashboard.scss';
 import DuesIcon from '../../images/icons/due-date.png'
@@ -6,17 +6,35 @@ import Avatar from '@mui/material/Avatar';
 import SideBar from './SideBar';
 import Card from '../../components/Card/Card';
 import HouseIcon from '../../images/icons/villageSide.png';
+
+import axios from '../../utils/axios';
+
 function HomeOwnerAssociation() {
-    const House = [
-        { name : 'Llagas', address:"Ucaliptus", residents:"8"},
-        { name : 'Castillo', address:"Saint Dominic", residents:"8"},
-        { name : 'Brandez', address:"Abuab", residents:"8"}
-    ];
-    const Cars = [
-        { plateNumber : 'ASC231S', model:"Sportivo", brand:"Isuzu"},
-        { plateNumber : 'ABC231', model:"Sivic", brand:"Honda"},
-        { plateNumber : 'BEW231', model:"L300", brand:"Toyota"}
-    ];
+
+    const [guard, setGuard] = useState();
+
+    const [hoa, setHoa] = useState();
+    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
+
+    // Runs onLoad
+	useEffect(() => {
+		const fetchHoa = async () => {
+			await axios
+				.get(`hoas`, {
+					params: {
+						hoaId: hoaId
+					}
+				})
+				.then((response) => {
+					setHoa(response.data);
+					setGuard(response.data.guards);
+				});
+		};
+		fetchHoa();
+	}, []);
+
+    if(!hoa || !guard) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -32,31 +50,15 @@ function HomeOwnerAssociation() {
                                     <div id='AssociationDues__Card'>
                                         <img src={DuesIcon} alt="" />
                                         <div id=''>
-                                            <h6>Monthly</h6>
-                                            <p>1,000 Pesos</p>
+                                            <h6>Payment Date</h6>
+                                            <p>{hoa.paymentDate.month}{' '}{hoa.paymentDate.day}</p>
                                         </div>
                                     </div>
                                     <div></div>
                                 </div>
                             </div>
                             <div className='SectionView__Sections'>
-                                <h5 className='SectionView__Sections__Title'>Homes</h5>
-                                <div className='SectionList'>
-                                    {House.map((House) => (
-                                        <Card type="Home" title={House.name} subTitle1={House.address} subTitle2={House.residents} url="viewvisitor" />
-                                    ))}
-                                </div>
-                            </div>
-                            <div className='SectionView__Sections'>
-                                <h5 className='SectionView__Sections__Title'>Vehicles</h5>
-                                <div className='SectionList'>
-                                    {Cars.map((Car) => (
-                                        <Card type="Vehicles" title={Car.plateNumber} subTitle1={Car.model} subTitle2={Car.brand} url="viewvisitor" />
-                                    ))}
-                                </div>
-                            </div>
-                            <div className='SectionView__Sections'>
-                                <h5 className='SectionView__Sections__Title'>Guard</h5>
+                                <h5 className='SectionView__Sections__Title'>Guard/s</h5>
                                 <div id='Guard__Content'>
                                     <div id='Guard__Card'>
                                         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
@@ -64,7 +66,6 @@ function HomeOwnerAssociation() {
                                             <h6>Juan Dela Cruz</h6>
                                         </div>
                                     </div>
-                                    <div></div>
                                 </div>
                             </div>  
                         </div>
@@ -73,15 +74,15 @@ function HomeOwnerAssociation() {
                                 <img src={HouseIcon} alt="" />
                                 <div>
                                     <h6>Homeowner Association: </h6>
-                                    <h5>Suburbia East</h5>
+                                    <h5>{hoa.name}</h5>
                                 </div>
                                 <div>
                                     <h6>Address: </h6>
-                                    <h5>Suburbia Concepcion Uno Marikina City</h5>
+                                    <h5>{hoa.address.street}{' '}{hoa.address.barangay}{' '}{hoa.address.city}{hoa.address.province}</h5>
                                 </div>
                                 <div>
-                                    <h6>Register Since: </h6>
-                                    <h5>Tue, 07 Feb 20 23 02:37:40 GMT </h5>
+                                    <h6>Registered Since: </h6>
+                                    <h5>{hoa.createdAt}</h5>
                                 </div>
                             </div>
                         </div>

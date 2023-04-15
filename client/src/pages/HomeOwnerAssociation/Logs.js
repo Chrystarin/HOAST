@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import NavBar from '../../layouts/NavBar';
 import './Dashboard.scss';
 import SideBar from './SideBar';
@@ -17,17 +17,44 @@ import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
+
+import axios from '../../utils/axios';
+
 function Logs() {
+
+    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
+    const [logs, setLogs] = useState()
+
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
 
+    // Runs onLoad
+	useEffect(() => {
+		const fetchLogs = async () => {
+			await axios
+				.get(`logs`, {
+					params: {
+						hoaId: hoaId
+					}
+				})
+				.then((response) => {
+					setLogs(response.data);
+                    console.log(response.data)
+				});
+		};
+		fetchLogs();
+	}, []);
     
+
     const Logs = [
         { id : 'MRPL8S', Resident:"Harold James Castillo", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
         { id : '58365G2', Resident:"Jon Angelo Llagas", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
         { id : 'MRPL8S', Resident:"Dianne Chrystalin Brandez", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
     ];
+
+    if(!logs) return <div>Loading...</div>
+
     return <>
         <NavBar/>
         <div id='SectionHolder'>
@@ -97,7 +124,29 @@ function Logs() {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {Logs.map((Log) => (
+
+                                        {logs.length === 0 ? (
+													<p>No Logs Recorded</p>
+                                        ) : (
+                                            <>
+                                                {logs.length > 0 &&
+                                                    logs.map((log) => {
+                                                        return (
+                                                            <TableRow
+                                                                key={log.logId}
+                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                            >
+                                                                <TableCell component="th" scope="row" align='center'>{log.id} </TableCell>
+                                                                <TableCell align="center">{log.objectId}</TableCell>
+                                                                <TableCell component="th" scope="row" align='center'>{log.id} </TableCell>
+                                                                <TableCell align="center">{log.Timestamp}</TableCell>
+                                                            </TableRow>
+                                                        );
+                                                    })}
+                                            </>
+                                        )}
+
+                                        {/* {Logs.map((Log) => (
                                             <TableRow
                                                 key={Log.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -107,28 +156,28 @@ function Logs() {
                                                 <TableCell component="th" scope="row" align='center'>{Log.id} </TableCell>
                                                 <TableCell align="center">{Log.Timestamp}</TableCell>
                                             </TableRow>
-                                        ))}
+                                        ))} */}
                                     </TableBody>
-                                    <TableFooter>
-                                    <TableRow>
-                                        <TablePagination
-                                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                        colSpan={3}
-                                        // count={rows.length}
-                                        // rowsPerPage={rowsPerPage}
-                                        // page={page}
-                                        SelectProps={{
-                                            inputProps: {
-                                            'aria-label': 'rows per page',
-                                            },
-                                            native: true,
-                                        }}
-                                        // onPageChange={handleChangePage}
-                                        // onRowsPerPageChange={handleChangeRowsPerPage}
-                                        // ActionsComponent={TablePaginationActions}
-                                        />
-                                    </TableRow>
-                                    </TableFooter>
+                                    {/* <TableFooter>
+                                        <TableRow>
+                                            <TablePagination
+                                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                            colSpan={3}
+                                            // count={rows.length}
+                                            // rowsPerPage={rowsPerPage}
+                                            // page={page}
+                                            SelectProps={{
+                                                inputProps: {
+                                                'aria-label': 'rows per page',
+                                                },
+                                                native: true,
+                                            }}
+                                            // onPageChange={handleChangePage}
+                                            // onRowsPerPageChange={handleChangeRowsPerPage}
+                                            // ActionsComponent={TablePaginationActions}
+                                            />
+                                        </TableRow>
+                                    </TableFooter> */}
                                 </Table>
                             </TableContainer>
                         </div>

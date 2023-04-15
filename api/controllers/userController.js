@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
 
 	res.status(201)
 		.cookie('access-token', createToken(user.userId), cookieOptions)
-		.json({ message: 'Logged in' });
+		.json({ user: user });
 };
 
 const updateUser = async (req, res, next) => {

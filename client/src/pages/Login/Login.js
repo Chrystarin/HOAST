@@ -10,6 +10,8 @@ import Button from '@mui/material/Button';
 
 import axios from '../../utils/axios';
 
+import axiosInstance from '../../utils/axiosInstance.js';
+
 function Login() {
     const navigate = useNavigate();
 
