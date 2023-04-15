@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import SideBar from './SideBar';
 import ResidentCard from '../../components/ResidentCard/ResidentCard.js'
-
+import loading from '../../images/loading.gif';
 function Guard() {
 
     const [guards, setGuards] = useState()
@@ -28,11 +28,16 @@ function Guard() {
         fetchGuards();
 	}, []);
 
-    if (!guards) return <div>Loading...</div>
+    if (!guards) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="Guard"/>
                 <div id='HOA__Content'>

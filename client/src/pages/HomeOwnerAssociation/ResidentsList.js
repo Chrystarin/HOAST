@@ -10,6 +10,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import axios from '../../utils/axios';
+import loading from '../../images/loading.gif';
 function ResidentsList() {
     const Residents = [
         { name : 'David', type : 'Homeowner'},
@@ -82,11 +83,16 @@ function ResidentsList() {
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
 
-    if(!requests || !residents) return <div>Requests Loading...</div>
+    if(!requests || !residents)  return <>
+        <div className='Loading'>
+        <img src={loading} alt="" />
+        <h3>Loading...</h3>
+        </div>
+    </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="ResidentsList"/>
                 <div id='HOA__Content'>

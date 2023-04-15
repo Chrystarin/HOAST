@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import loading from '../../images/loading.gif';
 import './VehicleView.scss'
 
 import Navbar from '../../layouts/NavBar';
@@ -60,11 +60,16 @@ function VehicleView() {
     }, []);
 
     // Returns loading if data is not yet retrieved
-    if(!vehicle || !logs) return <div>Loading...</div>
+    if(!vehicle || !logs) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <Navbar type="vehicles"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
             <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>{vehicle.plateNumber}</span></h3>
                 <div className='SectionContent SectionView' id='ViewResident'>

@@ -9,6 +9,7 @@ import Card from '../../components/Card/Card';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import axios from '../../utils/axios';
+import loading from '../../images/loading.gif';
 function HomeList() {
 
     const [homes, setHomes] = useState();
@@ -39,11 +40,16 @@ function HomeList() {
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
 
-    if(!homes) return <div>Loading...</div>
+    if(!homes) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="HomesList" access="admin"/>
                 <div id='HOA__Content'>

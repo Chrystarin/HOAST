@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 
 import axios from '../../utils/axios';
-
+import loading from '../../images/loading.gif';
 function VisitorsList() {
 
     const [visitors, setVisitors] = useState();
@@ -37,11 +37,16 @@ function VisitorsList() {
         fetchVisitors();
 	}, []);
   
-    if(!visitors) return <div>Loading...</div>
+    if(!visitors) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="VisitorsList"/>
                 <div id='HOA__Content'>

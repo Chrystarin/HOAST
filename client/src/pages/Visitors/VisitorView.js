@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import loading from '../../images/loading.gif';
 import './VisitorView.scss';
 
 import Navbar from '../../layouts/NavBar';
@@ -63,7 +63,12 @@ function VisitorView() {
 	}, []);
 
 	// Returns loading if data is not yet retrieved
-	if (!visitor) return <div>Loading...</div>;
+	if (!visitor) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>;
 
 	return (
 		<>

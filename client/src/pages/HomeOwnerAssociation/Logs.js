@@ -15,9 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-import TablePagination from '@mui/material/TablePagination';
-import TableFooter from '@mui/material/TableFooter';
-
+import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
 
 function Logs() {
@@ -46,11 +44,16 @@ function Logs() {
 	}, []);
     
 
-    if(!logs) return <div>Loading...</div>
+    if(!logs) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="Logs"/>
                 <div id='HOA__Content'>

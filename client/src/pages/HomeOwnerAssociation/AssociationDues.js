@@ -7,7 +7,7 @@ import SideBar from './SideBar';
 function AssociationDues() {
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="AssociationDues"/>
                 <div id='HOA__Content'>

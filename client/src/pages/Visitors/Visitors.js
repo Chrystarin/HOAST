@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-
+import loading from '../../images/loading.gif';
 function Visitors() {
 
     const [visitors, setVisitors] = useState();
@@ -32,11 +32,16 @@ function Visitors() {
     }, []);
 
     // Returns loading if data is not yet retrieved
-    if(!visitors) return <div>Loading...</div>
+    if(!visitors) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <Navbar type="visitors"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'>Visitors</h3>
                 <div className='SectionController'>

@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
-
+import loading from '../../images/loading.gif';
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -94,11 +94,17 @@ function AddHome() {
         }
     }
     
-    if(!hoas) return <div>Loading...</div>
+    // if(!hoas) 
+    return <>
+        <div className='Loading'>
+            <img src={loading} alt="" />
+            <h3>Loading...</h3>
+        </div>
+    </>
 
     return<>
         <Navbar type="home"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Add Home</span></h3>
 

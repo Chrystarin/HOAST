@@ -9,6 +9,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
+import loading from '../../images/loading.gif'
 
 import axios from '../../utils/axios';
 
@@ -36,11 +37,16 @@ function VehicleList() {
       fetchVehicles();
     }, []);
 
-    if (!vehicles) return <div>Loading...</div>
+    if (!vehicles) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="VehiclesList"/>
                 <div id='HOA__Content'>

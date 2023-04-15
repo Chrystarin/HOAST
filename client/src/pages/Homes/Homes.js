@@ -8,7 +8,8 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-import './Homes.scss'
+import './Homes.scss';
+import loading from '../../images/loading.gif';
 
 function Homes() {
 
@@ -32,11 +33,17 @@ function Homes() {
 	}, []);
 
   // Returns if member is null
-	if (!homes) return <div>Loading...</div>;
+	if (!homes) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
+  
 
   return <>
     <Navbar type="home"/>
-    <div id='SectionHolder'>
+    <div className='SectionHolder'>
       <section className='Section'>
         <h3 className='SectionTitleDashboard'> Homes</h3>
         <div className='SectionController'>

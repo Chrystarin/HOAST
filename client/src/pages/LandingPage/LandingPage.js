@@ -20,7 +20,7 @@ function LandingPage() {
     <>
       <div id='landingPage'>
         <Header/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
           <section className='Section' id='MainSection'>
             <div id='MainSection__Container'>
               <div id='MainSection__About'>

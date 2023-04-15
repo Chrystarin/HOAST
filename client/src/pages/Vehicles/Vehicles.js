@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Navbar from '../../layouts/NavBar';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
-
+import loading from '../../images/loading.gif';
 function Vehicles() {
     
     const [vehicles, setVehicles] = useState();
@@ -24,11 +24,16 @@ function Vehicles() {
     }, []);
 
     // Returns loading if data is not yet retrieved
-    if(!vehicles) return <div>Loading...</div>
+    if(!vehicles) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <Navbar type="vehicles"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
         <section className='Section'>
             <h3 className='SectionTitleDashboard'> Vehicles</h3>
             <div className='SectionController'>

@@ -37,7 +37,7 @@ function ResidentsView() {
     
     return <>
         <Navbar type="home"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
             <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Harold James H. Castillo</span></h3>
                 {/* <div className='SectionController'>

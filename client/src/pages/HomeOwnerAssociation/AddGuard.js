@@ -55,7 +55,7 @@ export default function AddGuard() {
 
     return <>
         <Navbar type="vehicle"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="Guard"/>
                 <div>

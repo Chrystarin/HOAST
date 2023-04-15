@@ -1,12 +1,17 @@
 import React from 'react';
-
+import NavBar from '../../layouts/NavBar';
+import Image404 from '../../images/404.png';
+import '../../styles/main.scss';
+import './error.scss';
 function Error404() {
-  return (
-    <div>
-        <h1>Error 404</h1><br />
-        <h2>Page Not Found</h2>
+  return <>
+    <NavBar/>
+    <div className='SectionHolder' id='Eror404__Container'>
+      <img src={Image404} alt="" />
+      <h2>Error 404</h2>
+      <h3>Page Not Found</h3>
     </div>
-  )
+  </>
 }
 
 export default Error404;

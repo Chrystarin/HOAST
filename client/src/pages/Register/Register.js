@@ -66,7 +66,7 @@ function Register() {
     return (
         <div>
             <Header/>
-            <div id='SectionHolder'>
+            <div className='SectionHolder'>
             <section className='Section' id='Register'>
                 <div id='Register__Img'>
                 <img src={HouseImg} alt="" />

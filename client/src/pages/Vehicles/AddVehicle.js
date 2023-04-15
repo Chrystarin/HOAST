@@ -84,7 +84,7 @@ function AddVehicle() {
     }
     return<>
         <Navbar type="vehicle"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>Add Vehicle</span></h3>
 

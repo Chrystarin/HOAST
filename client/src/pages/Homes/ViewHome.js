@@ -8,7 +8,7 @@ import VillageIcon from '../../images/icons/Village.png';
 import House from '../../images/icons/house.png';
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
 import Card from '../../components/Card/Card.js';
-
+import loading from '../../images/loading.gif';
 import './ViewHome.scss'
 
 import axios from '../../utils/axios';
@@ -56,11 +56,16 @@ function ViewHome() {
         fetchHome();
     }, []);
 
-    if(!home || !vehicles) return <div>Loading...</div>
+    if(!home || !vehicles) return <>
+        <div className='Loading'>
+        <img src={loading} alt="" />
+        <h3>Loading...</h3>
+        </div>
+    </>
 
     return <>
         <Navbar type="home"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
             <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > {home.address.houseName}</h3>
                 <div className='SectionContent' id='ViewHome'>

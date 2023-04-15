@@ -66,7 +66,7 @@ function Scanner() {
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="Scanner"/>
                 <div id='HOA__Content'>

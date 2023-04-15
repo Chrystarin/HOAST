@@ -6,7 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import SideBar from './SideBar';
 import Card from '../../components/Card/Card';
 import HouseIcon from '../../images/icons/villageSide.png';
-
+import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
 
 function HomeOwnerAssociation() {
@@ -31,11 +31,16 @@ function HomeOwnerAssociation() {
 		fetchHoa();
 	}, []);
 
-    if(!hoa || !guard) return <div>Loading...</div>
+    if(!hoa || !guard) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return <>
         <NavBar/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section SectionManage'>
                 <SideBar active="Dashboard"/>
                 <div id='HOA__Content'>

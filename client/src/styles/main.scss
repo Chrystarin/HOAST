@@ -48,7 +48,7 @@ a{
 a:active{
     color: black;
 }
-#SectionHolder{
+.SectionHolder{
     max-width: 1920px;
     margin: auto;
     .Section{
@@ -198,8 +198,8 @@ a:active{
     display: flex;
     gap:25px;
     .SectionView__Content{
-        flex-grow: 1;
         display: flex;
+        flex-grow: 1;
         flex-direction:column;
         gap: 25px;
         .SectionView__Sections{
@@ -275,5 +275,15 @@ a:active{
             }
             flex-grow: 1;
         }
+    }
+}
+.Loading{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h3{
+        color: var(--primary-color);
     }
 }

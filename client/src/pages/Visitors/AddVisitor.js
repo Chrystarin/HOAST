@@ -10,7 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import loading from '../../images/loading.gif';
 
 function AddVisitor() {
     const navigate = useNavigate();
@@ -87,11 +87,16 @@ function AddVisitor() {
         }
     }
 
-    if(!homes) return <div>Loading...</div>
+    if(!homes) return <>
+    <div className='Loading'>
+      <img src={loading} alt="" />
+      <h3>Loading...</h3>
+    </div>
+  </>
 
     return<>
         <Navbar type="vehicle"/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'><span><a href="/visitors">Visitors</a></span>  > <span>Add Visitors</span></h3>
 

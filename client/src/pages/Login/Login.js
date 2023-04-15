@@ -61,7 +61,7 @@ function Login() {
   return (
     <div>
         <Header/>
-        <div id='SectionHolder'>
+        <div className='SectionHolder'>
           <section className='Section' id='Login'>
             <div id='Login__Img'>
               <img src={HouseImg} alt="" />
