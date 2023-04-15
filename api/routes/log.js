@@ -29,7 +29,7 @@ router.get('/', allowAdmin, allowGuard, allowResident, getRecords);
 
 /**
  * hoaId
- * objectId
+ * objectId,m
  * logType
  */
 router.post('/', allowAdmin, allowGuard, notUser, addRecord);

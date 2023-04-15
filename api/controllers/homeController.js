@@ -19,7 +19,7 @@ const getHomes = async (req, res, next) => {
 	if (type == USER) {
 		const { user } = req.user;
 		homes = await Home.find({ owner: user._id })
-			.populate('residents.user')
+			.populate('residents.user hoa owner')
 			.exec();
 	}
 

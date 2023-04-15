@@ -44,7 +44,7 @@ function Scanner() {
                     JSON.stringify({
                         objectId: log.objId,
                         logType: log.logType,
-                        hoaId: log.hoaId
+                        hoaId: localStorage.getItem('hoaId')
                     })
                 )
                 .then((response) => {

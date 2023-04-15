@@ -9,7 +9,7 @@ function SideBar(props) {
         <div className='SectionManage__SideNav'>
             <ul>
                 {
-                    (role.role === "admin")? <>
+                    (role.admin.length==1)? <>
                         <li>
                             <a href="/dashboard" className={(props.active=="Dashboard")?"active":""}><h6>Dashboard</h6></a>
                         </li>

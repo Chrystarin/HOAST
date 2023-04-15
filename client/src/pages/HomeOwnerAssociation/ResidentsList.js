@@ -19,7 +19,6 @@ function ResidentsList() {
         { name : 'Historia Jalicent Castillo ', type : 'Resident'},
     ];
 
-    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
 
 
     const [requests, setRequests] = useState();
@@ -31,7 +30,7 @@ function ResidentsList() {
             await axios
                 .get(`requests`, { 
                     params: { 
-                        hoaId: hoaId
+                        hoaId: localStorage.getItem('hoaId')
                     } 
                 })
                 .then((response) => {
@@ -43,7 +42,7 @@ function ResidentsList() {
             await axios
                 .get(`residents`, { 
                     params: { 
-                        hoaId: hoaId
+                        hoaId: localStorage.getItem('hoaId')
                     } 
                 })
                 .then((response) => {

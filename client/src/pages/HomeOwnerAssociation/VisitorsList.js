@@ -15,7 +15,6 @@ import axios from '../../utils/axios';
 function VisitorsList() {
 
     const [visitors, setVisitors] = useState();
-    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
     
     // States for Tabs
     const [stepper, setStepper] = useState(1);
@@ -28,7 +27,7 @@ function VisitorsList() {
 			await axios
 				.get(`visitors`, {
 					params: {
-						hoaId: hoaId
+						hoaId: localStorage.getItem('hoaId')
 					}
 				})
 				.then((response) => {

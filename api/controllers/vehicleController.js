@@ -24,14 +24,14 @@ const getVehicles = async (req, res, next) => {
 		const { home } = req.user;
 
 		// Get each of residents' vehicles
-		vehicles = await extractHomes([home]);
+		({vehicles} = await extractHomes([home]));
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get all vehicles of each resident of each home
-		vehicles = await extractHomes({ hoa: hoa._id });
+		({vehicles} = await extractHomes({ hoa: hoa._id }));
 	}
 
 	// Get specific vehicle

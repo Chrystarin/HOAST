@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +18,7 @@ import QRCodeCard from '../../layouts/QRCodeCard';
 import axios from '../../utils/axios';
 
 function VisitorView() {
+    const navigate = useNavigate();
 	const { id } = useParams();
 	const [visitor, setVisitor] = useState();
 	const [logs, setLogs] = useState();
@@ -34,7 +36,10 @@ function VisitorView() {
 				.then((response) => {
 					setVisitor(response.data);
 					console.log(response.data);
-				});
+				})
+                .catch((err)=>{
+                    navigate('/unauthorized');
+                })
 		};
 
 		// // Retrieves All of Specific Visitor's Logs Data

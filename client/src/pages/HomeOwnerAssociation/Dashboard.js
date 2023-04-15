@@ -12,9 +12,7 @@ import axios from '../../utils/axios';
 function HomeOwnerAssociation() {
 
     const [guard, setGuard] = useState();
-
     const [hoa, setHoa] = useState();
-    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
 
     // Runs onLoad
 	useEffect(() => {
@@ -22,7 +20,7 @@ function HomeOwnerAssociation() {
 			await axios
 				.get(`hoas`, {
 					params: {
-						hoaId: hoaId
+						hoaId: localStorage.getItem('hoaId')
 					}
 				})
 				.then((response) => {

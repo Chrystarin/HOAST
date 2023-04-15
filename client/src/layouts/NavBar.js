@@ -34,10 +34,10 @@ function NavBar(props) {
 
     const hoaButton = () => {
         // console.log(role.role == 'admin')
-        if (role.role == 'admin'){
+        if (role.admin.length==1){
             navigate("/dashboard");
         }
-        else if (role.role == 'guard'){
+        else if (role.guard.length==1){
             navigate("/scanner");
         }
         else {

@@ -18,7 +18,7 @@ function Guard() {
 			await axios
 				.get(`hoas/guards`, {
 					params: {
-						hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
+						hoaId: localStorage.getItem('hoaId')
 					}
 				})
 				.then((response) => {

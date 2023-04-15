@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,7 +18,7 @@ import QRCodeCard from '../../layouts/QRCodeCard';
 import axios from '../../utils/axios';
 
 function VehicleView() {
-
+    const navigate = useNavigate();
     const { id } = useParams();
     const [vehicle, setVehicle] = useState();
     const [logs, setLogs] = useState();
@@ -33,7 +34,10 @@ function VehicleView() {
                 })
             .then((response) => {
                 setVehicle(response.data);
-            });
+            })
+            .catch((err)=>{
+                navigate('/unauthorized');
+            })
         };
 
         // Retrieves All of Specific Visitor's Logs Data 
@@ -47,7 +51,6 @@ function VehicleView() {
                 })
             .then((response) => {
                 setLogs(response.data);
-                console.log(response.data)
             });
         };
 
@@ -143,7 +146,7 @@ function VehicleView() {
                         </div>
                     </div>
                     <div className='SectionView__SidePanel' id="ViewResident__QRCode__Container">
-                        <QRCodeCard objId={vehicle.plateNumber} logType={'Vehicle'} hoaId={'9d5YZYUiesmNXua'}/>
+                        <QRCodeCard objId={vehicle.plateNumber} logType={'vehicle'} hoaId={'9d5YZYUiesmNXua'}/>
                     </div>
                 </div>
             </section>

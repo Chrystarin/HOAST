@@ -23,9 +23,8 @@ function ViewHome() {
 
     const { id } = useParams();
     const [home, setHome] = useState();
-    const [hoa, setHoa] = useState();
-    const [visitors, setVisitors] = useState();
-    const [homeowner, setHomeowner] = useState();
+    const [residents, setResidents] = useState();
+    const [vehicles, setVehicles] = useState();
 
     useEffect(() => {
         // Retrieves Home Data
@@ -39,61 +38,25 @@ function ViewHome() {
             .then((response) => {
                 // Assign retrieved value to home constant
                 setHome(response.data);
-                
-                // Retrieves HOA Data 
-                const fetchHoa = async () => {
-                    await axios
-                    .get(`hoas`,{
-                        params: {
-                            hoaId: response.data.hoa.hoaId
-                        }
-                    })
-                    .then((response) => {
-                        setHoa(response.data);
-                    });
-                };
-
-                // Retrieves All Home Visitors' Data 
-                const fetchVisitors = async () => {
-                    await axios
-                    .get(`visitors`,{
-                        params: {
-                            homeId: response.data.homeId
-                        }
-                    })
-                    .then((response) => {
-                        setVisitors(response.data);
-                    });
-                };
-
-                // Retrieves Homeowners's Data
-                const fetchHomeowner = async () => {
-                    await axios
-                    .get(`users`,{
-                        params: {
-                            userId: response.data.owner.userId
-                        }
-                    })
-                    .then((response) => {
-                        setHomeowner(response.data);
-                    });
-                };
-
-                // Executes Functions
-                fetchHoa();
-                fetchVisitors();
-                fetchHomeowner();
+                console.log(response.data)
             });
         };
 
-        
+        const fetchVehicles = async () => {
+            await axios
+                .get(`vehicles`)
+                .then((response) => {
+                    setVehicles(response.data);
+                    console.log(response.data)
+                });
+          };
+          fetchVehicles();
 
         // Executes Functions
         fetchHome();
     }, []);
 
-    // Returns loading if data is not yet retrieved
-    if(!home || !hoa || !visitors || !homeowner) return <div>Loading...</div>
+    if(!home || !vehicles) return <div>Loading...</div>
 
     return <>
         <Navbar type="home"/>
@@ -108,12 +71,12 @@ function ViewHome() {
                                 <img src={VillageIcon} alt="" />
                                 <div id='HOA__InfoContainer'>
                                     <div>
-                                        <h4>{hoa.name}</h4>
-                                        <p>{hoa.address.city}</p>
+                                        <h4>{home.hoa.name}</h4>
+                                        <p>{home.hoa.address.city}</p>
                                     </div>
                                     <div>
-                                        <h4>Monthly Dues Status</h4>
-                                        <p>Fully Paid</p>
+                                        <h4>HOA Dues Paid Until</h4>
+                                        <p>{home.paidUntil}</p>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +89,7 @@ function ViewHome() {
                                     :
                                     <>{home.residents.length > 0 && home.residents.map((resident) => {
                                         return (
-                                            <ResidentCard key={resident._id} UserName={resident._id}/>
+                                            <ResidentCard key={resident._id} UserName={resident.user.name.firstName}/>
                                         );
                                     })}</>
                                 }
@@ -135,16 +98,33 @@ function ViewHome() {
                         <div className='ViewHome__Container' id='Vehicles_div'>
                             <h5 className='ViewHome__Title'>Vehicles</h5>
                             <div className='SectionList'>
+                                {(vehicles.length === 0 )?
+                                    <p>No vehicles</p>
+                                    :
+                                    <>{vehicles.length > 0 && vehicles.map((vehicle) => {
+                                        return (
+                                            <Card 
+                                                type="Vehicles"
+                                                key={vehicle.plateNumber}
+                                                id={vehicle.plateNumber}
+                                                title={vehicle.plateNumber}
+                                                subTitle1={vehicle.brand}
+                                                subTitle2={vehicle.model}
+                                                url={`/vehicles/${vehicle.plateNumber}`}
+                                            />
+                                        );
+                                    })}</>
+                                }
                                 <Card type="Vehicles" {...CarOwner}/>
                             </div>
                         </div>
                         <div className='ViewHome__Container' id='Visitors_div'>
                             <h5 className='ViewHome__Title'>Visitors</h5>
                             <div className='SectionList'>
-                                {(visitors.length === 0 )?
-                                    <p>No visitors Available!</p>
+                                {(home.visitors.length === 0 )?
+                                    <p>No visitors</p>
                                     :
-                                    <>{visitors.length > 0 && visitors.map((visitor) => {
+                                    <>{home.visitors.length > 0 && home.visitors.map((visitor) => {
                                         return (
                                             <Card type="Visitor" key={visitor.visitorId} title={visitor.name} subTitle1={visitor.arrival} subTitle2={visitor.departure}/>
                                         );
@@ -158,11 +138,11 @@ function ViewHome() {
                             <img src={House} alt="" />
                             <div>
                                 <h6>Homeowner: </h6>
-                                <h5>{homeowner.name.firstName} {homeowner.name.lastName}</h5>
+                                <h5>{home.owner.name.firstName} {home.owner.name.lastName}</h5>
                             </div>
                             <div>
                                 <h6>Address: </h6>
-                                <h5>{home.address.houseNumber} {home.address.phase} {home.address.street}</h5>
+                                <h5>{home.address.number} {home.address.phase} {home.address.street}</h5>
                             </div>
                             {/* <div>
                                 <h6>Register Since: </h6>

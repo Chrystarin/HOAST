@@ -26,11 +26,11 @@ function VehicleList() {
         await axios
             .get(`vehicles`, {
                 params: {
-                    hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
+                    hoaId: localStorage.getItem('hoaId')
                 }
             })
             .then((response) => {
-                setVehicles(response.data.vehicles);
+                setVehicles(response.data);
             });
       };
       fetchVehicles();

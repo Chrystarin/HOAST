@@ -86,16 +86,17 @@ const addRecord = async (req, res, next) => {
 	const { objectId, logType } = req.body;
 	const { hoa } = req.user;
 
-    console.log("test")
-    console.log(objectId)
-    console.log(logType)
+
+    console.log(req.body)
 
 	// Validate input
 	checkString(objectId, 'Object ID');
 	checkString(logType, 'Log Type');
 
 	// Extract all data from homes under hoa
-	const { residents, visitors, vehicles } = extractHomes({ hoa: hoa._id });
+	const { residents, visitors, vehicles } = await extractHomes({ hoa: hoa._id });
+
+    console.log(visitors)
 
 	switch (logType) {
 		case 'user':

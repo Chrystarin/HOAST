@@ -12,7 +12,6 @@ import axios from '../../utils/axios';
 function HomeList() {
 
     const [homes, setHomes] = useState();
-    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
 
     useEffect(() => {
 		// Retrieves Homes
@@ -20,7 +19,7 @@ function HomeList() {
 			await axios
 				.get(`homes`, {
 					params: {
-						hoaId: hoaId
+						hoaId: localStorage.getItem('hoaId')
 					}
 				})
 				.then((response) => {

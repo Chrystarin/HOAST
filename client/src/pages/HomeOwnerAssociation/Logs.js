@@ -22,7 +22,6 @@ import axios from '../../utils/axios';
 
 function Logs() {
 
-    const hoaId = JSON.parse(localStorage.getItem("role")).hoas[0].hoaId;
     const [logs, setLogs] = useState()
 
     // States for popup filter
@@ -35,7 +34,7 @@ function Logs() {
 			await axios
 				.get(`logs`, {
 					params: {
-						hoaId: hoaId
+						hoaId: localStorage.getItem('hoaId')
 					}
 				})
 				.then((response) => {
@@ -46,12 +45,6 @@ function Logs() {
 		fetchLogs();
 	}, []);
     
-
-    const Logs = [
-        { id : 'MRPL8S', Resident:"Harold James Castillo", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
-        { id : '58365G2', Resident:"Jon Angelo Llagas", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
-        { id : 'MRPL8S', Resident:"Dianne Chrystalin Brandez", LogType:"Vehicle" ,Timestamp:"Tue, 07 Feb 20 23 02:37:40 GMT"},
-    ];
 
     if(!logs) return <div>Loading...</div>
 
@@ -117,8 +110,8 @@ function Logs() {
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell component="th" align='center'><h6>Plate Number / Visitor ID</h6></TableCell>
-                                            <TableCell component="th" align="center"><h6>Resident</h6></TableCell>
+                                            <TableCell component="th" align='center'><h6>Plate/ID Number</h6></TableCell>
+                                            <TableCell component="th" align="center"><h6>Name</h6></TableCell>
                                             <TableCell component="th" align='center'><h6>LogType</h6></TableCell>
                                             <TableCell component="th" align="center"><h6>Timestamp</h6></TableCell>
                                         </TableRow>
@@ -136,10 +129,18 @@ function Logs() {
                                                                 key={log.logId}
                                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                             >
-                                                                <TableCell component="th" scope="row" align='center'>{log.id} </TableCell>
-                                                                <TableCell align="center">{log.objectId}</TableCell>
-                                                                <TableCell component="th" scope="row" align='center'>{log.id} </TableCell>
-                                                                <TableCell align="center">{log.Timestamp}</TableCell>
+                                                                <TableCell component="th" scope="row" align='center'>
+                                                                    {log.logType === 'user' ? log.user.userId :
+                                                                    log.logType === 'vehicle' ? log.vehicle.plateNumber :
+                                                                    log.visitor.visitorId}
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    {log.logType === 'user' ? log.user.name.firstName + ' ' + log.user.name.lastName :
+                                                                    log.logType === 'vehicle' ? log.vehicle.brand:
+                                                                    log.visitor.name}
+                                                                </TableCell>
+                                                                <TableCell component="th" scope="row" align='center'>{log.logType} </TableCell>
+                                                                <TableCell align="center">{log.createdAt}</TableCell>
                                                             </TableRow>
                                                         );
                                                     })}
