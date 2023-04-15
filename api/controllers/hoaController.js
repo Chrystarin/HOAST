@@ -13,11 +13,9 @@ const { genHoaId, genRequestId } = require('../helpers/generateId');
 const { checkDate } = require('../helpers/validData');
 
 const registerHoa = async (req, res, next) => {
-	const { name, street, barangay, city, province, paymentMonth, paymentDay } =
+	const { name, street, barangay, city, province } =
 		req.body;
 	const { user } = req.user;
-
-	let date = `${paymentMonth}-${paymentDay}`;
 
 	// Validate strings
 	checkString(barangay, 'Barangay');
@@ -25,20 +23,13 @@ const registerHoa = async (req, res, next) => {
 	checkString(name, 'HOA Name');
 	checkString(province, 'Province');
 	checkString(street, 'Street');
-	checkDate(date, 'Payment Date');
-
-	date = new Date(date);
 
 	// Create HOA
 	const hoa = await HOA.create({
 		hoaId: genHoaId(),
 		name,
 		address: { street, barangay, city, province },
-		admin: user._id,
-		paymentDate: {
-			month: date.getMonth(),
-			day: date.getDate()
-		}
+		admin: user._id
 	});
 
 	res.status(201).json({ message: 'HOA created', hoaId: hoa.hoaId });

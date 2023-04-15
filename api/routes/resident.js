@@ -16,15 +16,15 @@ const { getResidents, addResident, removeResident } = asyncHandler(
 /**
  * Get residents of related home
  *
- * residentId
+ * residentId - optional [1 | n]
  *
  * [Employee]
- * hoaId
+ * hoaId*
  *
  * [Resident]
- * homeId
+ * homeId*
  */
-router.get('/', allowAdmin, allowGuard, allowResident, notUser, getResidents);
+router.get('/', allowAdmin, allowGuard, allowResident, getResidents);
 
 /**
  * Add residents of home

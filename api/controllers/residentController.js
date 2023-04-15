@@ -38,6 +38,7 @@ const getResidents = async (req, res, next) => {
 		residents = residents.find(
 			({ user: { userId } }) => residentId == userId
 		);
+		
 
 		if (!residents) throw new NotFoundError('User is not resident');
 	}

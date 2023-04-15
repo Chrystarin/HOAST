@@ -52,7 +52,6 @@ function App() {
                 <Route path='/hoa/requests' element={<JoinRequests/>}/>
 
                 <Route path='/resident/:id' element={<ResidentsView/>}/>
-
                 <Route path='/homes'>
                     <Route path='' element={<Homes/>}/>
                     <Route path='add' element={<AddHome/>}/>

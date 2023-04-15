@@ -37,14 +37,14 @@ function AddHome() {
 
     // Retrieves All HOA Data onLoad
     useEffect(() => {
-      const fetchHoas = async () => {
-        await axios
-          .get(`hoas`)
-          .then((response) => {
-            setHoas(response.data);
-          });
-      };
-      fetchHoas();
+        const fetchHoas = async () => {
+            await axios
+            .get(`hoas`)
+            .then((response) => {
+                setHoas(response.data);
+            });
+        };
+        fetchHoas();
     }, []);
 
     // Runs search function onLoad for hoa
@@ -93,15 +93,12 @@ function AddHome() {
             alert(err.message);
         }
     }
-    
-    // if(!hoas) 
-    return <>
+    if(!hoas) return <>
         <div className='Loading'>
             <img src={loading} alt="" />
             <h3>Loading...</h3>
         </div>
     </>
-
     return<>
         <Navbar type="home"/>
         <div className='SectionHolder'>

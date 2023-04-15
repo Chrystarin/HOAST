@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import Navbar from '../../layouts/NavBar';
 import './ResidentsView.scss';
 import Avatar from '@mui/material/Avatar';
@@ -13,7 +13,30 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import QRCodeCard from '../../layouts/QRCodeCard';
+
+import axios from '../../utils/axios';
+import { useParams } from 'react-router-dom';
+
 function ResidentsView() {
+    const { id } = useParams();
+    const [resident,setResident]=useState()
+
+    // Runs onLoad
+	useEffect(() => {
+		const fetchHoa = async () => {
+			await axios
+				.get(`residents`, {
+					params: {
+						residentId: id
+					}
+				})
+				.then((response) => {
+					console.log(response.data);
+				});
+		};
+		fetchHoa();
+	}, []);
+
 
     function createData(name,calories) {
         return { name, calories};

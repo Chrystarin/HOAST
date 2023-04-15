@@ -30,7 +30,7 @@ module.exports = model(
 			},
 			paidUntil: {
 				type: Date,
-				required: [true, 'Paid Until is required']
+				default: new Date()
 			},
 			residents: [
 				{
@@ -56,7 +56,11 @@ module.exports = model(
 			],
 			visitors: [
 				{
-					visitorId: { type: String, unique: true, required: true },
+					visitorId: {
+						type: String,
+						index: { unique: true, sparse: true },
+						required: true
+					},
 					name: {
 						type: String,
 						required: [true, 'Visitor Name is required']

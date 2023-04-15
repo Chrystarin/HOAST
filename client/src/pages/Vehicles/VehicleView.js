@@ -29,7 +29,7 @@ function VehicleView() {
             await axios
             .get(`vehicles`,{
                     params: {
-                        plateNumber: `${id}`
+                        plateNumber: id
                     }
                 })
             .then((response) => {

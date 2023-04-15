@@ -20,12 +20,6 @@ function NavBar(props) {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const role = JSON.parse(localStorage.getItem("role"));
-  
-    const [anchorAvatarDropDown, setAnchorAvatarDropDown] = useState(null);
-    const openAvatarDropDown = Boolean(anchorAvatarDropDown);
-
-    const [anchorNotificationDropDown, setAnchorNotificationDropDown] = useState(null);
-    const openNotificationDropDown = Boolean(anchorNotificationDropDown);
 
     const logout = () => {
         localStorage.clear();
@@ -46,6 +40,14 @@ function NavBar(props) {
         
     }
 
+
+
+
+    const [anchorAvatarDropDown, setAnchorAvatarDropDown] = useState(null);
+    const openAvatarDropDown = Boolean(anchorAvatarDropDown);
+
+    const [anchorNotificationDropDown, setAnchorNotificationDropDown] = useState(null);
+    const openNotificationDropDown = Boolean(anchorNotificationDropDown);
     return (
         <div id='NavBar'>
             <div id='NavBar__Container'>
@@ -167,24 +169,24 @@ function NavBar(props) {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                    <a href='/profile'>
+                    <a href={"/resident/" + user.user.userId}>
                         <MenuItem >
                             <Avatar /> {user.user.name.firstName}{' '}{user.user.name.lastName}
                         </MenuItem>
                     </a>
                     <Divider />
-                            <MenuItem onClick={hoaButton}>
-                                <ListItemIcon>
-                                    <MapsHomeWorkIcon fontSize="small" />
-                                </ListItemIcon>
-                                Homeowners Associations
-                            </MenuItem>
-                            <MenuItem onClick={logout}>
-                                <ListItemIcon>
-                                    <Logout fontSize="small" />
-                                </ListItemIcon>
-                                Logout
-                            </MenuItem>
+                        <MenuItem onClick={hoaButton}>
+                            <ListItemIcon>
+                                <MapsHomeWorkIcon fontSize="small" />
+                            </ListItemIcon>
+                            Homeowners Associations
+                        </MenuItem>
+                        <MenuItem onClick={logout}>
+                            <ListItemIcon>
+                                <Logout fontSize="small" />
+                            </ListItemIcon>
+                            Logout
+                        </MenuItem>
                 </Menu>
                 </li>
             </ul>
