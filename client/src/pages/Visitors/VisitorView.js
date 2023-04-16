@@ -38,7 +38,7 @@ function VisitorView() {
 					console.log(response.data);
 				})
                 .catch((err)=>{
-                    navigate('/unauthorized');
+                    navigate(`${err}`);
                 })
 		};
 

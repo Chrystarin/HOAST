@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import axios from './axios';
 import loading from '../images/loading.gif';
-const ProtectedRoute = () => {
+const ProtectedRoute = ({allowedRoles}) => {
     //Gets locally stored user
     const user = localStorage.getItem("user");
 
@@ -27,11 +27,11 @@ const ProtectedRoute = () => {
 	}, []);
 
     if (!role) return <>
-    <div className='Loading'>
-      <img src={loading} alt="" />
-      <h3>Loading...</h3>
-    </div>
-  </>
+        <div className='Loading'>
+            <img src={loading} alt="" />
+            <h3>Loading...</h3>
+        </div>
+    </>
 
     return(
         // Checks if user exists, if yes proceeds to page, if not proceeds to login

@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom';
-
+import { useNavigate } from 'react-router';
 import Button from '@mui/material/Button';
 
 import Navbar from '../../layouts/NavBar';
@@ -14,13 +14,7 @@ import './ViewHome.scss'
 import axios from '../../utils/axios';
 
 function ViewHome() {
-
-    const CarOwner = {
-        title:"#ASC231S",
-        subTitle1:"Sportivo",
-        subTitle2:"ISUZU"
-    }
-
+    const navigate = useNavigate();
     const { id } = useParams();
     const [home, setHome] = useState();
     const [residents, setResidents] = useState();
@@ -39,7 +33,10 @@ function ViewHome() {
                 // Assign retrieved value to home constant
                 setHome(response.data);
                 console.log(response.data)
-            });
+            })
+            .catch((err)=>{
+                navigate(`${err}`);
+            })
         };
 
         const fetchVehicles = async () => {
@@ -47,7 +44,6 @@ function ViewHome() {
                 .get(`vehicles`)
                 .then((response) => {
                     setVehicles(response.data);
-                    console.log(response.data)
                 });
           };
           fetchVehicles();
@@ -120,7 +116,6 @@ function ViewHome() {
                                         );
                                     })}</>
                                 }
-                                <Card type="Vehicles" {...CarOwner}/>
                             </div>
                         </div>
                         <div className='ViewHome__Container' id='Visitors_div'>

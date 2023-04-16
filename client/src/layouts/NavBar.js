@@ -35,13 +35,10 @@ function NavBar(props) {
             navigate("/scanner");
         }
         else {
-            navigate("/hoa/register");
+            navigate("/hoa");
         }
         
     }
-
-
-
 
     const [anchorAvatarDropDown, setAnchorAvatarDropDown] = useState(null);
     const openAvatarDropDown = Boolean(anchorAvatarDropDown);

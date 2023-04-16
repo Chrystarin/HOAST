@@ -36,7 +36,7 @@ function VehicleView() {
                 setVehicle(response.data);
             })
             .catch((err)=>{
-                navigate('/unauthorized');
+                navigate(`${err}`);
             })
         };
 

@@ -10,6 +10,8 @@ export default function RegisterHoa() {
 
     const navigate = useNavigate();
 
+    const role = JSON.parse(localStorage.getItem("role"));
+
     const [registerForm, setRegisterForm] = useState({
         name: '',
         street: '',
@@ -57,63 +59,68 @@ export default function RegisterHoa() {
         }
     }
 
+    if(role.admin.length==1) navigate("/dashboard");
+
     return <>
         <NavBar/>
-        <div className='SectionHolder' className='RegisterHoa'>
-            <form onSubmit={Submit} className='Form RegisterHoa__Form'>
-                <h4 className='RegisterHoa__Title'> Register Home Owner Association</h4>
-                <TextField
-                    id="filled-password-input"
-                    label="Name"
-                    type="text"
-                    autoComplete="current-password"
-                    variant="filled"
-                    onChange={(e)=>updateForm({ name: e.target.value })}
-                />
-                <div className='FormWrapper__2'>
+        <div className='SectionHolder'>
+            <div className='RegisterHoa'>
+                <form onSubmit={Submit} className='Form RegisterHoa__Form'>
+                    <h4 className='RegisterHoa__Title'> Register Home Owner Association</h4>
                     <TextField
                         id="filled-password-input"
-                        label="Street"
+                        label="Name"
                         type="text"
                         autoComplete="current-password"
                         variant="filled"
-                        onChange={(e)=>updateForm({ street: e.target.value })}
+                        onChange={(e)=>updateForm({ name: e.target.value })}
                     />
-                    <TextField
-                        id="filled-password-input"
-                        label="Barangay"
-                        type="text"
-                        autoComplete="current-password"
-                        variant="filled"
-                        onChange={(e)=>updateForm({ barangay: e.target.value })}
-                    />
-                </div>
+                    <div className='FormWrapper__2'>
+                        <TextField
+                            id="filled-password-input"
+                            label="Street"
+                            type="text"
+                            autoComplete="current-password"
+                            variant="filled"
+                            onChange={(e)=>updateForm({ street: e.target.value })}
+                        />
+                        <TextField
+                            id="filled-password-input"
+                            label="Barangay"
+                            type="text"
+                            autoComplete="current-password"
+                            variant="filled"
+                            onChange={(e)=>updateForm({ barangay: e.target.value })}
+                        />
+                    </div>
+                        
+                    <div className='FormWrapper__2'>
+                        <TextField
+                            id="filled-password-input"
+                            label="City"
+                            type="text"
+                            autoComplete="current-password"
+                            variant="filled"
+                            onChange={(e)=>updateForm({ city: e.target.value })}
+                        />
+                        <TextField
+                            id="filled-password-input"
+                            label="Province"
+                            type="text"
+                            autoComplete="current-password"
+                            variant="filled"
+                            onChange={(e)=>updateForm({ province: e.target.value })}
+                        />
+                    </div>
                     
-                <div className='FormWrapper__2'>
-                    <TextField
-                        id="filled-password-input"
-                        label="City"
-                        type="text"
-                        autoComplete="current-password"
-                        variant="filled"
-                        onChange={(e)=>updateForm({ city: e.target.value })}
-                    />
-                    <TextField
-                        id="filled-password-input"
-                        label="Province"
-                        type="text"
-                        autoComplete="current-password"
-                        variant="filled"
-                        onChange={(e)=>updateForm({ province: e.target.value })}
-                    />
-                </div>
-                
-                <div className='Form__Button'>
-                    <Button variant="contained" size="large" type='submit'>
-                        Register
-                    </Button>
-                </div>
-            </form>
+                    <div className='Form__Button'>
+                        <Button variant="contained" size="large" type='submit'>
+                            Register
+                        </Button>
+                    </div>
+                </form>
+            </div>
+            
         </div>
     </>
 

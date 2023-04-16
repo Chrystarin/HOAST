@@ -31,32 +31,25 @@ import Scanner from './pages/HomeOwnerAssociation/Scanner.js';
 import ProtectedRoute from './utils/ProtectedRoute.js'
 
 import RegisterHoa from './pages/HomeOwnerAssociation/RegisterHoa.js';
-import JoinRequests from './pages/JoinRequests.js';
 import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 
 import Guard from './pages/HomeOwnerAssociation/Guard.js';
-function App() {
 
+function App() {
     return (
         <Routes>
 
         {/* Public Routes */}
             <Route path='/' element={<LandingPage/>}/>
-            <Route path='*' element={<Error404/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
             
         {/* Private Routes for Users */}
             <Route element={<ProtectedRoute/>} >
-                <Route path='/hoa/register' element={<RegisterHoa/>}/>
-                <Route path='/hoa/requests' element={<JoinRequests/>}/>
-
+                
+                <Route path='/hoa' element={<RegisterHoa/>}/>
+                
                 <Route path='/resident/:id' element={<ResidentsView/>}/>
-                <Route path='/homes'>
-                    <Route path='' element={<Homes/>}/>
-                    <Route path='add' element={<AddHome/>}/>
-                    <Route path=':id' element={<ViewHome/>}/>
-                </Route>
 
                 <Route path='/vehicles'>
                     <Route path='' element={<Vehicles/>}/>
@@ -70,23 +63,32 @@ function App() {
                     <Route path=':id' element={<VisitorView/>}/>
                 </Route>
 
-                
+                {/* Private Routes for Homeowner and Residents */}
+                <Route path='/homes' allowedRoles={['homeOwner', 'resident']}>
+                    <Route path='' element={<Homes/>}/>
+                    <Route path='add' element={<AddHome/>}/>
+                    <Route path=':id' element={<ViewHome/>}/>
+                </Route>
 
-                {/* Private Routes for Admin */}
-                <Route element={<ProtectedRoute/>} >
-                    <Route path='/associationdues' element={<AssociationDues/>}/>
-                    <Route path='/guard' element={<Guard/>}/>
-                    <Route path='/addguard' element={<AddGuard/>}/>
-
+                {/* Private Routes for Homeowner */}
+                <Route element={<ProtectedRoute/>} allowedRoles={['homeOwner']}>
+                    <Route path=':id/edit' element={<ViewHome/>}/>
                 </Route>
 
                 {/* Private Routes for Guard */}
-                <Route element={<ProtectedRoute/>} >
+                <Route element={<ProtectedRoute/>} allowedRoles={['guard']}>
                     <Route path='/scanner' element={<Scanner/>}/>
                 </Route>
-                
+            
+                {/* Private Routes for Admin */}
+                <Route element={<ProtectedRoute/>} allowedRoles={['admin']}>
+                    <Route path='/associationdues' element={<AssociationDues/>}/>
+                    <Route path='/guard' element={<Guard/>}/>
+                    <Route path='/addguard' element={<AddGuard/>}/>
+                </Route>
+
                 {/* Private Routes for Admin and Guard */}
-                <Route element={<ProtectedRoute/>} >
+                <Route element={<ProtectedRoute/>} allowedRoles={['admin', 'guard']}>
                     <Route path='dashboard' element={<Dashboard/>}/>
                     <Route path='visitorslist' element={<VisitorsList/>}/>
                     <Route path='logs' element={<Logs/>}/>
@@ -95,6 +97,9 @@ function App() {
                     <Route path='homelist' element={<HomeList/>}/>
                 </Route>
             </Route>
+
+            {/* Error Routes */}
+            <Route path='*' element={<Error404/>}/>
         </Routes>
     );
 }
