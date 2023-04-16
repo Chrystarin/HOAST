@@ -14,7 +14,7 @@ import loading from '../../images/loading.gif';
 function Homes() {
 
   const [homes, setHomes] = useState();
-
+  const [data,setData] = useState("");
   // States for popup filter
   const [anchorElFilter, setAnchorElFilter] = React.useState(null);
   const openFilter = Boolean(anchorElFilter);
@@ -39,16 +39,15 @@ function Homes() {
       <h3>Loading...</h3>
     </div>
   </>
-  
 
   return <>
     <Navbar type="home"/>
     <div className='SectionHolder'>
       <section className='Section'>
-        <h3 className='SectionTitleDashboard'> Homes</h3>
+        <h3 className='SectionTitleDashboard' onClick={()=>console.log(data)}>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput/>
+            <SearchInput suggested set={setData}/>
           </div>
           <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
           <Menu
