@@ -110,8 +110,8 @@ function Visitors() {
                                 type="Visitor"
                                 key={visitor.visitorId}
                                 title={visitor.name}
-                                subTitle1={visitor.arrival}
-                                subTitle2={visitor.departure}
+                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
+                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
                                 url={`/visitors/${visitor.visitorId}`}
                                 />
                             );
