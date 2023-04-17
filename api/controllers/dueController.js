@@ -6,7 +6,7 @@ const {
 } = require('../helpers/constants');
 const { NotFoundError } = require('../helpers/errors');
 const { genDueId } = require('../helpers/generateId');
-const { checkNumber } = require('../helpers/validData');
+const { checkString, checkNumber } = require('../helpers/validData');
 
 const getDues = async (req, res, next) => {
 	const { dueId } = req.body;
@@ -53,6 +53,8 @@ const createDue = async (req, res, next) => {
 	const { homeId, amount, months } = req.body;
 	const { hoa } = req.user;
 
+	console.log(req.body);
+
 	// Validate input
 	checkString(homeId, 'Home ID');
 	checkNumber(amount, 'Amount');
@@ -71,17 +73,20 @@ const createDue = async (req, res, next) => {
 		from: home.paidUntil
 	});
 
+	const from = new Date(home.paidUntil);
+
 	// Calculate date
-	const paidUntil = home.paidUntil.setMonth(
-		home.paidUntil.getMonth() + months
-	);
+	const paidUntil = from.setMonth(from.getMonth() + months);
 
 	// Update due's paid to
 	due.to = paidUntil;
 	await due.save();
 
 	// Update home's paid until
+	home.paidUntil = from;
 	await home.save();
+
+	console.log(home)
 
 	res.status(201).json({ message: 'Due added', dueId: due.dueId });
 };

@@ -25,10 +25,11 @@ import VisitorsList from './pages/HomeOwnerAssociation/VisitorsList.js';
 import ResidentsList from './pages/HomeOwnerAssociation/ResidentsList.js';
 import VehicleList from './pages/HomeOwnerAssociation/VehicleList.js';
 import HomeList from './pages/HomeOwnerAssociation/HomeList.js';
+import DuesView from './pages/HomeOwnerAssociation/DuesView.js';
 
 import Scanner from './pages/HomeOwnerAssociation/Scanner.js';
 
-import ProtectedRoute from './utils/ProtectedRoute.js'
+import ProtectedRoute from './utils/ProtectedRoute.js';
 
 import RegisterHoa from './pages/HomeOwnerAssociation/RegisterHoa.js';
 import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
@@ -36,72 +37,167 @@ import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 import Guard from './pages/HomeOwnerAssociation/Guard.js';
 
 function App() {
-    return (
-        <Routes>
+	return (
+		<Routes>
+			{/* Public Routes */}
+			<Route
+				path="/"
+				element={<LandingPage />}
+			/>
+			<Route
+				path="/login"
+				element={<Login />}
+			/>
+			<Route
+				path="/register"
+				element={<Register />}
+			/>
 
-        {/* Public Routes */}
-            <Route path='/' element={<LandingPage/>}/>
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/register' element={<Register/>}/>
-            
-        {/* Private Routes for Users */}
-            <Route element={<ProtectedRoute/>} >
-                
-                <Route path='/hoa' element={<RegisterHoa/>}/>
-                
-                <Route path='/resident/:id' element={<ResidentsView/>}/>
+			{/* Private Routes for Users */}
+			<Route element={<ProtectedRoute />}>
+				<Route
+					path="/hoa"
+					element={<RegisterHoa />}
+				/>
 
-                <Route path='/vehicles'>
-                    <Route path='' element={<Vehicles/>}/>
-                    <Route path='add' element={<AddVehicle/>}/>
-                    <Route path=':id' element={<VehicleView/>}/>
-                </Route>
+				<Route
+					path="/resident/:id"
+					element={<ResidentsView />}
+				/>
 
-                <Route path='/visitors'>
-                    <Route path='' element={<Visitors/>}/>
-                    <Route path='add' element={<AddVisitor/>}/>
-                    <Route path=':id' element={<VisitorView/>}/>
-                </Route>
+				<Route path="/vehicles">
+					<Route
+						path=""
+						element={<Vehicles />}
+					/>
+					<Route
+						path="add"
+						element={<AddVehicle />}
+					/>
+					<Route
+						path=":id"
+						element={<VehicleView />}
+					/>
+				</Route>
 
-                {/* Private Routes for Homeowner and Residents */}
-                <Route path='/homes' allowedRoles={['homeOwner', 'resident']}>
-                    <Route path='' element={<Homes/>}/>
-                    <Route path='add' element={<AddHome/>}/>
-                    <Route path=':id' element={<ViewHome/>}/>
-                </Route>
+				<Route path="/visitors">
+					<Route
+						path=""
+						element={<Visitors />}
+					/>
+					<Route
+						path="add"
+						element={<AddVisitor />}
+					/>
+					<Route
+						path=":id"
+						element={<VisitorView />}
+					/>
+				</Route>
 
-                {/* Private Routes for Homeowner */}
-                <Route element={<ProtectedRoute/>} allowedRoles={['homeOwner']}>
-                    <Route path=':id/edit' element={<ViewHome/>}/>
-                </Route>
+				{/* Private Routes for Homeowner and Residents */}
+				<Route
+					path="/homes"
+					allowedRoles={['homeOwner', 'resident']}
+				>
+					<Route
+						path=""
+						element={<Homes />}
+					/>
+					<Route
+						path="add"
+						element={<AddHome />}
+					/>
+					<Route
+						path=":id"
+						element={<ViewHome />}
+					/>
+				</Route>
 
-                {/* Private Routes for Guard */}
-                <Route element={<ProtectedRoute/>} allowedRoles={['guard']}>
-                    <Route path='/scanner' element={<Scanner/>}/>
-                </Route>
-            
-                {/* Private Routes for Admin */}
-                <Route element={<ProtectedRoute/>} allowedRoles={['admin']}>
-                    <Route path='/associationdues' element={<AssociationDues/>}/>
-                    <Route path='/guard' element={<Guard/>}/>
-                    <Route path='/addguard' element={<AddGuard/>}/>
-                </Route>
+				{/* Private Routes for Homeowner */}
+				<Route
+					element={<ProtectedRoute />}
+					allowedRoles={['homeOwner']}
+				>
+					<Route
+						path=":id/edit"
+						element={<ViewHome />}
+					/>
+				</Route>
 
-                {/* Private Routes for Admin and Guard */}
-                <Route element={<ProtectedRoute/>} allowedRoles={['admin', 'guard']}>
-                    <Route path='dashboard' element={<Dashboard/>}/>
-                    <Route path='visitorslist' element={<VisitorsList/>}/>
-                    <Route path='logs' element={<Logs/>}/>
-                    <Route path='residentslist' element={<ResidentsList/>}/>
-                    <Route path='vehiclelist' element={<VehicleList/>}/>
-                    <Route path='homelist' element={<HomeList/>}/>
-                </Route>
-            </Route>
+				{/* Private Routes for Guard */}
+				<Route
+					element={<ProtectedRoute />}
+					allowedRoles={['guard']}
+				>
+					<Route
+						path="/scanner"
+						element={<Scanner />}
+					/>
+				</Route>
 
-            {/* Error Routes */}
-            <Route path='*' element={<Error404/>}/>
-        </Routes>
-    );
+				{/* Private Routes for Admin */}
+				<Route
+					element={<ProtectedRoute />}
+					allowedRoles={['admin']}
+				>
+					<Route
+						path="/associationdues"
+						element={<AssociationDues />}
+					/>
+					<Route
+						path="/guard"
+						element={<Guard />}
+					/>
+					<Route
+						path="/addguard"
+						element={<AddGuard />}
+					/>
+					<Route
+						path="/duesview"
+						element={<DuesView />}
+					/>
+				</Route>
+
+				{/* Private Routes for Admin and Guard */}
+				<Route
+					element={<ProtectedRoute />}
+					allowedRoles={['admin', 'guard']}
+				>
+					<Route
+						path="dashboard"
+						element={<Dashboard />}
+					/>
+					<Route
+						path="visitorslist"
+						element={<VisitorsList />}
+					/>
+					<Route
+						path="logs"
+						element={<Logs />}
+					/>
+					<Route
+						path="residentslist"
+						element={<ResidentsList />}
+					/>
+					<Route
+						path="vehiclelist"
+						element={<VehicleList />}
+					/>
+					<Route
+						path="homelist"
+						element={<HomeList />}
+					/>
+				</Route>
+			</Route>
+
+			{/* Error Routes */}
+			<Route
+				path="*"
+				element={<Error404 />}
+			/>
+		</Routes>
+	);
 }
 
 export default App;
