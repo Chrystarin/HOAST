@@ -14,7 +14,7 @@ export default function AddGuard() {
     const [searchText, setSearchText] = useState("");
     const [form, setForm] = useState({
         userId: '',
-        hoaId: JSON.parse(localStorage.getItem("role")).hoas[0].hoaId
+        hoaId: localStorage.getItem('hoaId')
     });
 
     const [stepper, setStepper] = useState(1);
