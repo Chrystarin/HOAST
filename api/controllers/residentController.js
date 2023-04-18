@@ -80,7 +80,7 @@ const removeResident = async (req, res, next) => {
 
 	// Find user index
 	const resident = home.residents.find(
-		({ user: { userId, status } }) =>
+		({ user: { userId }, status }) =>
 			userId == residentId && status == 'active'
 	);
 

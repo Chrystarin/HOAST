@@ -44,19 +44,6 @@ function AssociationDues() {
 	});
 
 	useEffect(() => {
-		// Retrieves Homes
-		const fetchHomes = async () => {
-			await axios
-				.get(`homes`, {
-					params: {
-						hoaId: localStorage.getItem('hoaId')
-					}
-				})
-				.then((response) => {
-					setHomes(response.data);
-					console.log(response.data);
-				});
-		};
 		fetchHomes();
 	}, []);
 
@@ -67,7 +54,20 @@ function AssociationDues() {
 			return prev;
 		});
 	}
-	
+
+	// Retrieves Homes
+    const fetchHomes = async () => {
+        await axios
+            .get(`homes`, {
+                params: {
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setHomes(response.data);
+                console.log(response.data);
+            });
+    };
 
 	async function Submit(e) {
 		e.preventDefault();
@@ -86,12 +86,12 @@ function AssociationDues() {
 				)
 				.then((response) => {
 					console.log(response?.data);
+                    setAnchorAddDues(null)
 					alert('Dues Set Successfully!');
-					window.location.reload(true);
-					// navigate("/homes");
+                    fetchHomes();
 				});
 		} catch (err) {
-			alert('Invalid Input!');
+			alert('Invalid Input! ' + err.message);
 			console.error(err.message);
 		}
 	}
@@ -232,90 +232,64 @@ function AssociationDues() {
 									<Table aria-label="simple table">
 										<TableHead>
 											<TableRow>
-												<TableCell
-													component="th"
-													align="center"
-												>
+												<TableCell component="th" align="center" >
 													<h6>HomeId</h6>
 												</TableCell>
-												<TableCell
-													component="th"
-													align="center"
-												>
+												<TableCell component="th" align="center" >
 													<h6>Name</h6>
 												</TableCell>
-												<TableCell
-													component="th"
-													align="center"
-												>
-													<h6>
-														Paid Until
-													</h6>
+                                                <TableCell component="th" align="center" >
+													<h6>Homeowner</h6>
 												</TableCell>
-												<TableCell
-													component="th"
-													align="center"
-												>
+												<TableCell component="th" align="center" >
+													<h6> Paid Until </h6>
+												</TableCell>
+												<TableCell component="th" align="center" >
 													<h6>Status</h6>
 												</TableCell>
+                                                
 											</TableRow>
 										</TableHead>
 										<TableBody>
 										{homes.length === 0 ? <></> : 
 											<>
-												{homes.length >
-													0 &&
-													homes.map(
-														(
-															home
-														) => {
-															return (
-																<TableRow
-																	key={
-																		home.homeId
-																	}
-																	sx={{
-																		'&:last-child td, &:last-child th':
-																			{
-																				border: 0
-																			}
-																	}}
-																>
-																	<TableCell
-																		component="th"
-																		scope="row"
-																		align="center"
-																	>
-																		{
-																			home.homeId
-																		}
-																	</TableCell>
-																	<TableCell align="center">
-																		{
-																			home.name
-																		}
-																	</TableCell>
-																	<TableCell
-																		component="th"
-																		scope="row"
-																		align="center"
-																	>
-																		{
-																			((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear()
-																		}
-																	</TableCell>
-																	<TableCell align="center">
-																		{new Date().getTime() <=
-																		new Date(
-																			home.paidUntil
-																		).getTime()
-																			? 'Paid'
-																			: 'Unpaid'}
-																	</TableCell>
-																</TableRow>
-															);
-														}
-													)}
+												{homes.length > 0 && homes.map( ( home ) => {
+                                                    return (
+                                                        <TableRow
+                                                            key={ home.homeId }
+                                                            sx={{ '&:last-child td, &:last-child th':
+                                                                    { border: 0 }
+                                                            }}
+                                                        >
+                                                            <TableCell
+                                                                component="th"
+                                                                scope="row"
+                                                                align="center"
+                                                            >
+                                                                { home.homeId }
+                                                            </TableCell>
+                                                            <TableCell align="center">
+                                                                { home.name }
+                                                            </TableCell>
+                                                            <TableCell align="center">
+                                                                { home.owner.name.firstName + " " + home.owner.name.lastName }
+                                                            </TableCell>
+                                                            <TableCell
+                                                                component="th"
+                                                                scope="row"
+                                                                align="center"
+                                                            >
+                                                                { ((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear() }
+                                                            </TableCell>
+                                                            <TableCell align="center">
+                                                                {new Date().getTime() <= new Date( home.paidUntil ).getTime()
+                                                                    ? 'Paid'
+                                                                    : 'Unpaid'}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                }
+                                                )}
 											</>
 										}
 										</TableBody>

@@ -19,11 +19,8 @@ function ViewHome() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [home, setHome] = useState();
-    const [residents, setResidents] = useState();
     const [vehicles, setVehicles] = useState();
     const {isHomeowner} = useAuth();
-
-    console.log(isHomeowner(id))
 
     useEffect(() => {
         // Retrieves Home Data
@@ -31,13 +28,11 @@ function ViewHome() {
             await axios
             .get(`homes`,{
                     params: {
-                        homeId: `${id}`
+                        homeId: id
                     }
                 })
             .then((response) => {
-                // Assign retrieved value to home constant
                 setHome(response.data);
-                console.log(response.data.residents)
             })
             .catch((err)=>{
                 navigate(`${err}`);
@@ -50,10 +45,9 @@ function ViewHome() {
                 .then((response) => {
                     setVehicles(response.data);
                 });
-          };
-          fetchVehicles();
+        };
 
-        // Executes Functions
+        fetchVehicles();
         fetchHome();
     }, []);
 
@@ -102,7 +96,7 @@ function ViewHome() {
                                         {home.residents.length > 0 && home.residents.map((resident) => {
                                             return (
                                                 // <p>{JSON.stringify(resident.user.name.firstName)}</p>
-                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type="View"/>
+                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type="View" residentId={resident.user.userId}/>
                                             );
                                         })}
                                     </>

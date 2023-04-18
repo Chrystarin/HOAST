@@ -12,16 +12,6 @@ import NativeSelect from '@mui/material/NativeSelect';
 import axios from '../../utils/axios';
 import loading from '../../images/loading.gif';
 function ResidentsList() {
-    const Residents = [
-        { name : 'David', type : 'Homeowner'},
-        { name : 'Harold James Castillo', type : 'Homeowner'},
-        { name : 'Damian Criston Castillo', type : 'Resident'},
-        { name : 'Dianne Chrystalin', type : 'Homeowner'},
-        { name : 'Historia Jalicent Castillo ', type : 'Resident'},
-    ];
-
-
-
     const [requests, setRequests] = useState();
     const [residents, setResidents] = useState();
 
@@ -162,7 +152,7 @@ function ResidentsList() {
                                         {residents.length > 0 &&
                                         residents.map((resident) => {
                                             return (
-                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type={"View"}/>
+                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type={"View"} residentId={resident.user.userId}/>
                                             );
                                         })}
                                     </>

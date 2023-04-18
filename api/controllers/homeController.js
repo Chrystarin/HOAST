@@ -26,7 +26,7 @@ const getHomes = async (req, res, next) => {
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 		homes = await Home.find({ hoa: hoa._id })
-			.populate('residents.user')
+			.populate('residents.user hoa owner')
 			.exec();
 	}
 

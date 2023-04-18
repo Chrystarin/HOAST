@@ -66,7 +66,7 @@ function NavBar(props) {
                 <a href="/visitors" className={(props.type==="visitors")?"active":""}>Visitors</a>
                 </li>
                 <li>
-                <IconButton onClick={(event)=>setAnchorNotificationDropDown(event.currentTarget)}>
+                {/* <IconButton onClick={(event)=>setAnchorNotificationDropDown(event.currentTarget)}>
                     <NotificationsIcon />
                 </IconButton>
                 <Menu
@@ -127,7 +127,7 @@ function NavBar(props) {
                         </li>
                         </ul>
                     </div>
-                </Menu>
+                </Menu> */}
                 </li>
                 <li>
                 <IconButton onClick={(event)=>setAnchorAvatarDropDown(event.currentTarget)}>
@@ -168,7 +168,7 @@ function NavBar(props) {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                    <a href={"/resident/" + user.user.userId}>
+                    <a href={"/profile"}>
                         <MenuItem >
                             <Avatar /> {user.user.name.firstName}{' '}{user.user.name.lastName}
                         </MenuItem>

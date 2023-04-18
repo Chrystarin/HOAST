@@ -37,6 +37,7 @@ import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 
 import Guard from './pages/HomeOwnerAssociation/Guard.js';
 
+import Profile from './pages/Profile/Profile.js'
 import EditProfile from './pages/Profile/EditProfile.js'
 
 function App() {
@@ -54,10 +55,8 @@ function App() {
 				<Route path="/resident/:id" element={<ResidentsView />} />
 
 				{/* New Route for editing user datails */}
-				<Route
-					path="/resident/:id/edit"
-					element={<EditProfile />}
-				/>
+                <Route path="/profile" element={<Profile />}/>
+				<Route path="/profile/edit" element={<EditProfile />}/>
 
 				<Route path="/vehicles">
 					<Route path="" element={<Vehicles />} />
@@ -80,8 +79,6 @@ function App() {
                         <Route path=":id/edit" element={<EditHome />} />
                     </Route>
 				</Route>
-
-				
 
 				{/* Private Routes for Guard */}
 				<Route element={<ProtectedRoute allowedRoles={['guard']} />}  >

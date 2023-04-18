@@ -27,9 +27,9 @@ function EditHome() {
             })
         .then((response) => {
             setHome(response.data);
-            setResidents(response.data.residents)
-            console.log(response.data)
-            console.log(response.data.residents)
+            let [owner, ...reds] = response.data.residents;
+            setResidents(reds)
+            console.log(residents)
         })
     }
     
@@ -98,6 +98,7 @@ function EditHome() {
         fetchHome();
 	}, []);
 
+
     if(!home || !residents) return <div>Loading...</div>
 
     return (
@@ -108,7 +109,7 @@ function EditHome() {
                 <h3 className='SectionTitleDashboard'>Edit Home</h3>
                     <div className='SectionContent' id='ViewHome'>
                         <div id='ViewHome__Content'>
-                            <div className='ViewHome__Container' id='HOA__Div'>
+                            <div className='ViewHome__Container' id='HOA__Div'>>
                             <div className='FormWrapper__2'>
                                 <TextField
                                     id="filled-password-input"
@@ -136,17 +137,32 @@ function EditHome() {
                                     Add
                                 </Button>
                             </div>
-                            {(home.residents.length === 0 )?
+                            {(residents.length === 0 )?
                                     <p>No Residents Available!</p>
                                     :
                                     <>
-                                        {home.residents.length > 0 && home.residents.map((resident) => {
+                                        <h3>Active Residents</h3>
+                                        {residents.length > 0 && residents.map((resident) => {
+                                            if(resident.status=="active")
                                             return (
                                                 // <p>{JSON.stringify(resident.user.name.firstName)}</p>
                                                 <ResidentCard 
                                                     key={resident._id} 
                                                     username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
                                                     type="Edit"
+                                                    action={()=>RemoveResident(resident.user.userId)}
+                                                />
+                                            );
+                                        })}
+                                        <h3>Inactive Residents</h3>
+                                        {residents.length > 0 && residents.map((resident) => {
+                                            if(resident.status=="inactive")
+                                            return (
+                                                // <p>{JSON.stringify(resident.user.name.firstName)}</p>
+                                                <ResidentCard 
+                                                    key={resident._id} 
+                                                    username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
+                                                    type="View"
                                                     action={()=>RemoveResident(resident.user.userId)}
                                                 />
                                             );

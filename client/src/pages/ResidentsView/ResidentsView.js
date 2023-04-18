@@ -16,25 +16,29 @@ import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
 import { useParams } from 'react-router-dom';
+import {useAuth} from './../../utils/AuthContext.js';
 
 function ResidentsView() {
     const { id } = useParams();
+    const {isRole} = useAuth();
     const [resident,setResident]=useState()
 
     // Runs onLoad
 	useEffect(() => {
-		const fetchHoa = async () => {
+		const fetchResident = async () => {
 			await axios
 				.get(`residents`, {
 					params: {
-						residentId: id
+						residentId: id,
+                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
 					}
 				})
 				.then((response) => {
-					console.log(response.data);
+                    setResident(response.data)
+                    console.log(response.data)
 				});
 		};
-		fetchHoa();
+		fetchResident();
 	}, []);
 
 
@@ -57,17 +61,15 @@ function ResidentsView() {
         subTitle1:"Saint Dominic",
         subTitle2:"8 Residents"
     }
-    
+
+
+    if(!resident) return <div>Loading...</div>
+
     return <>
         <Navbar type="home"/>
         <div className='SectionHolder'>
             <section className='Section'>
-            <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Harold James H. Castillo</span></h3>
-                {/* <div className='SectionController'>
-                    
-                    <Button variant="text" startIcon={<FilterAltIcon/>}>Filter</Button>
-                    <Button variant="contained" href='addhome'>Add Home</Button>
-                </div> */}
+            <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>{resident.user.name.firstName + " " + resident.user.name.lastName}</span></h3>
                 <div className='SectionContent SectionView' id='ViewResident'>
                     <div className='SectionView__Content' id="ViewResident__Content__Container" >
                         <div className="SectionView__Sections">
@@ -78,15 +80,15 @@ function ResidentsView() {
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                                 <div className='GeneralInformation__InfoContainer'>
                                     <h6>Name:</h6>
-                                    <h5>Harold James H. Castillo</h5>
+                                    <h5>{resident.user.name.firstName + " " + resident.user.name.lastName}</h5>
                                 </div>
                                 <div className='GeneralInformation__InfoContainer'>
                                     <h6>Registered Since: </h6>
-                                    <h5>Tue, 07 Feb 2023</h5>
+                                    <h5>{resident.user.createdAt}</h5>
                                 </div>
                             </div>
                         </div>
-                        <div className="SectionView__Sections">
+                        {/* <div className="SectionView__Sections">
                             <h5 className='SectionView__Sections__Title'>
                                 Homes
                             </h5>
@@ -94,16 +96,29 @@ function ResidentsView() {
                                 <Card type="Home" {...HomeOwner}/>
                                 <Card type="Home" {...HomeOwner}/>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="SectionView__Sections">
                             <h5 className='SectionView__Sections__Title'>
                                 Vehicles
                             </h5>
                             <div className='SectionList' id='Vehicles__Container'>
-                                <Card type="Vehicles" {...CarOwner}/>
-                                <Card type="Vehicles" {...CarOwner}/>
-                                <Card type="Vehicles" {...CarOwner}/>
-                                <Card type="Vehicles" {...CarOwner}/>
+                                {(resident.user.vehicles.length === 0 )?
+                                        <p>No vehicles</p>
+                                        :
+                                        <>{resident.user.vehicles.length > 0 && resident.user.vehicles.map((vehicle) => {
+                                            return (
+                                                <Card 
+                                                    type="Vehicles"
+                                                    key={vehicle.plateNumber}
+                                                    id={vehicle.plateNumber}
+                                                    title={vehicle.plateNumber}
+                                                    subTitle1={vehicle.brand}
+                                                    subTitle2={vehicle.model}
+                                                    url={`/vehicles/${vehicle.plateNumber}`}
+                                                />
+                                            );
+                                        })}</>
+                                    }
                             </div>
                         </div>
                         <div className="SectionView__Sections">
