@@ -20,7 +20,7 @@ function SearchSuggested({data}) {
                                 <li key={item.id}>
                                     <a href="">
                                         <Avatar className='SearchSuggested__Avatar'/>
-                                        <p className="BodyText3">{item.firstname + " " + item.middlename + " " + item.lastname}</p>
+                                        <p className="BodyText3">{item.name + " " + item.middlename + " " + item.lastname}</p>
                                     </a>
                                 </li>
                             </>

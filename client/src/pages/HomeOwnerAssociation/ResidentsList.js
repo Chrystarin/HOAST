@@ -56,7 +56,7 @@ function ResidentsList() {
         
     }, []);
 
-    async function approveRequest(hoaId, reqId){
+    async function approveRequest( hoaId, reqId){
         try{
             await axios
             .patch(`requests`, 

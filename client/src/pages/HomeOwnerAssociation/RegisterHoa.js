@@ -59,7 +59,7 @@ export default function RegisterHoa() {
 
     return <>
         <NavBar/>
-        <div className='SectionHolder' className='RegisterHoa'>
+        <div className='SectionHolder RegisterHoa'>
             <form onSubmit={Submit} className='Form RegisterHoa__Form'>
                 <h4 className='RegisterHoa__Title'> Register Home Owner Association</h4>
                 <TextField

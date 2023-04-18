@@ -1,7 +1,7 @@
 const HOA = require('../models/HOA');
 const User = require('../models/User');
 const Request = require('../models/Request');
-
+const Home = require('../models/Home');
 const {
 	UserNotFoundError,
 	HOANotFoundError,
@@ -67,14 +67,14 @@ const joinHoa = async (req, res, next) => {
 	const hoa = await HOA.findOne({ hoaId });
 	if (!hoa) throw new HOANotFoundError();
 
-	// Check if user already sent a join request
-	const requestExists = await Request.exists({
-		hoa: hoa._id,
-		requestor: user._id,
-		status: 'pending'
-	});
-	if (requestExists)
-		throw new DuplicateEntryError('Join request already sent');
+	// Check if address already exists
+    const homeExists = await Home.exists({
+        hoa: hoa._id,
+        'address.number': number,
+        'address.street': street,
+        'address.phase': phase
+    });
+    if (homeExists) throw new DuplicateEntryError('Home already saved');
 
 	// Create request
 	const request = await Request.create({

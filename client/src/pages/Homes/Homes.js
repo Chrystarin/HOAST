@@ -14,7 +14,8 @@ import loading from '../../images/loading.gif';
 function Homes() {
 
   const [homes, setHomes] = useState();
-  const [data,setData] = useState("");
+  const [data,setData] = useState({});
+
   // States for popup filter
   const [anchorElFilter, setAnchorElFilter] = React.useState(null);
   const openFilter = Boolean(anchorElFilter);
@@ -44,10 +45,10 @@ function Homes() {
     <Navbar type="home"/>
     <div className='SectionHolder'>
       <section className='Section'>
-        <h3 className='SectionTitleDashboard' onClick={()=>console.log(data)}>Homes</h3>
+        <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput suggested set={setData}/>
+            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]}/>
           </div>
           <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
           <Menu
@@ -96,27 +97,27 @@ function Homes() {
         </div>
 
         <div className='SectionList'>
-
-            {(homes.length === 0 )?
-                    <p>No homes found!</p>
-                :
-                <>
-                    {homes.length > 0 &&
-                        homes.map((home) => {
-                        return (
-                        <Card 
-                            type="Home"
-                            key={home.homeId}
-                            id={home.homeId}
-                            title={home.address.houseName}
-                            subTitle1={home.address.houseNumber}
-                            subTitle2={home.address.street}
-                            url={`/homes/${home.homeId}`}
-                        />
-                        );
-                    })}
-                </>
-            }
+          
+          {(data.length === 0 )?
+                  <p>No homes found!</p>
+              :
+              <>
+                  {data.length > 0 &&
+                      data.map((home) => {
+                      return (
+                      <Card 
+                          type="Home"
+                          key={home.homeId}
+                          id={home.homeId}
+                          title={home.name}
+                          subTitle1={home.address.number}
+                          subTitle2={home.address.street}
+                          url={`/homes/${home.homeId}`}
+                      />
+                      );
+                  })}
+              </>
+          }
         </div>
       </section>
     </div>

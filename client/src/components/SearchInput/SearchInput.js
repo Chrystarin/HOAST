@@ -4,30 +4,27 @@ import './SearchInput.scss';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchSuggested from './SearchSuggested';
+import { getAccordionDetailsUtilityClass } from '@mui/material';
 function SearchInput(props) {
-    const keys = ["lastname","firstname","email"];
+    const keys = props.keys;
     const [search,setSearch] = useState({
         value:"",
-        focus:false
+        focus:false,
     })
 
-    const users = [
-        {id:1,lastname:"Castillo",firstname:"Dianne Chrystarin",middlename:"Manabat"},
-        {id:2,lastname:"Castillo",firstname:"Harold James",middlename:"Hipos"},
-        {id:3,lastname:"Llagas",firstname:"Jon Angelo",middlename:"Castroverde"},
-        {id:4,lastname:"Dela Cruz",firstname:"Gian Carlo",middlename:"Sample"},
-        {id:5,lastname:"Embile",firstname:"David Joshua",middlename:"Sample"},
-        {id:6,lastname:"Castillo",firstname:"Harrison",middlename:"Hipos"},
-        {id:7,lastname:"Castillo",firstname:"Shiba",middlename:"Brandez"},
-    ]
+
+
+    useEffect(() => {
+        props.setData(searchData(props.data))
+    }, [search.focus, search.value]);
+
 
     const searchData = (data) => {
         return data.filter(
             (item)=>
                 keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
-        );
+        )
     }
-    
     return <>
         <div id='SearchInput'>
             <div  id='SearchInput__Container'>
@@ -47,15 +44,24 @@ function SearchInput(props) {
                     <ClearIcon fontSize="small" />
                 </IconButton>
             </div>
-            {props.suggested?<>
+            
+            {/* {props.suggested?<>
                 {(!search.focus)?"":
-                    !search.value?"":<SearchSuggested data={searchData(users)}/>
+                    !search.value?"":<SearchSuggested data={searchData(props.data)}/>
                 }
             </>:<></>
+            } */}
+            {
+            props.suggested?<>
+                {(!search.focus)?"":
+                    !search.value?"":<SearchSuggested data={searchData(props.data)}/>
+                }
+            </>:""
             }
             
         </div>
     </>
 }
+
 
 export default SearchInput

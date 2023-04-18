@@ -103,7 +103,7 @@ function AddHome() {
         <Navbar type="home"/>
         <div className='SectionHolder'>
             <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Add Home</span></h3>
+                <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span> <span>Add Home</span></h3>
 
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
