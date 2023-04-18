@@ -25,11 +25,11 @@ export default function EditHome() {
                 console.log(response.data)
             })
         };
-
         fetchUser();
     }, []);
-    
-    console.log(user.email);
+
+    const user_email = user
+    console.log(user_email);
 
     async function Submit(e){
         e.preventDefault();
@@ -52,6 +52,8 @@ export default function EditHome() {
         }
     }
 
+    if(!user) return <div>Loading...</div>
+
     return (
         // Edit Home
             <div>
@@ -59,7 +61,7 @@ export default function EditHome() {
                     First Name: <input type="text" value={user_id['user'].name.firstName}/>
                     Last Name: <input type="text" value={user_id['user'].name.lastName}/>
                     Email: <input type="text" value={user.email}/>
-                    Passwrod: <input type="text" value={user_id['user'].userId}/>
+                    Passwrod: <input type="text"/>
 
                     <button type="submit">Submit</button>
                 </form> 
