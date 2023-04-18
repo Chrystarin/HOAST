@@ -3,7 +3,7 @@ const router = require('express').Router();
 const asyncHandler = require('../middlewares/asyncHandler');
 const authenticate = require('../middlewares/authentication');
 
-const { signup, login, updateUser } = asyncHandler(
+const { signup, login, getUser, updateUser } = asyncHandler(
 	require('../controllers/userController')
 );
 
@@ -26,6 +26,11 @@ router.post('/signup', signup);
 router.post('/login', login);
 
 router.use(authenticate);
+
+/**
+ * Get user info
+ */
+router.get('/', getUser);
 
 /**
  * Edit user info

@@ -308,12 +308,7 @@ function AssociationDues() {
 															<></>
 														) : (
 															<>
-																{homes.length >
-																	0 &&
-																	homes.map(
-																		(
-																			home
-																		) => {
+																{homes.length > 0 && homes.map((home) => {
 																			return (
 																				<TableRow
 																					key={

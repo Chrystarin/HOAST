@@ -48,13 +48,13 @@ function Scanner() {
                     })
                 )
                 .then((response) => {
-                    fetch('http://192.168.160.115:80/?header=true')
+                    fetch('http://192.168.0.17:80/?header=true')
                     alert("Record Added Successfully!");
                 })
             }
             catch(err){
                 console.error(err.message);
-                fetch('http://192.168.160.115:80/?header=false')
+                fetch('http://192.168.0.17:80/?header=false')
                 alert("Record Not Detected!");
             }
         }
