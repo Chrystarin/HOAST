@@ -56,7 +56,7 @@ function HomeList() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Home List</a></span></h3>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
-                            <SearchInput/>
+                            {/* <SearchInput/> */}
                         </div>
                         <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
                         <Menu

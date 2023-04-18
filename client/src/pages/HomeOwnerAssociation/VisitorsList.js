@@ -61,7 +61,7 @@ function VisitorsList() {
                             {stepper===1?<>
                                 <div className='SectionController'>
                                     <div id='SearchInput__Container'>
-                                        <SearchInput/>
+                                        {/* <SearchInput/> */}
                                     </div>
                                     <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
                                     <Menu

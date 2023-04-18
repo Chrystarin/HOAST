@@ -20,8 +20,6 @@ function Homes() {
 
   const [filter,setFilter] = useState({
     sortBy:"A_Z",
-    
-
   })
 
 
