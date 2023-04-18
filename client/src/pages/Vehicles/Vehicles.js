@@ -10,7 +10,7 @@ import loading from '../../images/loading.gif';
 function Vehicles() {
     
     const [vehicles, setVehicles] = useState();
-
+    const [data,setData] = useState({});
     // Retrieve All User Vehicles Data
     useEffect(() => {
       const fetchVehicles = async () => {
@@ -38,18 +38,18 @@ function Vehicles() {
             <h3 className='SectionTitleDashboard'> Vehicles</h3>
             <div className='SectionController'>
                 <div id='SearchInput__Container'>
-                    <SearchInput/>
+                    <SearchInput setData={setData} data={vehicles} keys={["plateNumber","brand","model","type"]}/>
                 </div>
                 <Button variant="contained" href='/vehicles/add'>Add Vehicles</Button>
             </div>
 
             <div className='SectionList'>
-            {(vehicles.length === 0 )?
+            {(data.length === 0 )?
                 <p>No Vehicles found!</p>
                 :
                 <>
-                    {vehicles.length > 0 &&
-                    vehicles.map((vehicle) => {
+                    {data.length > 0 &&
+                    data.map((vehicle) => {
                     return (
                         <Card 
                         type="Vehicles"

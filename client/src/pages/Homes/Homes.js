@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../utils/axios';
+import './Homes.scss';
 
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-import './Homes.scss';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import loading from '../../images/loading.gif';
+import Filter from '../../components/Filter/Filter.js';
 
 function Homes() {
 
   const [homes, setHomes] = useState();
   const [data,setData] = useState({});
 
-  // States for popup filter
-  const [anchorElFilter, setAnchorElFilter] = React.useState(null);
-  const openFilter = Boolean(anchorElFilter);
 
-  
+  const [filter,setFilter] = useState({
+    sortBy:"A_Z",
+    
+
+  })
+
+
+
   useEffect(() => {
 		// Retrieves Homes
 		const fetchHomes = async () => {
@@ -32,6 +37,9 @@ function Homes() {
 		};
     fetchHomes();
 	}, []);
+  
+
+
 
   // Returns if member is null
 	if (!homes) return <>
@@ -40,6 +48,8 @@ function Homes() {
       <h3>Loading...</h3>
     </div>
   </>
+  
+  
 
   return <>
     <Navbar type="home"/>
@@ -50,49 +60,7 @@ function Homes() {
           <div id='SearchInput__Container'>
             <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]}/>
           </div>
-          <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
-          <Menu
-              id="basic-menu"
-              anchorEl={anchorElFilter}
-              open={openFilter}
-              onClose={() => {
-                  setAnchorElFilter(null);
-              }}
-              MenuListProps={{
-              'aria-labelledby': 'basic-button',
-              }}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
-              <div className='Filter'>
-                  <h6 className='Filter__Title'>Filter</h6>
-                  <ul>
-                      <li>
-                      <p className="BodyText3 Filter__Titles">Sort by</p>
-                      <div>
-                      <NativeSelect
-                          defaultValue={null}
-                          inputProps={{
-                          name: 'age',
-                          id: 'uncontrolled-native',
-                          }}
-                      >
-                          <option value={10}>A to Z</option>
-                          <option value={20}>Recent Register</option>
-                          <option value={30}>More Residents</option>
-                      </NativeSelect>
-                      </div>
-                      </li>
-                  </ul>
-                  <div className='Filter__Buttons'>
-                      <div>
-                      <Button variant=''>Reset All</Button>
-                      </div>
-                      <Button variant=''>Cancel</Button>
-                      <Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
-                  </div>
-              </div>
-          </Menu>
+          <Filter/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 

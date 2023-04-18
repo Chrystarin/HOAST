@@ -20,6 +20,7 @@ function SearchInput(props) {
 
 
     const searchData = (data) => {
+        console.log(data);
         return data.filter(
             (item)=>
                 keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
