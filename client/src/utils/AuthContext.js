@@ -10,37 +10,10 @@ function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        
         // Check if user is already logged in on first mount
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
             setUser(JSON.parse(loggedInUser));
-            const fetchRole = async () => {
-                await axios
-                    .get(`roles`)
-                    .then((response) => {
-                        let roles = []
-                        if (response.data.admin.length>=1){
-                            localStorage.setItem('hoaId', response.data.admin)
-                            localStorage.setItem('adminOf', response.data.admin)
-                            roles.push('admin')
-                        }
-                        if (response.data.guard.length>=1){
-                            localStorage.setItem('hoaId', response.data.guard)
-                            localStorage.setItem('guardOf', response.data.admin)
-                            roles.push('guard')
-                        }
-                        if (response.data.homeowner.length>=1){
-                            localStorage.setItem('homeownerOf', response.data.homeowner)
-                            roles.push('homeowner')
-                        }
-                        if (response.data.resident.length>=1){
-                            localStorage.setItem('residentOf', response.data.resident)
-                            roles.push('resident')
-                        }
-                        localStorage.setItem('roles', roles)
-                    });
-            };
             fetchRole();
         }
     }, []);
@@ -58,6 +31,7 @@ function AuthProvider({ children }) {
                 .then((response) => {
                     setUser(response.data)
                     localStorage.setItem('user', JSON.stringify(response.data))
+                    fetchRole();
                     alert("Logged In Successfully!")
                     navigate("/homes");
                 });
@@ -69,6 +43,33 @@ function AuthProvider({ children }) {
     const logout = async () => {
         localStorage.clear();
         navigate("/");
+    };
+
+    const fetchRole = async () => {
+        await axios
+            .get(`roles`)
+            .then((response) => {
+                let roles = []
+                if (response.data.admin.length>=1){
+                    localStorage.setItem('hoaId', response.data.admin)
+                    localStorage.setItem('adminOf', response.data.admin)
+                    roles.push('admin')
+                }
+                if (response.data.guard.length>=1){
+                    localStorage.setItem('hoaId', response.data.guard)
+                    localStorage.setItem('guardOf', response.data.admin)
+                    roles.push('guard')
+                }
+                if (response.data.homeowner.length>=1){
+                    localStorage.setItem('homeownerOf', response.data.homeowner)
+                    roles.push('homeowner')
+                }
+                if (response.data.resident.length>=1){
+                    localStorage.setItem('residentOf', response.data.resident)
+                    roles.push('resident')
+                }
+                localStorage.setItem('roles', roles)
+            });
     };
 
     
