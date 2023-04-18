@@ -6,8 +6,10 @@ import Button from '@mui/material/Button';
 import NavBar from '../../layouts/NavBar';
 import axios from '../../utils/axios';
 import './RegisterHoa.scss'
-export default function RegisterHoa() {
+import {useAuth} from '../../utils/AuthContext.js';
 
+export default function RegisterHoa() {
+    const {isRole} = useAuth();
     const navigate = useNavigate();
 
     const role = JSON.parse(localStorage.getItem("role"));
@@ -59,7 +61,8 @@ export default function RegisterHoa() {
         }
     }
 
-    if(role.admin.length==1) navigate("/dashboard");
+    if(isRole('admin')) navigate("/dashboard");
+    if(isRole('guard')) navigate("/scanner");
 
     return <>
         <NavBar/>
@@ -120,7 +123,6 @@ export default function RegisterHoa() {
                     </div>
                 </form>
             </div>
-            
         </div>
     </>
 

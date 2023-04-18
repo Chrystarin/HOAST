@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { Link, useNavigate, useLocation } from 'react-router';
 
 import './Login.scss'
 
@@ -8,55 +7,25 @@ import Header from '../../layouts/Header';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import axios from '../../utils/axios';
-
-import axiosInstance from '../../utils/axiosInstance.js';
+import {useAuth} from '../../utils/AuthContext.js';
 
 function Login() {
-    const navigate = useNavigate();
+    const {login} = useAuth();
 
     // Contains login input
-    const [loginForm, setLoginForm] = useState({
+    const [form, setForm] = useState({
         email: '',
         password: ''
     });
 
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
-        return setLoginForm((prev) => {
+        return setForm((prev) => {
             const [key, value] = Object.entries(e)[0];
             prev[key] = value;
             return prev;
         
     });}
-
-    // Submit button for login
-    async function Submit(e){
-        e.preventDefault();
-        try{
-            // Login
-            await axios
-            .post(
-                `users/login`,
-                JSON.stringify({ 
-                    email: loginForm.email,
-                    password: loginForm.password
-                }),
-                {headers: { 'Content-Type': 'application/json' }},
-                {withCredentials: true}
-            )
-            .then((response) => {
-                localStorage.setItem('user', JSON.stringify(response.data))
-                alert("Logged in Successfully!");
-                navigate("/homes");
-            })
-        }
-        catch(err){
-            alert("Invalid Credentials!");
-            console.error(err.message);
-        }
-
-    }
 
   return (
     <div>
@@ -70,29 +39,28 @@ function Login() {
               <h2 className='Title'>LOGIN</h2>
               <p className='SubTitle'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, eveniet suscipit  libero nesciunt odit quo nobis culpa dignissimos. Aperiam.</p>
               <div className='Login__Form'>
-                <form onSubmit={Submit}>
-                  <TextField
-                      id="filled-password-input"
-                      label="Email"
-                      type="text"
-                      autoComplete="current-password"
-                      variant="filled"
-                      onChange={(e)=>updateForm({ email: e.target.value })}
+                <div className='FormReplacement'>
+                    <TextField
+                        label="Email"
+                        type="text"
+                        autoComplete="current-password"
+                        variant="filled"
+                        onChange={(e)=>updateForm({ email: e.target.value })}
                     />
                     <TextField
-                      id="filled-password-input"
-                      label="Password"
-                      type="password"
-                      autoComplete="current-password"
-                      variant="filled"
-                      onChange={(e)=>updateForm({ password: e.target.value })}
+                        id="filled-password-input"
+                        label="Password"
+                        type="password"
+                        autoComplete="current-password"
+                        variant="filled"
+                        onChange={(e)=>updateForm({ password: e.target.value })}
                     />
-                  <div>
-                    <Button variant="contained" size="large" type='submit'>
-                      Login
-                    </Button>
-                  </div>
-                </form>
+                    <div>
+                        <Button variant="contained" size="large" type='submit' onClick={()=>login(form.email, form.password)}>
+                            Login
+                        </Button>
+                    </div>
+                </div>
                 <p id='Login__Note'>Not a member yet? <a href="/register">Register</a> now!</p>
               </div>
             </div>

@@ -14,8 +14,10 @@ import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from "react-router-dom";
 
-function NavBar(props) {
+import {useAuth} from '../utils/AuthContext.js';
 
+function NavBar(props) {
+    const {isRole} = useAuth();
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -28,10 +30,10 @@ function NavBar(props) {
 
     const hoaButton = () => {
         // console.log(role.role == 'admin')
-        if (role.admin.length==1){
+        if (isRole('admin')){
             navigate("/dashboard");
         }
-        else if (role.guard.length==1){
+        else if (isRole('guard')){
             navigate("/scanner");
         }
         else {

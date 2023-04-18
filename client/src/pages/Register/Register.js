@@ -59,8 +59,6 @@ function Register() {
         catch(err){
             console.error(err.message);
         }
-
-
     }
 
     return (

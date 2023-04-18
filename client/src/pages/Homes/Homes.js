@@ -10,11 +10,12 @@ import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import './Homes.scss';
 import loading from '../../images/loading.gif';
-
+import {useAuth} from '../../utils/AuthContext.js';
 function Homes() {
-
+    const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
 
+  console.log(isAdmin('-3ssmPU-vbDD3mc0sbh'))
   // States for popup filter
   const [anchorElFilter, setAnchorElFilter] = React.useState(null);
   const openFilter = Boolean(anchorElFilter);

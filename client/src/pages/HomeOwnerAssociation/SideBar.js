@@ -1,15 +1,15 @@
 import React,{useState} from 'react'
 import './Dashboard.scss';
+import {useAuth} from '../../utils/AuthContext.js';
 
 function SideBar(props) {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const role = JSON.parse(localStorage.getItem("role"));
-    const access ="wew"
+    const {isRole} = useAuth();
+
     return (
         <div className='SectionManage__SideNav'>
             <ul>
                 {
-                    (role.admin.length==1)? <>
+                    (isRole('admin'))? <>
                         <li>
                             <a href="/dashboard" className={(props.active=="Dashboard")?"active":""}><h6>Dashboard</h6></a>
                         </li>
