@@ -44,7 +44,7 @@ function Guard() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Guard</a></span></h3>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
-                            <SearchInput/>
+                            {/* <SearchInput/> */}
                         </div>
                         <Button variant="contained" href='/addguard'>Add Guard</Button>
                         

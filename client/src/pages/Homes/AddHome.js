@@ -10,9 +10,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
-import ResidentCard from '../../components/ResidentCard/ResidentCard';
 import loading from '../../images/loading.gif';
-import SearchIcon from '@mui/icons-material/Search';
 
 
 import axios from './../../utils/axios';
@@ -25,7 +23,7 @@ function AddHome() {
     const [filteredHoa, setFilteredHoa] = useState([])
     const [searchText, setSearchText] = useState("");
     const [selectedHoa, setSelectedHoa] = useState(null);
-
+    const [data,setData] = useState({});
     // Collection of form data
     const [form, setForm] = useState({
         hoaId: '',
@@ -48,17 +46,7 @@ function AddHome() {
     }, []);
 
     // Runs search function onLoad for hoa
-    useEffect(() => {
-        if (searchText.length) {
-            const filterHoas = hoas.filter((hoa) => {
-                return (hoa.name).toLowerCase().includes(searchText.toLowerCase());
-            });
-            setFilteredHoa(filterHoas);
-        } 
-        else {
-            setFilteredHoa([]);
-        }
-    }, [searchText, hoas]);
+    
 
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
@@ -103,7 +91,7 @@ function AddHome() {
         <Navbar type="home"/>
         <div className='SectionHolder'>
             <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span>  > <span>Add Home</span></h3>
+                <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span> <span>Add Home</span></h3>
 
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
@@ -128,16 +116,15 @@ function AddHome() {
                     {stepper==2?<>
                         <form onSubmit={Submit} className='Form' id='GeneralInformation'>
                             <div>
-                                <SearchInput onChange={(e)=>setSearchText(e.target.value)} value={searchText}/>
+                                <SearchInput setData={setData} data={hoas} keys={["name"]}/>
                             </div>
-                            <p>Selected Hoa: {selectedHoa}</p>
                             <div className='SectionList'>
                                 {(hoas.length === 0 )?
                                     <p>No HOAs Available!</p>
                                     :
                                     <>
-                                        {(!searchText) ?
-                                            hoas.length > 0 && hoas.map((hoa) => {
+                                        {
+                                            data.length > 0 && data.map((hoa) => {
                                                 return (
                                                     <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
                                                         <img src={VillageIcon} alt="" />
@@ -148,20 +135,7 @@ function AddHome() {
                                                     </div> 
                                                 );
                                             })
-                                        :
-                                            filteredHoa.length > 0 && filteredHoa.map((hoa) => {
-                                                return (
-                                                    <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
-                                                        <img src={VillageIcon} alt="" />
-                                                        <div>
-                                                            <h6>{hoa.name}</h6>
-                                                            <p>{hoa.city}</p>
-                                                        </div>  
-                                                    </div> 
-                                                );
-                                            })
                                         }
-                                        
                                     </>
                                 }
                             </div>

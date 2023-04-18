@@ -13,6 +13,7 @@ import loading from '../../images/loading.gif';
 function Visitors() {
 
     const [visitors, setVisitors] = useState();
+    const [data,setData] = useState({});
     
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
@@ -46,7 +47,7 @@ function Visitors() {
                 <h3 className='SectionTitleDashboard'>Visitors</h3>
                 <div className='SectionController'>
                 <div id='SearchInput__Container'>
-                    <SearchInput/>
+                    <SearchInput setData={setData} data={visitors} keys={["hoa","name"]}/>
                 </div>
                 <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
                 <Menu
@@ -101,10 +102,10 @@ function Visitors() {
 
                 <div className='SectionList'>
                     {/* Displays All User's Visitors */}
-                    {(visitors.length === 0 )?
+                    {(data.length === 0 )?
                         <p>No Visitors Available!</p>
                         :
-                        <>{visitors.length > 0 && visitors.map((visitor) => {
+                        <>{data.length > 0 && data.map((visitor) => {
                             return (
                                 <Card 
                                 type="Visitor"

@@ -56,7 +56,7 @@ function ResidentsList() {
         
     }, []);
 
-    async function approveRequest(hoaId, reqId){
+    async function approveRequest( hoaId, reqId){
         try{
             await axios
             .patch(`requests`, 
@@ -107,7 +107,7 @@ function ResidentsList() {
                         {stepper==1?<>
                             <div className='SectionController'>
                                 <div id='SearchInput__Container'>
-                                    <SearchInput/>
+                                    {/* <SearchInput/> */}
                                 </div>
                                 <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
                                 <Menu
@@ -172,7 +172,7 @@ function ResidentsList() {
                         {stepper==2?<>
                             <div className='SectionController'>
                                 <div id='SearchInput__Container'>
-                                    <SearchInput/>
+                                    {/* <SearchInput/> */}
                                 </div>
                                 <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
                                 <Menu

@@ -1,26 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../utils/axios';
+import './Homes.scss';
 
 import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-import './Homes.scss';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import loading from '../../images/loading.gif';
 import {useAuth} from '../../utils/AuthContext.js';
+import Filter from '../../components/Filter/Filter.js';
+
 function Homes() {
     const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
+  const [data,setData] = useState({});
 
-  console.log(isAdmin('-3ssmPU-vbDD3mc0sbh'))
+
+  const [filter,setFilter] = useState({
+    sortBy:"A_Z",
+  })
+
   // States for popup filter
   const [anchorElFilter, setAnchorElFilter] = React.useState(null);
   const openFilter = Boolean(anchorElFilter);
 
-  
   useEffect(() => {
 		// Retrieves Homes
 		const fetchHomes = async () => {
@@ -32,6 +38,9 @@ function Homes() {
 		};
     fetchHomes();
 	}, []);
+  
+
+
 
   // Returns if member is null
 	if (!homes) return <>
@@ -41,84 +50,43 @@ function Homes() {
     </div>
   </>
   
+  
 
   return <>
     <Navbar type="home"/>
     <div className='SectionHolder'>
       <section className='Section'>
-        <h3 className='SectionTitleDashboard'> Homes</h3>
+        <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput/>
+            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]}/>
           </div>
-          <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
-          <Menu
-              id="basic-menu"
-              anchorEl={anchorElFilter}
-              open={openFilter}
-              onClose={() => {
-                  setAnchorElFilter(null);
-              }}
-              MenuListProps={{
-              'aria-labelledby': 'basic-button',
-              }}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
-              <div className='Filter'>
-                  <h6 className='Filter__Title'>Filter</h6>
-                  <ul>
-                      <li>
-                      <p className="BodyText3 Filter__Titles">Sort by</p>
-                      <div>
-                      <NativeSelect
-                          defaultValue={null}
-                          inputProps={{
-                          name: 'age',
-                          id: 'uncontrolled-native',
-                          }}
-                      >
-                          <option value={10}>A to Z</option>
-                          <option value={20}>Recent Register</option>
-                          <option value={30}>More Residents</option>
-                      </NativeSelect>
-                      </div>
-                      </li>
-                  </ul>
-                  <div className='Filter__Buttons'>
-                      <div>
-                      <Button variant=''>Reset All</Button>
-                      </div>
-                      <Button variant=''>Cancel</Button>
-                      <Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
-                  </div>
-              </div>
-          </Menu>
+          <Filter/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 
         <div className='SectionList'>
-
-            {(homes.length === 0 )?
-                    <p>No homes found!</p>
-                :
-                <>
-                    {homes.length > 0 &&
-                        homes.map((home) => {
-                        return (
-                        <Card 
-                            type="Home"
-                            key={home.homeId}
-                            id={home.homeId}
-                            title={home.address.houseName}
-                            subTitle1={home.address.houseNumber}
-                            subTitle2={home.address.street}
-                            url={`/homes/${home.homeId}`}
-                        />
-                        );
-                    })}
-                </>
-            }
+          
+          {(data.length === 0 )?
+                  <p>No homes found!</p>
+              :
+              <>
+                  {data.length > 0 &&
+                      data.map((home) => {
+                      return (
+                      <Card 
+                          type="Home"
+                          key={home.homeId}
+                          id={home.homeId}
+                          title={home.name}
+                          subTitle1={home.address.number}
+                          subTitle2={home.address.street}
+                          url={`/homes/${home.homeId}`}
+                      />
+                      );
+                  })}
+              </>
+          }
         </div>
       </section>
     </div>
