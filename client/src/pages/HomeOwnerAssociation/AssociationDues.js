@@ -4,14 +4,13 @@ import { useParams } from 'react-router-dom';
 import NavBar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import './Dashboard.scss';
-import DuesIcon from '../../images/icons/due-date.png';
 import SideBar from './SideBar';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
 
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import Menu from '@mui/material/Menu';
+import NativeSelect from '@mui/material/NativeSelect';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -25,11 +24,14 @@ import axios from '../../utils/axios';
 import './AssociationDues.scss';
 
 function AssociationDues() {
-	const [stepper, setStepper] = useState(1);
-	const [hoa, setHoa] = useState();
 	const [homes, setHomes] = useState();
-	const [dues, setDues] = useState();
 
+	const [anchorElFilter, setAnchorElFilter] = React.useState(null);
+	const openFilter = Boolean(anchorElFilter);
+
+	const [anchorAddDues, setAnchorAddDues] = useState(null);
+	const open = Boolean(anchorAddDues);
+	
 	const user = JSON.parse(localStorage.getItem('user'));
 	console.log(localStorage.getItem('hoaId'));
 
@@ -104,6 +106,7 @@ function AssociationDues() {
 			return prev;
 		});
 	}
+	
 
 	async function Submit(e) {
 		e.preventDefault();
@@ -146,231 +149,238 @@ function AssociationDues() {
 								<a href="">Association Dues</a>
 							</span>
 						</h3>
-						<div
-							id="Manage__Hoa"
-							className="SectionView"
+						<div className='SectionController'>
+							<div id='SearchInput__Container'>
+								<SearchInput/>
+							</div>
+							<Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
+							<Menu
+							id="basic-menu"
+							anchorEl={anchorElFilter}
+							open={openFilter}
+							onClose={() => {
+								setAnchorElFilter(null);
+							}}
+							MenuListProps={{
+							'aria-labelledby': 'basic-button',
+							}}
+							transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+							anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 						>
-							<div className="SectionView__Content">
-								<div
-									className="SectionView__Sections"
-									id="AssociatoinDues__Container"
-								>
-									<h5 className="SectionView__Sections__Title">
-										Association Dues
-									</h5>
-									<div id="AssociatoinDues__Content">
-										{/* <div id="AssociationDues__Card">
-											<img
-												src={DuesIcon}
-												alt=""
-											/>
-											<div id="">
-												<h6>Monthly</h6>
-												<p>1,000 Pesos</p>
-											</div>
-										</div>
-										<div></div> */}
+							<div className='Filter'>
+								<h6 className='Filter__Title'>Filter</h6>
+								<ul>
+									<li>
+									<p className="BodyText3 Filter__Titles">Sort by</p>
+									<div>
+									<NativeSelect
+										defaultValue={null}
+										inputProps={{
+										name: 'age',
+										id: 'uncontrolled-native',
+										}}
+									>
+										<option value={10}>A to Z</option>
+										<option value={20}>Recent Register</option>
+										<option value={30}>More Residents</option>
+									</NativeSelect>
+									</div>
+									</li>
+								</ul>
+									<div className='Filter__Buttons'>
 										<div>
-											<form
-												onSubmit={Submit}
-												className="Form"
-											>
-												{/* <FormControl fullWidth>
-													<InputLabel
-														variant="filled"
-														id="home-select"
-													>
-														Home
-													</InputLabel>
-													<Select
-														labelId="home-select"
-														value={form.homeId}
-														label="Home"
-														onChange={(e) =>
-															setForm({
-																...form,
-																homeId: e.target
-																	.value
-															})
-														}
-													>
-														{props.homes.length >
-															0 &&
-															props.homes.map(
-																(home) => {
-																	return (
-																		<MenuItem
-																			key={
-																				home.homeId
-																			}
-																			value={
-																				home.homeId
-																			}
-																		>
-																			{
-																				home.name
-																			}
-																		</MenuItem>
-																	);
-																}
-															)}
-													</Select>
-												</FormControl> */}
-
-												<TextField
-													id="filled-password-input"
-													label="amount"
-													type="number"
-													autoComplete="current-password"
-													variant="filled"
-													onChange={(e) =>
-														updateForm({
-															amount: e.target
-																.value
-														})
-													}
-												/>
-												<TextField
-													id="filled-password-input"
-													label="HOmeId"
-													type="text"
-													autoComplete="current-password"
-													variant="filled"
-													onChange={(e) =>
-														updateForm({
-															homeId: e.target
-																.value
-														})
-													}
-												/>
-												<TextField
-													id="filled-password-input"
-													label="paidUntil"
-													type="date"
-													autoComplete="current-password"
-													variant="filled"
-													onChange={(e) =>
-														updateForm({
-															months: e.target
-																.value
-														})
-													}
-												/>
-												<div className="Form__Button">
-													<Button variant="text">
-														Cancel
-													</Button>
-													<Button
-														variant="contained"
-														type="submit"
-														className="Submit"
-													>
-														Submit
-													</Button>
-												</div>
-											</form>
+										<Button variant=''>Reset All</Button>
 										</div>
-										<div>
-											<TableContainer component={Paper}>
-												<Table aria-label="simple table">
-													<TableHead>
-														<TableRow>
-															<TableCell
-																component="th"
-																align="center"
-															>
-																<h6>HomeId</h6>
-															</TableCell>
-															<TableCell
-																component="th"
-																align="center"
-															>
-																<h6>Name</h6>
-															</TableCell>
-															<TableCell
-																component="th"
-																align="center"
-															>
-																<h6>
-																	Paid Until
-																</h6>
-															</TableCell>
-															<TableCell
-																component="th"
-																align="center"
-															>
-																<h6>Status</h6>
-															</TableCell>
-														</TableRow>
-													</TableHead>
-													<TableBody>
-														{homes.length === 0 ? (
-															<></>
-														) : (
-															<>
-																{homes.length >
-																	0 &&
-																	homes.map(
-																		(
-																			home
-																		) => {
-																			return (
-																				<TableRow
-																					key={
-																						home.homeId
-																					}
-																					sx={{
-																						'&:last-child td, &:last-child th':
-																							{
-																								border: 0
-																							}
-																					}}
-																				>
-																					<TableCell
-																						component="th"
-																						scope="row"
-																						align="center"
-																					>
-																						{
-																							home.homeId
-																						}
-																					</TableCell>
-																					<TableCell align="center">
-																						{
-																							home.name
-																						}
-																					</TableCell>
-																					<TableCell
-																						component="th"
-																						scope="row"
-																						align="center"
-																					>
-																						{
-																							((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear()
-																						}
-																					</TableCell>
-																					<TableCell align="center">
-																						{new Date().getTime() <=
-																						new Date(
-																							home.paidUntil
-																						).getTime()
-																							? 'Paid'
-																							: 'Unpaid'}
-																					</TableCell>
-																				</TableRow>
-																			);
-																		}
-																	)}
-															</>
-														)}
-													</TableBody>
-												</Table>
-											</TableContainer>
-										</div>
+										<Button variant=''>Cancel</Button>
+										<Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
 									</div>
 								</div>
+							</Menu>
+							<Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget)}}>Add Dues</Button>
+							<Menu
+								id="basic-menu"
+								anchorEl={anchorAddDues}
+								open={open}
+								onClose={() => {setAnchorAddDues(null)}}
+								MenuListProps={{
+								'aria-labelledby': 'basic-button',
+								}}
+							>
+								<form onSubmit={Submit} className="Form AddDues">
+									
+									<TextField
+										id="filled-password-input"
+										label="HOmeId"
+										type="text"
+										autoComplete="current-password"
+										variant="filled"
+										onChange={(e) =>
+											updateForm({
+												homeId: e.target
+													.value
+											})
+										}
+									/>
+									<TextField
+										id="filled-password-input"
+										label="amount"
+										type="number"
+										autoComplete="current-password"
+										variant="filled"
+										onChange={(e) =>
+											updateForm({
+												amount: e.target
+													.value
+											})
+										}
+									/>
+									<TextField
+										id="filled-password-input"
+										label="paidUntil"
+										type="date"
+										autoComplete="current-password"
+										defaultValue={"2023-01-01"}
+										variant="filled"
+										onChange={(e) =>
+											{
+												updateForm({
+													months: e.target.value
+												})
+												console.log(e.target.value);
+											}
+										}
+									/>
+									<div className="Form__Button">
+										<Button variant="text" onClick={() => {setAnchorAddDues(null)}}>
+											Cancel
+										</Button>
+										<Button
+											variant="contained"
+											type="submit"
+											className="Submit"
+										>
+											Submit
+										</Button>
+									</div>
+								</form>
+							</Menu>
+						</div>
+						<div id='Manage__Hoa' className='SectionView'>
+							<div className='SectionView__Content'>
+								<TableContainer component={Paper} >
+									<Table aria-label="simple table">
+										<TableHead>
+											<TableRow>
+												<TableCell
+													component="th"
+													align="center"
+												>
+													<h6>HomeId</h6>
+												</TableCell>
+												<TableCell
+													component="th"
+													align="center"
+												>
+													<h6>Name</h6>
+												</TableCell>
+												<TableCell
+													component="th"
+													align="center"
+												>
+													<h6>
+														Paid Until
+													</h6>
+												</TableCell>
+												<TableCell
+													component="th"
+													align="center"
+												>
+													<h6>Status</h6>
+												</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+										{homes.length === 0 ? <></> : 
+											<>
+												{homes.length >
+													0 &&
+													homes.map(
+														(
+															home
+														) => {
+															return (
+																<TableRow
+																	key={
+																		home.homeId
+																	}
+																	sx={{
+																		'&:last-child td, &:last-child th':
+																			{
+																				border: 0
+																			}
+																	}}
+																>
+																	<TableCell
+																		component="th"
+																		scope="row"
+																		align="center"
+																	>
+																		{
+																			home.homeId
+																		}
+																	</TableCell>
+																	<TableCell align="center">
+																		{
+																			home.name
+																		}
+																	</TableCell>
+																	<TableCell
+																		component="th"
+																		scope="row"
+																		align="center"
+																	>
+																		{
+																			((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear()
+																		}
+																	</TableCell>
+																	<TableCell align="center">
+																		{new Date().getTime() <=
+																		new Date(
+																			home.paidUntil
+																		).getTime()
+																			? 'Paid'
+																			: 'Unpaid'}
+																	</TableCell>
+																</TableRow>
+															);
+														}
+													)}
+											</>
+										}
+										</TableBody>
+										{/* <TableFooter>
+											<TableRow>
+												<TablePagination
+												rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+												colSpan={3}
+												// count={rows.length}
+												// rowsPerPage={rowsPerPage}
+												// page={page}
+												SelectProps={{
+													inputProps: {
+													'aria-label': 'rows per page',
+													},
+													native: true,
+												}}
+												// onPageChange={handleChangePage}
+												// onRowsPerPageChange={handleChangeRowsPerPage}
+												// ActionsComponent={TablePaginationActions}
+												/>
+											</TableRow>
+										</TableFooter> */}
+									</Table>
+								</TableContainer>
 							</div>
-							<div></div>
 						</div>
 					</div>
 				</section>
