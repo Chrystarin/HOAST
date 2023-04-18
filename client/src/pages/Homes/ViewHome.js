@@ -13,12 +13,17 @@ import './ViewHome.scss'
 
 import axios from '../../utils/axios';
 
+import {useAuth} from '../../utils/AuthContext.js';
+
 function ViewHome() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [home, setHome] = useState();
     const [residents, setResidents] = useState();
     const [vehicles, setVehicles] = useState();
+    const {isHomeowner} = useAuth();
+
+    console.log(isHomeowner(id))
 
     useEffect(() => {
         // Retrieves Home Data
@@ -32,7 +37,7 @@ function ViewHome() {
             .then((response) => {
                 // Assign retrieved value to home constant
                 setHome(response.data);
-                console.log(response.data)
+                console.log(response.data.residents)
             })
             .catch((err)=>{
                 navigate(`${err}`);
@@ -88,11 +93,19 @@ function ViewHome() {
                                 {(home.residents.length === 0 )?
                                     <p>No Residents Available!</p>
                                     :
-                                    <>{home.residents.length > 0 && home.residents.map((resident) => {
-                                        return (
-                                            <ResidentCard key={resident._id} UserName={resident.user.name.firstName}/>
-                                        );
-                                    })}</>
+                                    <>
+                                        {/* {home.residents.length > 0 && home.residents.map((resident) => {
+                                            return (
+                                                <ResidentCard key={resident._id} UserName={resident.user.name.firstName}/>
+                                            );
+                                        })} */}
+                                        {home.residents.length > 0 && home.residents.map((resident) => {
+                                            return (
+                                                // <p>{JSON.stringify(resident.user.name.firstName)}</p>
+                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type="View"/>
+                                            );
+                                        })}
+                                    </>
                                 }
                             </div>
                         </div>
@@ -148,7 +161,10 @@ function ViewHome() {
                                 <h6>Register Since: </h6>
                                 <h5>Tue, 07 Feb 20 23 02:37:40 GMT </h5>
                             </div> */}
-                            <Button variant='contained'>Edit Home</Button>
+                            {(isHomeowner(id))
+                                ? <Button variant='contained' href={`${id}/edit`}>Edit Home</Button>
+                                : ''
+                            }
                         </div>
                     </div>
                 </div>

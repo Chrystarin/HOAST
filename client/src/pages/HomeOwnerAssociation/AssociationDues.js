@@ -44,45 +44,6 @@ function AssociationDues() {
 	});
 
 	useEffect(() => {
-		// const fetchHoa = async () => {
-		// 	await axios
-		// 		.get(`hoas`, {
-		// 			params: {
-		// 				hoaId: localStorage.getItem('hoaId')
-		// 			}
-		// 		})
-		// 		.then((response) => {
-		// 			setHoa(response.data);
-		// 			const fetchHomes = async () => {
-		// 				await axios
-		// 					.get(`homes`, {
-		// 						params: {
-		// 							homeId: response.data.homeId
-		// 						}
-		// 					})
-		// 					.then((response) => {
-		// 						setHomes(response.data);
-		// 						console.log(response.data);
-		// 					});
-		// 			};
-		// 			const fetchDues = async () => {
-		// 				await axios
-		// 					.get(`dues`, {
-		// 						params: {
-		// 							homeId: response.data.homeId
-		// 						}
-		// 					})
-		// 					.then((response) => {
-		// 						setDues(response.data);
-		// 						console.log(response.data);
-		// 					});
-		// 			};
-		// 			fetchHomes();
-		// 			fetchDues();
-		// 		});
-		// };
-		// fetchHoa();
-
 		// Retrieves Homes
 		const fetchHomes = async () => {
 			await axios
@@ -151,7 +112,7 @@ function AssociationDues() {
 						</h3>
 						<div className='SectionController'>
 							<div id='SearchInput__Container'>
-								<SearchInput/>
+								{/* <SearchInput/> */}
 							</div>
 							<Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
 							<Menu

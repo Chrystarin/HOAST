@@ -38,8 +38,6 @@ const getResidents = async (req, res, next) => {
 		residents = residents.find(
 			({ user: { userId } }) => residentId == userId
 		);
-		
-
 		if (!residents) throw new NotFoundError('User is not resident');
 	}
 
@@ -49,6 +47,9 @@ const getResidents = async (req, res, next) => {
 const addResident = async (req, res, next) => {
 	const { userId } = req.body;
 	const { home } = req.user;
+
+    console.log(userId)
+    console.log("TEST")
 
 	// Validate input
 	checkString(userId, 'User ID');
@@ -67,6 +68,9 @@ const removeResident = async (req, res, next) => {
 	const { residentId } = req.body;
 	const { home, user } = req.user;
 
+
+    console.log(residentId)
+
 	// Validate input
 	checkString(residentId, 'Resident ID');
 
@@ -79,6 +83,7 @@ const removeResident = async (req, res, next) => {
 		({ user: { userId, status } }) =>
 			userId == residentId && status == 'active'
 	);
+
 	if (!resident) throw new ResidentNotFoundError();
 
 	// Set the status of resident to inactive

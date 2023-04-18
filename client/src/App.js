@@ -9,6 +9,7 @@ import Homes from './pages/Homes/Homes';
 import AddHome from './pages/Homes/AddHome.js';
 import ResidentsView from './pages/ResidentsView/ResidentsView.js';
 import ViewHome from './pages/Homes/ViewHome.js';
+import EditHome from './pages/Homes/EditHome.js';
 
 import Vehicles from './pages/Vehicles/Vehicles.js';
 import AddVehicle from './pages/Vehicles/AddVehicle.js';
@@ -74,15 +75,13 @@ function App() {
 				<Route path="/homes">
 					<Route path="" element={<Homes />} />
 					<Route path="add" element={<AddHome />} />
-                    <Route element={<ProtectedRoute allowedRoles={['homeowner, resident']}/>} >
-					    <Route path=":id" element={<ViewHome />} />
+					<Route path=":id" element={<ViewHome />} />
+                    <Route element={<ProtectedRoute allowedRoles={['homeowner']}/>} >
+                        <Route path=":id/edit" element={<EditHome />} />
                     </Route>
 				</Route>
 
-				{/* Private Routes for Homeowner */}
-				<Route element={<ProtectedRoute allowedRoles={['homeowner']}/>} >
-					<Route path=":id/edit" element={<ViewHome />} />
-				</Route>
+				
 
 				{/* Private Routes for Guard */}
 				<Route element={<ProtectedRoute allowedRoles={['guard']} />}  >

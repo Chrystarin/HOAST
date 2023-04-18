@@ -1,34 +1,37 @@
-import React from 'react'
-
+import React, {useEffect, useState} from 'react'
+import { useParams } from 'react-router-dom';
 import axios from '../../utils/axios';
-
-export default function EditHome(props) {
+import {useAuth} from '../../utils/AuthContext.js';
+import Navbar from '../../layouts/NavBar';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import ResidentCard from '../../components/ResidentCard/ResidentCard';
+function EditHome() {
+    const { id } = useParams();
+    const {isHomeowner} = useAuth();
+    
+    console.log(isHomeowner(id));
 
     const [name, setName] = useState()
     const [home, setHome] = useState()
     const [residents, setResidents] = useState()
+    const [residentAdd, setResidentAdd] = useState()
 
     // Retrieve Home Info
     const fetchHome = async () => {
         await axios
         .get(`homes`,{
                 params: {
-                    homeId: props.id
+                    homeId: id
                 }
             })
         .then((response) => {
             setHome(response.data);
+            setResidents(response.data.residents)
+            console.log(response.data)
+            console.log(response.data.residents)
         })
     }
-
-    // Retrieve Home's Residents
-    const fetchResidents = async () => {
-            await axios
-            .get(`homes/residents`)
-            .then((response) => {
-                setResidents(response.data);
-        });
-    };
     
     async function Submit(e){
         e.preventDefault();
@@ -37,10 +40,12 @@ export default function EditHome(props) {
                 .patch(
                     `homes`,
                     JSON.stringify({ 
-                        name: form.name
+                        name: name,
+                        homeId: id
                     })
                 )
                 .then((response) => {
+                    alert("Name Updated")
                     console.log(response.data)
                 })
         } catch(err){
@@ -48,12 +53,114 @@ export default function EditHome(props) {
         }
     }
 
+    async function AddResident(e){
+        e.preventDefault();
+        try {
+            await axios
+                .post(
+                    `residents`,
+                    JSON.stringify({ 
+                        userId: residentAdd,
+                        homeId: id
+                    })
+                )
+                .then((response) => {
+                    alert("Resident Added")
+                    fetchHome()
+                })
+        } catch(err){
+            console.log(err)
+        }
+    }
+
+    async function RemoveResident(residentId){
+        console.log(id)
+        try {
+            await axios
+                .patch(
+                    `residents`,
+                    JSON.stringify({ 
+                        residentId: residentId,
+                        homeId: id
+                    })
+                )
+                .then((response) => {
+                    alert("Resident Removed")
+                    
+                    fetchHome()
+                })
+        } catch(err){
+            console.log(err)
+        }
+    }
+
     useEffect(() => {
         fetchHome();
-        fetchResidents();
 	}, []);
 
+    if(!home || !residents) return <div>Loading...</div>
+
     return (
-        <div>Edit Home</div>
+        <div>
+            <Navbar type="home"/>
+            <div className='SectionHolder'>
+            <section className='Section'>
+                <h3 className='SectionTitleDashboard'>Edit Home</h3>
+                    <div className='SectionContent' id='ViewHome'>
+                        <div id='ViewHome__Content'>
+                            <div className='ViewHome__Container' id='HOA__Div'>
+                            <div className='FormWrapper__2'>
+                                <TextField
+                                    id="filled-password-input"
+                                    label="Name"
+                                    type="text"
+                                    autoComplete="current-password"
+                                    variant="filled"
+                                    defaultValue={home.name}
+                                    onChange={(e)=>setName(e.target.value )}
+                                />
+                                <Button variant="contained" size="large" type='submit' onClick={Submit}>
+                                    Save
+                                </Button>
+                            </div>
+                            <div className='FormWrapper__2'>
+                                <TextField
+                                    id="filled-password-input"
+                                    label="Residents"
+                                    type="text"
+                                    autoComplete="current-password"
+                                    variant="filled"
+                                    onChange={(e)=>setResidentAdd(e.target.value)}
+                                />
+                                <Button variant="contained" size="large" type='submit' onClick={AddResident}>
+                                    Add
+                                </Button>
+                            </div>
+                            {(home.residents.length === 0 )?
+                                    <p>No Residents Available!</p>
+                                    :
+                                    <>
+                                        {home.residents.length > 0 && home.residents.map((resident) => {
+                                            return (
+                                                // <p>{JSON.stringify(resident.user.name.firstName)}</p>
+                                                <ResidentCard 
+                                                    key={resident._id} 
+                                                    username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
+                                                    type="Edit"
+                                                    action={()=>RemoveResident(resident.user.userId)}
+                                                />
+                                            );
+                                        })}
+                                    </>
+                                }
+                            </div>
+                        </div>
+                    </div>
+            </section>
+            </div>
+        </div>
+        
     )
 }
+
+export default EditHome
