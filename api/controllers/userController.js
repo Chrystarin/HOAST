@@ -53,6 +53,13 @@ const login = async (req, res, next) => {
 		.json({ user: user });
 };
 
+const getUser = async (req, res, next) => {
+	const { user } = req.user;
+	const { credentials: { email } } = user;
+
+	res.json({ ...user.toJSON(), email });
+}
+
 const updateUser = async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body;
 	const { user } = req.user;
@@ -68,4 +75,4 @@ const updateUser = async (req, res, next) => {
 	res.json({ message: 'User updated' });
 };
 
-module.exports = { signup, login, updateUser };
+module.exports = { signup, login, getUser, updateUser };

@@ -36,6 +36,8 @@ import AddGuard from './pages/HomeOwnerAssociation/AddGuard.js';
 
 import Guard from './pages/HomeOwnerAssociation/Guard.js';
 
+import EditProfile from './pages/Profile/EditProfile.js'
+
 function App() {
 	return (
 		<Routes>
@@ -49,6 +51,12 @@ function App() {
 				<Route path="/hoa" element={<RegisterHoa />} />
 
 				<Route path="/resident/:id" element={<ResidentsView />} />
+
+				{/* New Route for editing user datails */}
+				<Route
+					path="/resident/:id/edit"
+					element={<EditProfile />}
+				/>
 
 				<Route path="/vehicles">
 					<Route path="" element={<Vehicles />} />
