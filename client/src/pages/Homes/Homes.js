@@ -17,16 +17,20 @@ function Homes() {
     const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
   const [data,setData] = useState({});
+  const [filterData,setFilterData] = useState({});
 
-
-  const [filter,setFilter] = useState({
-    sortBy:"A_Z",
-  })
+  const [filterValues,setFilterValues] = useState(
+    {
+      "sortBy":"Z_A"
+    }
+  );
+  
 
   // States for popup filter
-  const [anchorElFilter, setAnchorElFilter] = React.useState(null);
-  const openFilter = Boolean(anchorElFilter);
+ 
 
+
+  const [toDo,setTodo] = useState([])
   useEffect(() => {
 		// Retrieves Homes
 		const fetchHomes = async () => {
@@ -39,7 +43,7 @@ function Homes() {
     fetchHomes();
 	}, []);
   
-
+  
 
 
   // Returns if member is null
@@ -59,34 +63,53 @@ function Homes() {
         <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]}/>
+            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]} />
           </div>
-          <Filter/>
+          <Filter output={filterData} setData={setFilterData} data={homes} keys={[filterValues.sortBy]} setFilterKeys={setFilterValues} filterKeys={filterValues}/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 
         <div className='SectionList'>
-          
-          {(data.length === 0 )?
+          {/* {(data.length === 0 )?
                   <p>No homes found!</p>
               :
               <>
-                  {data.length > 0 &&
-                      data.map((home) => {
-                      return (
-                      <Card 
-                          type="Home"
-                          key={home.homeId}
-                          id={home.homeId}
-                          title={home.name}
-                          subTitle1={home.address.number}
-                          subTitle2={home.address.street}
-                          url={`/homes/${home.homeId}`}
-                      />
-                      );
-                  })}
+                {data.length > 0 &&
+                    data.map((home) => {
+                    return (
+                    <Card 
+                        type="Home"
+                        key={home.homeId}
+                        id={home.homeId}
+                        title={home.name}
+                        subTitle1={home.address.number}
+                        subTitle2={home.address.street}
+                        url={`/homes/${home.homeId}`}
+                    />
+                    );
+                })}
               </>
-          }
+          } */}
+          {/* {(filterData.length === 0 )?
+                  <p>No homes found!</p>
+              :
+              <>
+                {filterData.length > 0 &&
+                    filterData.map((home) => {
+                    return (
+                    <Card 
+                        type="Home"
+                        key={home.homeId}
+                        id={home.homeId}
+                        title={home.name}
+                        subTitle1={home.address.number}
+                        subTitle2={home.address.street}
+                        url={`/homes/${home.homeId}`}
+                    />
+                    );
+                })}
+              </>
+          } */}
         </div>
       </section>
     </div>

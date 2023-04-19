@@ -12,18 +12,14 @@ function SearchInput(props) {
         focus:false,
     })
 
-
-
     useEffect(() => {
         props.setData(searchData(props.data))
     }, [search.focus, search.value]);
 
 
     const searchData = (data) => {
-        console.log(data);
         return data.filter(
-            (item)=>
-                keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
+            (item)=>keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
         )
     }
     return <>
@@ -45,13 +41,6 @@ function SearchInput(props) {
                     <ClearIcon fontSize="small" />
                 </IconButton>
             </div>
-            
-            {/* {props.suggested?<>
-                {(!search.focus)?"":
-                    !search.value?"":<SearchSuggested data={searchData(props.data)}/>
-                }
-            </>:<></>
-            } */}
             {
             props.suggested?<>
                 {(!search.focus)?"":
