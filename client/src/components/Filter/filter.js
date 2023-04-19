@@ -11,34 +11,41 @@ function Filter(props) {
         // console.log(data)
         // setData(FilterData(data,keys));
         // setData()
+        const { data: [data] } = props;
+
+        // console.log(crawlData(data));
     }, [props.data,props.keys])
+
+    
+
+
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
     
-    const Operation = (data,key)=>{
+    // const Operation = (data,key)=>{
 
-        switch (key) {
-            case "A_Z":
-                return data.sort((a, b) => a.name > b.name?1:-1)
-            case "Z_A":
-                return data.sort((a, b) => a.name < b.name?1:-1)
-            case "Recent":
-                return data.sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt)?1:-1)
-        default:
-                // setData(data);
-            break;
-        }
-        return "WEW"
-    }
+    //     switch (key) {
+    //         case "A_Z":
+    //             return data.sort((a, b) => a.name > b.name?1:-1)
+    //         case "Z_A":
+    //             return data.sort((a, b) => a.name < b.name?1:-1)
+    //         case "Recent":
+    //             return data.sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt)?1:-1)
+    //     default:
+    //             // setData(data);
+    //         break;
+    //     }
+    //     return "WEW"
+    // }
 
-    const FilterData = (data,keys) =>{
-        return data.filter(
-            (item)=>keys.some((key)=>item[key]?.item.sort((a, b) => a.name > b.name?1:-1))
-        )
-    }
+    // const FilterData = (data,keys) =>{
+    //     return data.filter(
+    //         (item)=>keys.some((key)=>item[key]?.item.sort((a, b) => a.name > b.name?1:-1))
+    //     )
+    // }
 
     return <>
-        <Button 
+        {/* <Button 
             variant="" 
             startIcon={<FilterAltIcon/>} 
             onClick={(event) => setAnchorElFilter(event.currentTarget)}>
@@ -66,7 +73,7 @@ function Filter(props) {
                             <NativeSelect
                                 defaultValue={null}
                                 onChange={(e)=> {
-                                        props.setFilterKeys({...props.filterKeys, ["sortBy"]: e.target.value.toString()})
+                                        // props.setFilterKeys({...props.filterKeys, ["sortBy"]: e.target.value.toString()})
                                     }
                                 }
                                 inputProps={{
@@ -89,15 +96,12 @@ function Filter(props) {
                     </div>
                     <Button variant=''>Cancel</Button>
                     <Button variant='contained' onClick={()=>{
-                        // console.log(props.keys)
                         
-                        console.log(FilterData(props.data,props.keys));
-                        // console.log(keys);
                         setAnchorElFilter(null);
                     }}>Apply</Button>
                 </div>
             </div>
-        </Menu>
+        </Menu> */}
         
         
     

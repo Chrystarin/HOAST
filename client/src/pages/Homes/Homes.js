@@ -11,11 +11,13 @@ import NativeSelect from '@mui/material/NativeSelect';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import loading from '../../images/loading.gif';
 import {useAuth} from '../../utils/AuthContext.js';
-import Filter from '../../components/Filter/Filter.js';
+import Filter from '../../components/Filter/filter.js';
 
 function Homes() {
     const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
+
+
   const [data,setData] = useState({});
   const [filterData,setFilterData] = useState({});
 
@@ -63,9 +65,9 @@ function Homes() {
         <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]} />
+            <SearchInput setData={setData} data={homes} keys={["hoa.name","name","owner.name.firstName", 'owner.name.lastName']} sort={{sortFunction}} />
           </div>
-          <Filter output={filterData} setData={setFilterData} data={homes} keys={[filterValues.sortBy]} setFilterKeys={setFilterValues} filterKeys={filterValues}/>
+          <Filter data={homes}/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 

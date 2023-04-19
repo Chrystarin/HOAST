@@ -13,14 +13,39 @@ function SearchInput(props) {
     })
 
     useEffect(() => {
-        props.setData(searchData(props.data))
+        const { data, setData } = props;
+        
+        props.setData(searchData(crawlData(props.data)))
     }, [search.focus, search.value]);
 
+    const crawlData = (data, parent) => {
+        return Object.entries(data)
+            .reduce(
+                (data, [key, value]) => {
+                    const newKey = parent ? `${parent}.${key}` : key;
+                    if (typeof value === 'object') {
+                        return { ...data, ...crawlData(value, newKey) };
+                    }
+                    return { ...data, [newKey]: value };
+                },
+                {}
+            )
+    }
 
     const searchData = (data) => {
-        return data.filter(
-            (item)=>keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
-        )
+        const { value, focus } = search; // search.value
+        const { keys, data } = props; // props.filter
+
+
+        if (focus && value) {
+            return data.filter(
+                (item) => keys.some(
+                    (key) => item[key].toString().toLowerCase().includes(search.value.toLowerCase())
+                )
+            )
+        }
+
+        return data
     }
     return <>
         <div id='SearchInput'>
