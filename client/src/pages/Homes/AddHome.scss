@@ -7,11 +7,14 @@
     display: flex;
     gap: 25px;
     align-items: center;
+    cursor: pointer;
     img{
         height: 100%;
     }
 }
-
+.cardactive{
+    border: 1px solid rgba(15, 15, 95, 0.219);
+}
 .Form{
     max-width: 1800px;
 

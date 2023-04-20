@@ -8,36 +8,21 @@ function Filter(props) {
 
     
     useEffect(() => {
-        // console.log(data)
-        // setData(FilterData(data,keys));
-        // setData()
-    }, [props.data,props.keys])
+        setDefaultValue(props.value);
+    }, [])
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
     
-    const Operation = (data,key)=>{
+    const [defaultValue,setDefaultValue] = useState();
 
-        switch (key) {
-            case "A_Z":
-                return data.sort((a, b) => a.name > b.name?1:-1)
-            case "Z_A":
-                return data.sort((a, b) => a.name < b.name?1:-1)
-            case "Recent":
-                return data.sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt)?1:-1)
-        default:
-                // setData(data);
-            break;
-        }
-        return "WEW"
-    }
+    const [value,setValue]= useState({
+        sortBy:""
+    })
 
-    const FilterData = (data,keys) =>{
-        return data.filter(
-            (item)=>keys.some((key)=>item[key]?.item.sort((a, b) => a.name > b.name?1:-1))
-        )
-    }
+
 
     return <>
+        
         <Button 
             variant="" 
             startIcon={<FilterAltIcon/>} 
@@ -51,11 +36,11 @@ function Filter(props) {
             onClose={() => {
                 setAnchorElFilter(null);
             }}
-        MenuListProps={{
-        'aria-labelledby': 'basic-button',
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            MenuListProps={{
+            'aria-labelledby': 'basic-button',
+            }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
             <div className='Filter'>
                 <h6 className='Filter__Title'>Filter</h6>
@@ -64,14 +49,14 @@ function Filter(props) {
                         <p className="BodyText3 Filter__Titles">Sort by</p>
                         <div>
                             <NativeSelect
+
                                 defaultValue={null}
                                 onChange={(e)=> {
-                                        props.setFilterKeys({...props.filterKeys, ["sortBy"]: e.target.value.toString()})
-                                    }
-                                }
+                                    setValue(value=>({...value,sortBy:e.target.value}))
+                                }}
                                 inputProps={{
                                 name: 'age',
-                                id: 'uncontrolled-native',
+                                id: ' SortBy uncontrolled-native',
                                 }}
                             >
                                 <option value={""}></option>
@@ -85,20 +70,21 @@ function Filter(props) {
                 </ul>
                 <div className='Filter__Buttons'>
                     <div>
-                        <Button variant=''>Reset All</Button>
+                        <Button variant=''
+                            onClick={()=>{
+                                props.setValue(defaultValue);
+                                setAnchorElFilter(null);
+                            }}
+                        >Reset All</Button>
                     </div>
-                    <Button variant=''>Cancel</Button>
+                    <Button variant='' onClick={()=>setAnchorElFilter(null)}>Cancel</Button>
                     <Button variant='contained' onClick={()=>{
-                        // console.log(props.keys)
-                        
-                        console.log(FilterData(props.data,props.keys));
-                        // console.log(keys);
+                        props.setValue(value);
                         setAnchorElFilter(null);
                     }}>Apply</Button>
                 </div>
             </div>
         </Menu>
-        
         
     
     </>
