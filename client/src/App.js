@@ -52,7 +52,7 @@ function App() {
 			<Route element={<ProtectedRoute/>}>
 				<Route path="/hoa" element={<RegisterHoa />} />
 
-				<Route path="/resident/:id" element={<ResidentsView />} />
+				{/* <Route path="/resident/:id" element={<ResidentsView />} /> */}
 
 				{/* New Route for editing user datails */}
                 <Route path="/profile" element={<Profile />}/>
@@ -75,6 +75,7 @@ function App() {
 					<Route path="" element={<Homes />} />
 					<Route path="add" element={<AddHome />} />
 					<Route path=":id" element={<ViewHome />} />
+					<Route path=":id/:resId" element={<ResidentsView />} />
                     <Route element={<ProtectedRoute allowedRoles={['homeowner']}/>} >
                         <Route path=":id/edit" element={<EditHome />} />
                     </Route>

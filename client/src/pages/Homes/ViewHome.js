@@ -21,6 +21,7 @@ function ViewHome() {
     const [home, setHome] = useState();
     const [vehicles, setVehicles] = useState();
     const {isHomeowner} = useAuth();
+    const {isRole} = useAuth();
 
     useEffect(() => {
         // Retrieves Home Data
@@ -28,7 +29,8 @@ function ViewHome() {
             await axios
             .get(`homes`,{
                     params: {
-                        homeId: id
+                        homeId: id,
+                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
                     }
                 })
             .then((response) => {
@@ -96,7 +98,12 @@ function ViewHome() {
                                         {home.residents.length > 0 && home.residents.map((resident) => {
                                             return (
                                                 // <p>{JSON.stringify(resident.user.name.firstName)}</p>
-                                                <ResidentCard key={resident._id} username={resident.user.name.firstName + ' ' + resident.user.name.lastName} type="View" residentId={resident.user.userId}/>
+                                                <ResidentCard 
+                                                    key={resident._id} 
+                                                    username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
+                                                    type="View" 
+                                                    residentId={resident.user.userId}
+                                                    homeId={id}/>
                                             );
                                         })}
                                     </>
@@ -133,7 +140,14 @@ function ViewHome() {
                                     :
                                     <>{home.visitors.length > 0 && home.visitors.map((visitor) => {
                                         return (
-                                            <Card type="Visitor" key={visitor.visitorId} title={visitor.name} subTitle1={visitor.arrival} subTitle2={visitor.departure}/>
+                                            <Card 
+                                            type="Visitor" 
+                                            key={visitor.visitorId} 
+                                            title={visitor.name} 
+                                            subTitle1={visitor.arrival} 
+                                            subTitle2={visitor.departure}
+                                            url={`/visitors/${visitor.visitorId}`}
+                                            />
                                         );
                                     })}</>
                                 }

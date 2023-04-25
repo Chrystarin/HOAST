@@ -16,12 +16,14 @@ import Navbar from '../../layouts/NavBar';
 import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
+import {useAuth} from './../../utils/AuthContext.js';
 
 function VehicleView() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [vehicle, setVehicle] = useState();
     const [logs, setLogs] = useState();
+    const {isRole} = useAuth();
 
     useEffect(() => {
         // Retrieves Vehicles
@@ -29,7 +31,8 @@ function VehicleView() {
             await axios
             .get(`vehicles`,{
                     params: {
-                        plateNumber: id
+                        plateNumber: id,
+                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
                     }
                 })
             .then((response) => {

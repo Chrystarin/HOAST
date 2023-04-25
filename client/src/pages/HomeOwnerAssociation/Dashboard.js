@@ -81,11 +81,12 @@ function HomeOwnerAssociation() {
                                 </div>
                                 <div>
                                     <h6>Address: </h6>
-                                    <h5>{hoa.address.street}{' '}{hoa.address.barangay}{' '}{hoa.address.city}{hoa.address.province}</h5>
+                                    <h5>{hoa.address.street}{' '}{hoa.address.barangay}{' '}{hoa.address.city}{' '}{hoa.address.province}</h5>
                                 </div>
                                 <div>
                                     <h6>Registered Since: </h6>
-                                    <h5>{hoa.createdAt}</h5>
+                                    <h5>{ new Date(hoa.createdAt).toLocaleString('default', { month: 'long' }) + " " + new Date(hoa.createdAt).getDate() + ", " + new Date(hoa.createdAt).getFullYear()}</h5>
+
                                 </div>
                             </div>
                         </div>

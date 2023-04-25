@@ -19,8 +19,8 @@ import { useParams } from 'react-router-dom';
 import {useAuth} from './../../utils/AuthContext.js';
 
 function ResidentsView() {
-    const { id } = useParams();
-    const {isRole} = useAuth();
+    const { id, resId } = useParams();
+    const {isRole, isResident, isHomeowner} = useAuth();
     const [resident,setResident]=useState()
 
     // Runs onLoad
@@ -29,8 +29,9 @@ function ResidentsView() {
 			await axios
 				.get(`residents`, {
 					params: {
-						residentId: id,
-                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
+						residentId: resId,
+                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null,
+                        homeId: (isResident(id) || isHomeowner(id)) ? id : null
 					}
 				})
 				.then((response) => {

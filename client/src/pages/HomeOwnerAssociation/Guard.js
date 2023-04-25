@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import './Guard.scss'
 
 import axios from '../../utils/axios';
+import {useAuth} from './../../utils/AuthContext.js';
 
 import NavBar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
@@ -11,14 +12,16 @@ import ResidentCard from '../../components/ResidentCard/ResidentCard.js'
 import loading from '../../images/loading.gif';
 function Guard() {
 
-    const [guards, setGuards] = useState()
+    const [guards, setGuards] = useState();
+    const {isRole} = useAuth();
 
     useEffect(() => {
 		const fetchGuards = async () => {
 			await axios
 				.get(`hoas/guards`, {
 					params: {
-						hoaId: localStorage.getItem('hoaId')
+						hoaId: localStorage.getItem('hoaId'),
+                        hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
 					}
 				})
 				.then((response) => {

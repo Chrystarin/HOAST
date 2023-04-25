@@ -21,7 +21,7 @@ function ResidentCard(props) {
             </div>:<></>
         }
         {(props.type == "View")?<>
-            <a href={`/resident/${props.residentId}`}>
+            <a href={`/homes/${props.homeId}/${props.residentId}`}>
                 <div id='ResidentCard'>
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                     <div>

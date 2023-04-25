@@ -16,12 +16,14 @@ import Navbar from '../../layouts/NavBar';
 import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
+import {useAuth} from './../../utils/AuthContext.js';
 
 function VisitorView() {
     const navigate = useNavigate();
 	const { id } = useParams();
 	const [visitor, setVisitor] = useState();
 	const [logs, setLogs] = useState();
+	const {isRole} = useAuth();
 
 	// Runs onLoad
 	useEffect(() => {
@@ -30,7 +32,8 @@ function VisitorView() {
 			await axios
 				.get(`visitors`, {
 					params: {
-						visitorId: `${id}`
+						visitorId: `${id}`,
+						hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
 					}
 				})
 				.then((response) => {
