@@ -39,34 +39,35 @@ function VisitorView() {
 				.then((response) => {
 					setVisitor(response.data);
 					console.log(response.data);
+					// // Retrieves All of Specific Visitor's Logs Data
+					const fetchLogs = async () => {
+						await axios
+						.get(`logs`, {
+							params: {
+								objId: '${id}',
+								logType: 'visitor',
+								homeId: response.data.home
+							}
+						})
+						.then((response) => {
+							setLogs(response.data);
+							console.log(response.data);
+						});
+					};
+					fetchLogs();
 				})
                 .catch((err)=>{
                     navigate(`${err}`);
                 })
 		};
 
-		// // Retrieves All of Specific Visitor's Logs Data
-		// const fetchLogs = async () => {
-		// 	await axios
-		// 		.get(`logs`, {
-		// 			params: {
-		// 				objId: `${id}`,
-		// 				logType: 'Visitor'
-		// 			}
-		// 		})
-		// 		.then((response) => {
-		// 			setLogs(response.data);
-		// 			console.log(response.data);
-		// 		});
-		// };
-
 		// Executes Functions of fetch visitors and fetch logs
 		fetchVisitor();
-		// fetchLogs();
+		
 	}, []);
 
 	// Returns loading if data is not yet retrieved
-	if (!visitor) return <>
+	if (!visitor || !logs) return <>
     <div className='Loading'>
       <img src={loading} alt="" />
       <h3>Loading...</h3>
@@ -149,13 +150,12 @@ function VisitorView() {
 													</TableCell>
 												</TableRow>
 											</TableHead>
-											{/* <TableBody>
+											<TableBody>
 												{logs.length === 0 ? (
 													<p>No Logs Recorded</p>
 												) : (
 													<>
-														{logs.length > 0 &&
-															logs.map((log) => {
+														{logs.length > 0 && logs.map((log) => {
 																return (
 																	<TableRow
 																		key={
@@ -179,7 +179,7 @@ function VisitorView() {
 																		</TableCell>
 																		<TableCell align="center">
 																			{
-																				log.createdAt
+																				new Date(log.createdAt).getMonth() + 1 + " - " + new Date(log.createdAt).getDate() + " - " + new Date(log.createdAt).getFullYear() + " " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() + " " + (new Date(log.createdAt).getHours() >= 12 ? "PM" : "AM")
 																			}
 																		</TableCell>
 																	</TableRow>
@@ -187,12 +187,13 @@ function VisitorView() {
 															})}
 													</>
 												)}
-											</TableBody> */}
+											</TableBody>
 										</Table>
 									</TableContainer>
 								</div>
 							</div>
 						</div>
+
 						<div
 							className="SectionView__SidePanel"
 							id="ViewResident__QRCode__Container"
@@ -203,6 +204,8 @@ function VisitorView() {
 								hoaId={visitor.home.hoa}
 							/>
 						</div>
+
+						{/* <button onClick={()=>DownloadQRCode("ViewResident__QRCode__Container", "QRCode.html")}>Download</button> */}
 					</div>
 				</section>
 			</div>

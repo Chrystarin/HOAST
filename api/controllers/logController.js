@@ -31,7 +31,7 @@ const getLogsByLookup = async (logType, objects, objectId) => {
 };
 
 const getRecords = async (req, res, next) => {
-	const { logId } = req.query;
+	const { logId, objId, logType } = req.query;
 	const { type } = req.user;
 
 	// Validate input
@@ -77,6 +77,14 @@ const getRecords = async (req, res, next) => {
 		logs = logs.find(({ logId: li }) => logId == li);
 
 		if (!logs) throw new NotFoundError('Incorrect log id');
+	}
+
+	// Get logs of specific entity
+	if(objId) {
+		const { user } = req.user;
+		const { home } = req.user;
+		if(logType==='visitor') logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
+		if(logType==='vehicle') logs = await getLogsByLookup(logType, user.vehicles, 'visitorId');
 	}
 
 	res.json(logs);
