@@ -12,6 +12,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
+import sjcl from '../../layouts/sjcl';
 
 function Scanner() {
     const [data, setData] = useState(null);
@@ -28,12 +29,14 @@ function Scanner() {
     const handleClose = () => {
       setAnchorEl(null);
     };
+    const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
 
     // Function upon scanning
     async function handleScan(data){
         if (data) {
             try{
-                log = JSON.parse(data.text)
+                // log = JSON.parse(decryptData(password, data))
+                log = JSON.parse(sjcl.decrypt(password, data.text))
                 console.log(log)
                 alert("QR Code Detected!")
                 
@@ -48,13 +51,13 @@ function Scanner() {
                     })
                 )
                 .then((response) => {
-                    fetch('http://192.168.0.24:80/?header=true')
+                    // fetch('http://192.168.0.24:80/?header=true')
                     alert("Record Added Successfully!");
                 })
             }
             catch(err){
                 console.error(err.message);
-                fetch('http://192.168.0.24:80/?header=false')
+                // fetch('http://192.168.0.24:80/?header=false')
                 alert("Record Not Detected!");
             }
         }
@@ -63,6 +66,25 @@ function Scanner() {
     let handleError = (err) => {
         alert(err);
     };
+
+    // Function to decrypt data
+    function decryptData(password, encryptedData) {
+        return sjcl.decrypt(
+            password,
+            encryptedData
+                .match(/.{2}/g)
+                .map(
+                    hex =>
+                        String.fromCharCode(
+                            parseInt(
+                                hex,
+                                16
+                            )
+                        )
+                )
+                .join('')
+        );
+    }
 
     return <>
         <NavBar/>

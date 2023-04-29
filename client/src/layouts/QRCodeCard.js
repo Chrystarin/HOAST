@@ -1,43 +1,22 @@
 import React from 'react'
 import './QRCodeCard.scss';
 import QRCodeimg from '../images/Placeholder/QRcode.png'
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import QRCode from "react-qr-code";
 import html2canvas from 'html2canvas';
+import sjcl from './sjcl';
 
 function QRCodeCard(props) {
+
+    const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
 
     // download QR Code
     const DownloadQRCode = (divId, filename) => {
         // Get the div element
         const element = document.getElementById(divId);
-
-        // Get the HTML content of the div
-        const html = element.innerHTML;
-    
-        // Create a blob from the HTML content
-        // const blob = new Blob([html], { type: "text/html" });
-    
-        // // Create a URL from the blob
-        // const url = URL.createObjectURL(blob);
-    
-        // // Create a link element
-        // const link = document.createElement("a");
-    
-        // // Set the URL and download attributes of the link element
-        // link.href = url;
-        // link.download = filename;
-    
-        // // Append the link element to the body
-        // document.body.appendChild(link);
-    
-        // // Click the link to trigger the download
-        // link.click();
-    
-        // // Remove the link element from the body
-        // document.body.removeChild(link);
-
+        
         html2canvas(element).then(function(canvas) {
             const createImage = canvas.toDataURL("image/png");
             var anchor = document.createElement('a');
@@ -82,21 +61,24 @@ function QRCodeCard(props) {
 
     }
 
-    return (
+    console.log(sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId)))
+
+    return <>
         <div className='SidePanel__Container' id='QRCodeContainer'>
             {/* <img src={QRCodeimg} alt="" /> */}
             {/* <CardInfo category={props.logType}/> */}
             <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={createQrData(props.objId, props.logType, props.hoaId)}
+                // value={encryptData(createQrData(props.objId, props.logType, props.hoaId), password)}
+                value={sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId))}
                 viewBox={`0 0 256 256`}
             />
-            <IconButton onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >
-                <FileDownloadIcon />
-            </IconButton>
         </div>
-    )
+        <div id="DownloadQR">
+            <Button onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >Download QR</Button>
+        </div>
+    </>
 }
 
 export default QRCodeCard
