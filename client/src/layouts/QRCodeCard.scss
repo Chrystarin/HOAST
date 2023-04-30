@@ -3,9 +3,19 @@
     img{
         width: 100%;
     }
-    #DownloadButton{
-        position: absolute;
-        top: 1.2em;
-        right: 1em;
+}
+
+#DownloadButton{
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #1976D2;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    &:hover{
+        background-color: #bedfff;
     }
 }
