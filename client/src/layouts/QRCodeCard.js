@@ -76,7 +76,7 @@ function QRCodeCard(props) {
             />
         </div>
         <div id="DownloadQR">
-            <Button variant='contained' onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >Download QR</Button>
+            <Button variant='contained' maxWidth onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >Download QR</Button>
         </div>
     </>
 }
