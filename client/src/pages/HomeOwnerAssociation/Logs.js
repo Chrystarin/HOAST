@@ -37,12 +37,113 @@ function Logs() {
 				})
 				.then((response) => {
 					setLogs(response.data);
-                    console.log(response.data)
+                    console.log(response.data);
+                    // console.log(Object.keys(response.data[0]));
+
+                    // // get object headers keys
+                    // const headers = Object.keys(response.data[0]).toString();
+                    // console.log(headers);
+                    
+                    // // get object values
+                    // const main = response.data.map((data) => {
+                    //     return Object.values(data).toString();
+                    // });
+                    // console.log(main);
+
+                    // // combine headers and values
+                    // const csv = [headers, ...main].join('\n');
+                    // console.log(csv);
+
+                    // downloadCSV(csv);
 				});
 		};
 		fetchLogs();
 	}, []);
-    
+
+    // Function for downloading csv
+    // function downloadCSV(input) {
+
+    //     // create blob
+    //     const blob = new Blob([input], { type: 'application/csv' });
+        
+    //     // create url
+    //     const url = URL.createObjectURL(blob);
+
+    //     document.getElementById('downloadButton').addEventListener('click', () => {
+    //          // create link
+    //         const link = document.createElement('a');
+    //         link.download = 'logs.csv';                     // name of the file
+    //         link.href = url;                                // url of the file
+
+    //         // append link to the body
+    //         document.body.appendChild(link);
+
+    //         // click the link
+    //         link.click();
+
+    //         // remove link from the body
+    //         link.remove();
+    //         URL.revokeObjectURL(url);                       // free up memory
+    //     });
+    // }
+
+    function tableToCSV() {
+ 
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+
+            // Get each column data
+            var cols = rows[i].querySelectorAll('td, th');
+
+            // Stores each csv row data
+            var csvrow = [];
+            for (var j = 0; j < cols.length; j++) {
+
+                // Get the text data of each cell
+                // of a row and push it to csvrow
+                csvrow.push(cols[j].innerHTML);
+            }
+
+            // Combine each column value with comma
+            csv_data.push(csvrow.join(","));
+        }
+
+        // Combine each row data with new line character
+        csv_data = csv_data.join('\n');
+
+        // Call this function to download csv file 
+        downloadCSVFile(csv_data);
+
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        const CSVFile = new Blob([csv_data], { type: "application/csv" });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "logs.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
 
     if(!logs) return <>
     <div className='Loading'>
@@ -106,6 +207,7 @@ function Logs() {
                             </div>
                         </Menu>
                         <Button variant="contained" href='addhome'>Add Home</Button>
+                        <Button variant="contained" id='downloadButton' onClick={() => tableToCSV()}>Export to Excel</Button>
                     </div>
                     <div id='Manage__Hoa' className='SectionView'>
                         <div className='SectionView__Content'>
