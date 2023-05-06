@@ -41,11 +41,12 @@ const getHomes = async (req, res, next) => {
 };
 
 const updateHome = async (req, res, next) => {
-	const { name } = req.body;
+	const { name, color } = req.body;
 	const { home } = req.user;
 
 	// Update home
 	home.name = name;
+    home.color = color;
 	await home.save();
 
 	res.json({ message: 'Home updated' });

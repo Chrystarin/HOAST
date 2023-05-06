@@ -5,6 +5,7 @@ const {
 const { checkString } = require('../helpers/validData');
 const { VehicleNotFoundError } = require('../helpers/errors');
 const extractHomes = require('../helpers/extractHomes');
+const uploadImage = require('../helpers/uploadImage');
 
 const getVehicles = async (req, res, next) => {
 	const { plateNumber } = req.query;
@@ -24,14 +25,14 @@ const getVehicles = async (req, res, next) => {
 		const { home } = req.user;
 
 		// Get each of residents' vehicles
-		({vehicles} = await extractHomes([home]));
+		({ vehicles } = await extractHomes([home]));
 	}
 
 	if (EMPLOYEE.has(type)) {
 		const { hoa } = req.user;
 
 		// Get all vehicles of each resident of each home
-		({vehicles} = await extractHomes({ hoa: hoa._id }));
+		({ vehicles } = await extractHomes({ hoa: hoa._id }));
 	}
 
 	// Get specific vehicle
@@ -52,8 +53,24 @@ const addVehicle = async (req, res, next) => {
 	checkString(type, 'Type');
 	checkString(color, 'Color');
 
+	const vehicle = { plateNumber, brand, model, type, color };
+
+	const frontImage = req.files?.frontImage;
+	if (frontImage)
+		vehicle.frontImage = await uploadImage(
+			frontImage,
+			`vehicles/${plateNumber}-front`
+		);
+
+	const backImage = req.files?.backImage;
+	if (backImage)
+		vehicle.backImage = await uploadImage(
+			backImage,
+			`vehicles/${plateNumber}-back`
+		);
+
 	// Create vehicle
-	user.vehicles.push({ plateNumber, brand, model, type, color });
+	user.vehicles.push(vehicle);
 	await user.save();
 
 	res.status(201).json({ message: 'Vehicle added' });

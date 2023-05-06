@@ -19,6 +19,8 @@
 	"dependencies": {
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
+		"dropbox": "^10.34.0",
+		"express-fileupload": "^1.4.0",
 		"jsonwebtoken": "^9.0.0"
 	}
 }
