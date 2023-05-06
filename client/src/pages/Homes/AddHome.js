@@ -67,7 +67,7 @@ function AddHome() {
                 JSON.stringify({ 
                     hoaId: form.hoaId,
                     name: form.houseName,
-                    number: parseInt(form.houseNumber),
+                    number: form.houseNumber,
                     street: form.street,
                     phase: form.phase
                 })

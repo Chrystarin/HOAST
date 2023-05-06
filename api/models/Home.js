@@ -19,7 +19,7 @@ module.exports = model(
 			},
 			address: {
 				number: {
-					type: Number,
+					type: String,
 					required: [true, 'Home Number is required']
 				},
 				street: {

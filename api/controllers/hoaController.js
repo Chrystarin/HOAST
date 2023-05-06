@@ -54,12 +54,16 @@ const getHoas = async (req, res, next) => {
 };
 
 const joinHoa = async (req, res, next) => {
+
+	console.log(req.body)
+
 	const { hoaId, name, number, street, phase } = req.body;
 	const { user } = req.user;
+	console.log(number)
 
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
-	checkNumber(number, 'Home Number');
+	checkString(number, 'Home Number');
 	checkString(street, 'Street');
 	checkString(phase, 'Phase', true);
 

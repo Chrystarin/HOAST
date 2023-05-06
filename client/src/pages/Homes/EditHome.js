@@ -6,6 +6,7 @@ import Navbar from '../../layouts/NavBar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
+import { useNavigate } from 'react-router';
 function EditHome() {
     const { id } = useParams();
     const {isHomeowner} = useAuth();
@@ -16,6 +17,7 @@ function EditHome() {
     const [home, setHome] = useState()
     const [residents, setResidents] = useState()
     const [residentAdd, setResidentAdd] = useState()
+    const navigate = useNavigate();
 
     // Retrieve Home Info
     const fetchHome = async () => {
@@ -109,7 +111,7 @@ function EditHome() {
                 <h3 className='SectionTitleDashboard'>Edit Home</h3>
                     <div className='SectionContent' id='ViewHome'>
                         <div id='ViewHome__Content'>
-                            <div className='ViewHome__Container' id='HOA__Div'>>
+                            <div className='ViewHome__Container' id='HOA__Div'>
                             <div className='FormWrapper__2'>
                                 <TextField
                                     id="filled-password-input"
@@ -135,6 +137,11 @@ function EditHome() {
                                 />
                                 <Button variant="contained" size="large" type='submit' onClick={AddResident}>
                                     Add
+                                </Button>
+                            </div>
+                            <div>
+                            <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
+                                    Cancel
                                 </Button>
                             </div>
                             {(residents.length === 0 )?
