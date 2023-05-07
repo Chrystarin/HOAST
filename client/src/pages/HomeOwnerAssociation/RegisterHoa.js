@@ -50,7 +50,7 @@ export default function RegisterHoa() {
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
-                alert("Registered Successfully!");
+                // alert("Registered Successfully!");
                 navigate("/dashboard");
                 window.location.reload();
             })

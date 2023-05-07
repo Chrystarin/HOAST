@@ -110,73 +110,82 @@ function EditHome() {
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'>Edit Home</h3>
                     <div className='SectionContent' id='ViewHome'>
-                        <div id='ViewHome__Content'>
-                            <div className='ViewHome__Container' id='HOA__Div'>
+                        <div className='Form' id='ViewHome__Content'>
+                            <TextField
+                                id="filled-password-input"
+                                label="Name"
+                                type="text"
+                                autoComplete="current-password"
+                                variant="filled"
+                                defaultValue={home.name}
+                                onChange={(e)=>setName(e.target.value )}
+                            />
+                            
                             <div className='FormWrapper__2'>
-                                <TextField
-                                    id="filled-password-input"
-                                    label="Name"
-                                    type="text"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    defaultValue={home.name}
-                                    onChange={(e)=>setName(e.target.value )}
-                                />
+                                <div className='FormWrapper__2'>
+                                    <TextField
+                                        id="filled-password-input"
+                                        label="Residents"
+                                        type="text"
+                                        autoComplete="current-password"
+                                        variant="filled"
+                                        onChange={(e)=>setResidentAdd(e.target.value)}
+                                    />
+                                    <Button variant="contained"  type='submit' onClick={AddResident}>
+                                        Add
+                                    </Button>
+                                </div>
+                                <div>
+                                {(residents.length === 0 )?
+                                <p>No Residents Available!</p>
+                                :
+                                <>
+                                    <h3>Active Residents</h3>
+                                    {residents.length > 0 && residents.map((resident) => {
+                                        if(resident.status=="active")
+                                        return (
+                                            // <p>{JSON.stringify(resident.user.name.firstName)}</p>
+                                            <ResidentCard 
+                                                key={resident._id} 
+                                                username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
+                                                type="Edit"
+                                                action={()=>RemoveResident(resident.user.userId)}
+                                            />
+                                        );
+                                    })}
+                                    <h3>Inactive Residents</h3>
+                                    {residents.length > 0 && residents.map((resident) => {
+                                        if(resident.status=="inactive")
+                                        return (
+                                            // <p>{JSON.stringify(resident.user.name.firstName)}</p>
+                                            <ResidentCard 
+                                                key={resident._id} 
+                                                username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
+                                                type="View"
+                                                action={()=>RemoveResident(resident.user.userId)}
+                                            />
+                                        );
+                                    })}
+                                </>
+                            }
+                                </div>
+                            </div>
+                            
+                            <div className='Form__Button'>
+                                <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
+                                    Cancel
+                                </Button>
                                 <Button variant="contained" size="large" type='submit' onClick={Submit}>
                                     Save
                                 </Button>
                             </div>
-                            <div className='FormWrapper__2'>
-                                <TextField
-                                    id="filled-password-input"
-                                    label="Residents"
-                                    type="text"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    onChange={(e)=>setResidentAdd(e.target.value)}
-                                />
-                                <Button variant="contained" size="large" type='submit' onClick={AddResident}>
-                                    Add
-                                </Button>
-                            </div>
-                            <div>
-                            <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
-                                    Cancel
-                                </Button>
-                            </div>
-                            {(residents.length === 0 )?
-                                    <p>No Residents Available!</p>
-                                    :
-                                    <>
-                                        <h3>Active Residents</h3>
-                                        {residents.length > 0 && residents.map((resident) => {
-                                            if(resident.status=="active")
-                                            return (
-                                                // <p>{JSON.stringify(resident.user.name.firstName)}</p>
-                                                <ResidentCard 
-                                                    key={resident._id} 
-                                                    username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
-                                                    type="Edit"
-                                                    action={()=>RemoveResident(resident.user.userId)}
-                                                />
-                                            );
-                                        })}
-                                        <h3>Inactive Residents</h3>
-                                        {residents.length > 0 && residents.map((resident) => {
-                                            if(resident.status=="inactive")
-                                            return (
-                                                // <p>{JSON.stringify(resident.user.name.firstName)}</p>
-                                                <ResidentCard 
-                                                    key={resident._id} 
-                                                    username={resident.user.name.firstName + ' ' + resident.user.name.lastName} 
-                                                    type="View"
-                                                    action={()=>RemoveResident(resident.user.userId)}
-                                                />
-                                            );
-                                        })}
-                                    </>
-                                }
-                            </div>
+
+
+
+
+
+
+                            
                         </div>
                     </div>
             </section>
