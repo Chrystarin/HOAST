@@ -4,7 +4,7 @@
     background-size: cover;
     position: relative;
     #MainSection__Container{
-        background-color: rgba(0, 0, 0, 0.284);
+        background-color: rgba(0, 0, 0, 0.43);
         width: 100%;
         position: absolute;
         top: 0;
@@ -38,6 +38,7 @@
     background-color: var(--secondary-color);
     padding-top: 80px;
     padding-bottom: 80px;
+    text-align: center;
     .SectionTitle{
         color: rgb(251, 251, 251);
     }
@@ -50,13 +51,12 @@
         flex-wrap: wrap;
         div{
             width: 320px;
+            height: 500px;
             background-color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 1em 2em;
-            height: 400px;
+            padding: 6em 2em;
             border-radius: 9px;
             svg{
                 transform: scale(4);

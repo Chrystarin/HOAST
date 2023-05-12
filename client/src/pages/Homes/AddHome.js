@@ -96,7 +96,6 @@ function AddHome() {
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
                     <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>Join Homeowners Association</Button>
-                    {/* <Button variant='text'className={(stepper === 3)?"active":""} onClick={()=> setStepper(3)}>Residents</Button> */}
                 </div>
                 <div className='SectionContent'>
                     {/* <Stepper hoas={hoas}/> */}
@@ -126,7 +125,7 @@ function AddHome() {
                                         {
                                             data.length > 0 && data.map((hoa) => {
                                                 return (
-                                                    <div className='Card__Horizontal' onClick={()=>{setSelectedHoa(hoa.name); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
                                                         <img src={VillageIcon} alt="" />
                                                         <div>
                                                             <h6>{hoa.name}</h6>

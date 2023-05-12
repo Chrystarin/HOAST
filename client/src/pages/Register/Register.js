@@ -52,7 +52,7 @@ function Register() {
                 }
             )
             .then((response) => {
-                alert("Registered Successfully!");
+                // alert("Registered Successfully!");
                 navigate("/");
             })
         }

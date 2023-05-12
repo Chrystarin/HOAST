@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
 import { useNavigate } from 'react-router';
+import SearchInput from '../../components/SearchInput/SearchInput';
 function EditHome() {
     const { id } = useParams();
     const {isHomeowner} = useAuth();
@@ -110,8 +111,7 @@ function EditHome() {
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'>Edit Home</h3>
                     <div className='SectionContent' id='ViewHome'>
-                        <div id='ViewHome__Content'>
-                            <div className='ViewHome__Container' id='HOA__Div'>
+                        <div className='Form' id='ViewHome__Content'>
                             <div className='FormWrapper__2'>
                                 <TextField
                                     id="filled-password-input"
@@ -122,29 +122,26 @@ function EditHome() {
                                     defaultValue={home.name}
                                     onChange={(e)=>setName(e.target.value )}
                                 />
-                                <Button variant="contained" size="large" type='submit' onClick={Submit}>
-                                    Save
-                                </Button>
-                            </div>
-                            <div className='FormWrapper__2'>
-                                <TextField
-                                    id="filled-password-input"
-                                    label="Residents"
-                                    type="text"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    onChange={(e)=>setResidentAdd(e.target.value)}
-                                />
-                                <Button variant="contained" size="large" type='submit' onClick={AddResident}>
-                                    Add
-                                </Button>
-                            </div>
-                            <div>
-                            <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
-                                    Cancel
-                                </Button>
-                            </div>
-                            {(residents.length === 0 )?
+                                <div className='FormWrapper__2'>
+                                    <div className='FormWrapper__2'>
+                                        {/* <TextField
+                                            id="filled-password-input"
+                                            label="Residents"
+                                            type="text"
+                                            autoComplete="current-password"
+                                            variant="filled"
+                                            onChange={(e)=>setResidentAdd(e.target.value)}
+                                        /> */}
+                                        <div>
+                                            <SearchInput suggested data={residents} setData={setResidents} keys={["name"]}/>
+                                        </div>
+                                        <Button variant="contained"  type='submit' onClick={AddResident}>
+                                            Add
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div>
+                                    {(residents.length === 0 )?
                                     <p>No Residents Available!</p>
                                     :
                                     <>
@@ -175,7 +172,20 @@ function EditHome() {
                                             );
                                         })}
                                     </>
-                                }
+                                    }
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            
+                            <div className='Form__Button'>
+                                <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" size="large" type='submit' onClick={Submit}>
+                                    Save
+                                </Button>
                             </div>
                         </div>
                     </div>
