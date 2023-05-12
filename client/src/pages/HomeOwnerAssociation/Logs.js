@@ -17,7 +17,8 @@ import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
-
+import TablePagination from '@mui/material/TablePagination';
+import TableFooter from '@mui/material/TableFooter';
 function Logs() {
 
     const [logs, setLogs] = useState()
@@ -264,7 +265,7 @@ function Logs() {
                                             </TableRow>
                                         ))} */}
                                     </TableBody>
-                                    {/* <TableFooter>
+                                    <TableFooter>
                                         <TableRow>
                                             <TablePagination
                                             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
@@ -283,7 +284,7 @@ function Logs() {
                                             // ActionsComponent={TablePaginationActions}
                                             />
                                         </TableRow>
-                                    </TableFooter> */}
+                                    </TableFooter>
                                 </Table>
                             </TableContainer>
                         </div>
