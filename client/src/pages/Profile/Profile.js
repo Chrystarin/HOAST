@@ -33,9 +33,8 @@ function Profile() {
                             <h5 className='SectionView__Sections__Title'>
                                 General Information
                             </h5>
-                            <Button variant="contained" href='/profile/edit'>Edit Profile</Button>
                             <div id='GeneralInformation__Container'>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                <Avatar sx={{ width: 76, height: 76 }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                                 <div className='GeneralInformation__InfoContainer'>
                                     <h6>Name:</h6>
                                     <h5>{user.name.firstName + " " + user.name.lastName}</h5>
@@ -48,6 +47,8 @@ function Profile() {
                                     <h6>Registered Since: </h6>
                                     <h5>{user.createdAt}</h5>
                                 </div>
+                                <Button variant="contained" href='/profile/edit'>Edit Profile</Button>
+
                             </div>
                         </div>
                     </div>

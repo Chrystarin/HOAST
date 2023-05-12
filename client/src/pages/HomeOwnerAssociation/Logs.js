@@ -19,10 +19,15 @@ import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
 import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 function Logs() {
 
     const [logs, setLogs] = useState()
-
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
@@ -148,8 +153,8 @@ function Logs() {
 
     if(!logs) return <>
     <div className='Loading'>
-      <img src={loading} alt="" />
-      <h3>Loading...</h3>
+        <img src={loading} alt="" />
+        <h3>Loading...</h3>
     </div>
   </>
 
@@ -203,12 +208,28 @@ function Logs() {
                                     <Button variant=''>Reset All</Button>
                                     </div>
                                     <Button variant=''>Cancel</Button>
-                                    <Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
+                                    <Button 
+                                        variant='contained' 
+                                        onClick={() => {
+                                            setAnchorElFilter(null)
+                                        }}
+                                        >
+                                            Apply
+                                    </Button>
                                 </div>
                             </div>
                         </Menu>
-                        <Button variant="contained" href='addhome'>Add Home</Button>
-                        <Button variant="contained" id='downloadButton' onClick={() => tableToCSV()}>Export to Excel</Button>
+                        <Button variant="contained" id='downloadButton' 
+                        onClick={() => {
+                            tableToCSV(); 
+                            setOpenSnackBar(openSnackBar => ({
+                                ...openSnackBar,
+                                open:true,
+                                type:'info',
+                                note:"CSV Downloading",
+                            }));
+                        }}
+                        >Export to Excel</Button>
                     </div>
                     <div id='Manage__Hoa' className='SectionView'>
                         <div className='SectionView__Content'>
@@ -291,6 +312,7 @@ function Logs() {
                     </div>
                 </div>
             </section>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
     </>
 }

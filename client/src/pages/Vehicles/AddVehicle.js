@@ -5,12 +5,16 @@ import Navbar from '../../layouts/NavBar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import image from '../../images/Placeholder/QRcode.png'
-
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 import axios from './../../utils/axios';
 
 function AddVehicle() {
     const navigate = useNavigate();
-
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     const [stepper, setStepper] = useState(1);
 
     const [form, setForm] = useState({
@@ -102,8 +106,7 @@ function AddVehicle() {
         <Navbar type="vehicle"/>
         <div className='SectionHolder'>
             <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>Vehicle Form</span></h3>
-
+                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span> > <span>Vehicle Form</span></h3>
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
                 </div>
@@ -111,6 +114,7 @@ function AddVehicle() {
                     <Stepper/>
                 </div>
             </section>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
     </>
 }

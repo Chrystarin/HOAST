@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
 import { useNavigate } from 'react-router';
 import SearchInput from '../../components/SearchInput/SearchInput';
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 function EditHome() {
     const { id } = useParams();
     const {isHomeowner} = useAuth();
@@ -19,6 +20,11 @@ function EditHome() {
     const [home, setHome] = useState()
     const [residents, setResidents] = useState()
     const [residentAdd, setResidentAdd] = useState()
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     const navigate = useNavigate();
 
     // Retrieve Home Info
@@ -49,12 +55,13 @@ function EditHome() {
                     })
                 )
                 .then((response) => {
-                    alert("Name Updated")
+                    // alert("Name Updated") 
                     console.log(response.data)
                 })
         } catch(err){
 
         }
+        navigate("/homes")
     }
 
     async function AddResident(e){
@@ -69,11 +76,21 @@ function EditHome() {
                     })
                 )
                 .then((response) => {
-                    alert("Resident Added")
+                    setOpenSnackBar(openSnackBar => ({
+                        ...openSnackBar,
+                        open:true,
+                        type:'success',
+                        note:"Resident Added",
+                    }));
                     fetchHome()
                 })
         } catch(err){
-            console.log(err)
+            setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                open:true,
+                type:'error',
+                note:"Resident exist on the list",
+            }));
         }
     }
 
@@ -89,7 +106,12 @@ function EditHome() {
                     })
                 )
                 .then((response) => {
-                    alert("Resident Removed")
+                    setOpenSnackBar(openSnackBar => ({
+                        ...openSnackBar,
+                        open:true,
+                        type:'error',
+                        note:"Resident Removed",
+                    }));
                     
                     fetchHome()
                 })
@@ -160,7 +182,6 @@ function EditHome() {
                                                     );
                                                 })}
                                             </div>
-                                            
                                             <br />
                                             <hr />
                                             <br />
@@ -185,10 +206,7 @@ function EditHome() {
                                         }
                                     </div>
                                 </div>
-                                    
-                                
                             </div>
-                            
                             
                             <div className='Form__Button'>
                                 <Button variant="contained" size="large" type='submit' onClick={() => navigate(-1)}>
@@ -202,6 +220,7 @@ function EditHome() {
                     </div>
             </section>
             </div>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
         
     )

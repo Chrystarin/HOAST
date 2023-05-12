@@ -64,6 +64,14 @@ const addResident = async (req, res, next) => {
 	const user = await User.findOne({ userId });
 	if (!user) throw new UserNotFoundError();
 
+	// Check if user is resident of home
+	const resident = home.residents.find(({ user: { _id } }) =>
+		_id.equals(user._id)
+	);
+
+	// If user is resident, throw error
+	if (resident) throw new ForbiddenError('User is already resident');
+
 	// Add user as resident in home
 	home.residents.push({ user: user._id });
 	await home.save();

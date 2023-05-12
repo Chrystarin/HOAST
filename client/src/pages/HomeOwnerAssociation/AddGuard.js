@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import axios from '../../utils/axios';
 import SideBar from './SideBar';
-
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 export default function AddGuard() {
 
     const navigate = useNavigate();
@@ -15,6 +15,11 @@ export default function AddGuard() {
     const [form, setForm] = useState({
         userId: '',
         hoaId: localStorage.getItem('hoaId')
+    });
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
     });
 
     const [stepper, setStepper] = useState(1);
@@ -43,12 +48,22 @@ export default function AddGuard() {
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
-                alert("Added Guard Succesfully!");
+                setOpenSnackBar(openSnackBar => ({
+                    ...openSnackBar,
+                    open:true,
+                    type:'success',
+                    note:"Added Guard Succesfully!",
+                }));
                 navigate("/guard");
             })
         }
         catch(err){
-            alert("Error Occured!");
+            setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                open:true,
+                type:'error',
+                note:"Error Occured!",
+            }));
             console.error(err.message);
         }
     }
@@ -110,13 +125,14 @@ export default function AddGuard() {
                                 onChange={(e)=>updateForm({ userId: e.target.value })}
                             />
                             <div className='Form__Button'>
-                                <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
+                                <Button variant='text' onClick={()=> navigate("/guard")}>cancel</Button>
                                 <Button variant='contained' type='submit' className='Submit'>Submit</Button>
                             </div>
                         </form>
                     </div>
                 </div>
             </section>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
     </>
 }

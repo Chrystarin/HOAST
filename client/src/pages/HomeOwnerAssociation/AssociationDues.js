@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import './Dashboard.scss';
 import SideBar from './SideBar';
 import TextField from '@mui/material/TextField';
-
+import IconButton from '@mui/material/IconButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Menu from '@mui/material/Menu';
@@ -18,10 +18,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import WalletIcon from '@mui/icons-material/Wallet';
 import axios from '../../utils/axios';
-
+import { TablePagination,TableFooter } from '@mui/material';
 import './AssociationDues.scss';
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 
 function AssociationDues() {
 	const [homes, setHomes] = useState();
@@ -31,7 +32,11 @@ function AssociationDues() {
 
 	const [anchorAddDues, setAnchorAddDues] = useState(null);
 	const open = Boolean(anchorAddDues);
-	
+	const [openSnackBar, setOpenSnackBar] = React.useState({
+		open:false,
+		type:"",
+		note:""
+	});
 	const user = JSON.parse(localStorage.getItem('user'));
 	console.log(localStorage.getItem('hoaId'));
 
@@ -90,11 +95,21 @@ function AssociationDues() {
 				.then((response) => {
 					console.log(response?.data);
                     setAnchorAddDues(null)
-					alert('Dues Set Successfully!');
+					setOpenSnackBar(openSnackBar => ({
+						...openSnackBar,
+						open:true,
+						type:'success',
+						note:"Payment Updated!",
+					}));
                     fetchHomes();
 				});
 		} catch (err) {
-			alert('Invalid Input! ' + err.message);
+			setOpenSnackBar(openSnackBar => ({
+				...openSnackBar,
+				open:true,
+				type:'error',
+				note:'Invalid Input! ' + err.message,
+			}));
 			console.error(err.message);
 		}
 	}
@@ -160,7 +175,7 @@ function AssociationDues() {
 									</div>
 								</div>
 							</Menu>
-							<Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget)}}>Add Dues</Button>
+							{/* <Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget)}}>New Payment</Button> */}
 							<Menu
 								id="basic-menu"
 								anchorEl={anchorAddDues}
@@ -178,6 +193,7 @@ function AssociationDues() {
 										type="text"
 										autoComplete="current-password"
 										variant="filled"
+										
                                         defaultValue={selectedHome}
 										// onChange={(e) =>
 										// 	updateForm({
@@ -185,11 +201,15 @@ function AssociationDues() {
 										// 			.value
 										// 	})
 										// }
-                                        disabled
 									/>
 									<TextField
 										id="filled-password-input"
 										label="amount"
+										InputProps={{
+											inputProps: { 
+												min: 0
+											}
+										}}
 										type="number"
 										autoComplete="current-password"
 										variant="filled"
@@ -258,7 +278,7 @@ function AssociationDues() {
                                                 
 											</TableRow>
 										</TableHead>
-										<TableBody>
+										<TableBody className='ListBody'>
 										{homes.length === 0 ? <></> : 
 											<>
 												{homes.length > 0 && homes.map( ( home ) => {
@@ -289,13 +309,23 @@ function AssociationDues() {
                                                             >
                                                                 { ((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear() }
                                                             </TableCell>
+															{new Date().getTime() <= new Date( home.paidUntil ).getTime()
+                                                                    ? <>
+																		<TableCell align="center" className='ListBody__Green'>
+																			Paid
+																		</TableCell>
+																	</>
+                                                                    : <>
+																		<TableCell align="center" className='ListBody__Red'>
+																			Not Paid
+																		</TableCell>
+																	</>}
+                                                            
                                                             <TableCell align="center">
-                                                                {new Date().getTime() <= new Date( home.paidUntil ).getTime()
-                                                                    ? 'Paid'
-                                                                    : 'Unpaid'}
-                                                            </TableCell>
-                                                            <TableCell align="center">
-                                                                <Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget);setSelectedHome(home.homeId)}}>Add Dues</Button>
+																<IconButton aria-label="delete" size="small" onClick={(event) => {setAnchorAddDues(event.currentTarget);setSelectedHome(home.homeId)}}>
+																	<WalletIcon fontSize="small" />
+																	Payment
+																</IconButton>
                                                             </TableCell>
                                                         </TableRow>
                                                     );
@@ -304,7 +334,7 @@ function AssociationDues() {
 											</>
 										}
 										</TableBody>
-										{/* <TableFooter>
+										<TableFooter>
 											<TableRow>
 												<TablePagination
 												rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
@@ -323,13 +353,14 @@ function AssociationDues() {
 												// ActionsComponent={TablePaginationActions}
 												/>
 											</TableRow>
-										</TableFooter> */}
+										</TableFooter>
 									</Table>
 								</TableContainer>
 							</div>
 						</div>
 					</div>
 				</section>
+				<SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
 			</div>
 		</>
 	);
