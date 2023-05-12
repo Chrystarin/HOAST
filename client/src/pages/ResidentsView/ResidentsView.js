@@ -22,7 +22,6 @@ function ResidentsView() {
     const { id, resId } = useParams();
     const {isRole, isResident, isHomeowner} = useAuth();
     const [resident,setResident]=useState()
-    const [logs, setLogs] = useState();
 
     // Runs onLoad
 	useEffect(() => {
@@ -38,27 +37,8 @@ function ResidentsView() {
 				.then((response) => {
                     setResident(response.data)
                     console.log(response.data)
-
-                    
 				});
 		};
-        const fetchLogs = async () => {
-            await axios
-            .get(`logs`, {
-                params: {
-                    objId: `${id}`,
-                    logType: 'user',
-                    homeId: localStorage.getItem('homeId')
-                }
-            })
-            .then((response) => {
-                setLogs(response.data);
-                console.log(response.data);
-            });
-        };
-        
-        fetchLogs();
-
 		fetchResident();
 	}, []);
 
@@ -155,7 +135,7 @@ function ResidentsView() {
                                                 <TableCell align="center"><h6>Timestamp</h6></TableCell>
                                             </TableRow>
                                         </TableHead>
-                                        {/* <TableBody>
+                                        <TableBody>
                                         {rows.map((row) => (
                                             <TableRow
                                             key={row.name}
@@ -167,45 +147,7 @@ function ResidentsView() {
                                             <TableCell align="center">{row.calories}</TableCell>
                                             </TableRow>
                                         ))}
-                                        </TableBody> */}
-                                        <TableBody>
-												{logs.length === 0 ? (
-													<p>No Logs Recorded</p>
-												) : (
-													<>
-														{logs.length > 0 && logs.map((log) => {
-																return (
-																	<TableRow
-																		key={
-																			log.logId
-																		}
-																		sx={{
-																			'&:last-child td, &:last-child th':
-																				{
-																					border: 0
-																				}
-																		}}
-																	>
-																		<TableCell
-																			component="th"
-																			scope="row"
-																			align="center"
-																		>
-																			{
-																				log.logId
-																			}
-																		</TableCell>
-																		<TableCell align="center">
-																			{
-																				new Date(log.createdAt).getMonth() + 1 + " - " + new Date(log.createdAt).getDate() + " - " + new Date(log.createdAt).getFullYear() + " " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() + " " + (new Date(log.createdAt).getHours() >= 12 ? "PM" : "AM")
-																			}
-																		</TableCell>
-																	</TableRow>
-																);
-															})}
-													</>
-												)}
-											</TableBody>
+                                        </TableBody>
                                     </Table>
                                 </TableContainer>
                             </div>
