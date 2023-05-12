@@ -12,7 +12,7 @@ import ViewHome from './pages/Homes/ViewHome.js';
 import EditHome from './pages/Homes/EditHome.js';
 
 import Vehicles from './pages/Vehicles/Vehicles.js';
-import EditVehicle from './pages/Vehicles/EditVehicle.js'
+import UpdateVehicle from './pages/Vehicles/UpdateVehicle.js'
 import AddVehicle from './pages/Vehicles/AddVehicle.js';
 import VehicleView from './pages/Vehicles/VehicleView.js';
 
@@ -62,7 +62,7 @@ function App() {
 				<Route path="/vehicles">
 					<Route path="" element={<Vehicles />} />
 					<Route path="add" element={<AddVehicle />} />
-					<Route path="edit" element={<EditVehicle />} />
+					<Route path="update" element={<UpdateVehicle />} />
 					<Route path=":id" element={<VehicleView />} />
 				</Route>
 

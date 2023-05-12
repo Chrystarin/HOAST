@@ -17,6 +17,7 @@ import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
 import {useAuth} from './../../utils/AuthContext.js';
+import { Button } from '@mui/material';
 
 function VehicleView() {
     const navigate = useNavigate();
@@ -112,6 +113,8 @@ function VehicleView() {
                                         <h5>{vehicle.createdAt}</h5>
                                     </div>
                                 </div>
+                            <Button variant='contained' href='/vehicles/update'> Update</Button>
+
                             </div>
                         </div>
                         
