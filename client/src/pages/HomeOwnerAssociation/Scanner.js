@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import NavBar from '../../layouts/NavBar';
 import './Scanner.scss';
 import SideBar from './SideBar';
@@ -31,56 +31,6 @@ function Scanner() {
     };
     const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
 
-    useEffect(() => {
-        // real time clock
-        function currentTime() {
-            let date = new Date();
-
-            let hour = date.getHours();
-            let minutes = date.getMinutes();
-            let seconds = date.getSeconds();
-            let session = 'AM';
-
-            if (hour == 0) {
-                hour = 12;
-            }
-            if (hour > 12) {
-                hour = hour - 12;
-                session = 'PM';
-            }
-
-            hour = hour < 10 ? '0' + hour : hour;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            let time = hour + ':' + minutes + ':' + seconds + ' ' + session;
-
-            document.getElementById('clock').innerText = time;
-            let t = setTimeout(function () {
-                currentTime();
-            }, 1000);
-        };
-
-        // real time date
-        function currentDate() {
-            let today = new Date();
-
-            let month = today.toLocaleString('default', { month: 'long' });
-            let day = today.getDate();
-            let year = today.getFullYear();
-
-            let dateToday = month + " " + day + ", " + year;
-
-            document.getElementById('date').innerText = dateToday;
-            let d = setTimeout(function (){
-                currentDate();
-            }, 1000)
-        }
-
-        currentTime();
-        currentDate();
-	}, []);
-
     // Function upon scanning
     async function handleScan(data){
         if (data) {
@@ -101,13 +51,13 @@ function Scanner() {
                     })
                 )
                 .then((response) => {
-                    fetch('http://192.168.144.115:80/?header=true')
+                    fetch('http://192.168.0.24:80/?header=true')
                     alert("Record Added Successfully!");
                 })
             }
             catch(err){
                 console.error(err.message);
-                fetch('http://192.168.144.115:80/?header=false')
+                fetch('http://192.168.0.24:80/?header=false')
                 alert("Record Not Detected!");
             }
         }
@@ -166,13 +116,11 @@ function Scanner() {
                             <div className='SidePanel__Container' id='DateTime'>
                                 <div>
                                     <h6>Time:</h6>
-                                    {/* <h5>{ new Date().getHours() - 12 + ":" + new Date().getMinutes() + ":" + new Date().getSeconds() }</h5> */}
-                                    <h5 id='clock'></h5>
+                                    <h5>3:65 PM</h5>
                                 </div>
                                 <div>
                                     <h6>Date:</h6>
-                                    {/* <h5>{ new Date().toLocaleString('default', { month: 'long' }) + " " + new Date().getDate() + ", " + new Date().getFullYear() }</h5> */}
-                                    <h5 id='date'></h5>
+                                    <h5>June 1, 2019</h5>
                                 </div>
                             </div>
                             <Button variant='contained' onClick={handleClick}>Manual Check</Button>
