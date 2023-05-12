@@ -35,8 +35,6 @@ function AssociationDues() {
 	const user = JSON.parse(localStorage.getItem('user'));
 	console.log(localStorage.getItem('hoaId'));
 
-    const [selectedHome, setSelectedHome] = useState(null);
-
 	// Collection of form data
 	const [form, setForm] = useState({
 		hoaId: '',
@@ -81,8 +79,7 @@ function AssociationDues() {
 					`dues`,
 					JSON.stringify({
 						hoaId: localStorage.getItem('hoaId'),
-						// homeId: form.homeId,
-                        homeId: selectedHome,
+						homeId: form.homeId,
 						amount: parseInt(form.amount),
 						months: new Date(form.months).getMonth()
 					})
@@ -178,14 +175,12 @@ function AssociationDues() {
 										type="text"
 										autoComplete="current-password"
 										variant="filled"
-                                        defaultValue={selectedHome}
-										// onChange={(e) =>
-										// 	updateForm({
-										// 		homeId: e.target
-										// 			.value
-										// 	})
-										// }
-                                        disabled
+										onChange={(e) =>
+											updateForm({
+												homeId: e.target
+													.value
+											})
+										}
 									/>
 									<TextField
 										id="filled-password-input"
@@ -252,9 +247,6 @@ function AssociationDues() {
 												<TableCell component="th" align="center" >
 													<h6>Status</h6>
 												</TableCell>
-                                                <TableCell component="th" align="center" >
-													<h6>Action</h6>
-												</TableCell>
                                                 
 											</TableRow>
 										</TableHead>
@@ -293,9 +285,6 @@ function AssociationDues() {
                                                                 {new Date().getTime() <= new Date( home.paidUntil ).getTime()
                                                                     ? 'Paid'
                                                                     : 'Unpaid'}
-                                                            </TableCell>
-                                                            <TableCell align="center">
-                                                                <Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget);setSelectedHome(home.homeId)}}>Add Dues</Button>
                                                             </TableCell>
                                                         </TableRow>
                                                     );

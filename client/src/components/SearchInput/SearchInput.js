@@ -5,14 +5,14 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchSuggested from './SearchSuggested';
 import { getAccordionDetailsUtilityClass } from '@mui/material';
-
-
 function SearchInput(props) {
     const keys = props.keys;
     const [search,setSearch] = useState({
         value:"",
         focus:false,
     })
+
+
 
     useEffect(() => {
         props.setData(searchData(props.data))
