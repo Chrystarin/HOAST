@@ -41,6 +41,7 @@ function AssociationDues() {
 	console.log(localStorage.getItem('hoaId'));
 
     const [selectedHome, setSelectedHome] = useState(null);
+    const [selectedPaidUntil, setSelectedPaidUntil] = useState(null);
 
 	// Collection of form data
 	const [form, setForm] = useState({
@@ -187,13 +188,13 @@ function AssociationDues() {
 							>
 								<form onSubmit={Submit} className="Form AddDues">
 									
-									<TextField
+									{/* <TextField
 										id="filled-password-input"
 										label="HOmeId"
 										type="text"
 										autoComplete="current-password"
 										variant="filled"
-										
+										disabled
                                         defaultValue={selectedHome}
 										// onChange={(e) =>
 										// 	updateForm({
@@ -201,7 +202,7 @@ function AssociationDues() {
 										// 			.value
 										// 	})
 										// }
-									/>
+									/> */}
 									<TextField
 										id="filled-password-input"
 										label="amount"
@@ -213,6 +214,7 @@ function AssociationDues() {
 										type="number"
 										autoComplete="current-password"
 										variant="filled"
+                                        
 										onChange={(e) =>
 											updateForm({
 												amount: e.target
@@ -225,7 +227,10 @@ function AssociationDues() {
 										label="paidUntil"
 										type="date"
 										autoComplete="current-password"
-										defaultValue={"2023-01-01"}
+										// defaultValue={"2023-01-01"}
+                                        defaultValue={
+                                            ((new Date(selectedPaidUntil)).getFullYear()) + "-" + String((new Date(selectedPaidUntil)).getMonth() + 1).padStart(2, '0') + "-" + String((new Date(selectedPaidUntil)).getDate()).padStart(2, '0')
+                                        }
 										variant="filled"
 										onChange={(e) =>
 											{
@@ -236,7 +241,7 @@ function AssociationDues() {
 											}
 										}
 									/>
-									<div className="Form__Button">
+                                    <div className="Form__Button">
 										<Button variant="text" onClick={() => {setAnchorAddDues(null)}}>
 											Cancel
 										</Button>
@@ -322,7 +327,7 @@ function AssociationDues() {
 																	</>}
                                                             
                                                             <TableCell align="center">
-																<IconButton aria-label="delete" size="small" onClick={(event) => {setAnchorAddDues(event.currentTarget);setSelectedHome(home.homeId)}}>
+																<IconButton aria-label="delete" size="small" onClick={(event) => {setAnchorAddDues(event.currentTarget);setSelectedHome(home.homeId);setSelectedPaidUntil(home.paidUntil)}}>
 																	<WalletIcon fontSize="small" />
 																	Payment
 																</IconButton>

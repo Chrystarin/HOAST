@@ -29,6 +29,21 @@ module.exports = model(
 					type: String,
 					required: [true, 'Street is required']
 				},
+                color: {
+                    type: String,
+                    required: [true, 'Color is required'],
+                    enum: {
+                        values: [
+                            'red',
+                            'orange',
+                            'yellow',
+                            'green',
+                            'blue',
+                            'violet'
+                        ],
+                        message: "'{VALUE}' is not supported"
+                    }
+                },
 				phase: String
 			},
 			status: {

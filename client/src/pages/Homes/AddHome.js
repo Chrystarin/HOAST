@@ -41,7 +41,8 @@ function AddHome() {
         houseName: '',
         houseNumber: '',
         street: '',
-        phase: ''
+        phase: '',
+        color: ''
     });
 
     // Retrieves All HOA Data onLoad
@@ -64,6 +65,7 @@ function AddHome() {
         return setForm((prev) => {
             const [key, value] = Object.entries(e)[0];
             prev[key] = value;
+            console.log(form)
             return prev;
     });}
 
@@ -80,7 +82,8 @@ function AddHome() {
                     name: form.houseName,
                     number: form.houseNumber,
                     street: form.street,
-                    phase: form.phase
+                    phase: form.phase,
+                    color: form.color
                 })
             )
             .then((response) => {
@@ -124,6 +127,7 @@ function AddHome() {
                                 <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
                                 <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                             </div>
+                            <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/>
                             <div className='Form__Button'>
                                 <Button 
                                     variant='contained' 
@@ -159,13 +163,13 @@ function AddHome() {
                                         {
                                             data.length > 0 && data.map((hoa) => {
                                                 return (
-                                                    // <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
-                                                    <div className='Card__Horizontal' 
+                                                    <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    {/* <div className='Card__Horizontal' 
                                                         onClick={(e)=>{
                                                                 e.currentTarget.classList.add('cardactive');
                                                                 setSelectedHoa(hoa.name); 
                                                                 updateForm({ hoaId: hoa.hoaId }) 
-                                                            }} key={hoa._id} id={hoa._id}>
+                                                            }} key={hoa._id} id={hoa._id}> */}
                                                         <img src={VillageIcon} alt="" />
                                                     <div>
                                                             <h6>{hoa.name}</h6>
