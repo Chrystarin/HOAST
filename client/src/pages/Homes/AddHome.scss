@@ -1,10 +1,9 @@
 .Card__Horizontal{
-    cursor: pointer;
     padding: .5em 1em;
     background-color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.076);
     border-radius: 10px;
     height: 140px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.067);
     display: flex;
     gap: 25px;
     align-items: center;
@@ -15,14 +14,6 @@
     img{
         height: 100%;
     }
-}
-.Active{
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-}
-.Card__Horizontal:hover{
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.095);
-    opacity: 1;
 }
 
 .cardactive{

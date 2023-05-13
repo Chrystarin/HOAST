@@ -88,7 +88,14 @@ function ResidentsList() {
                 <div id='HOA__Content'>
                     <h3 className='SectionTitleDashboard'><span><a href="">Residents List</a></span></h3>
                     
-        
+                    <div className='SectionStepper'>
+                        <h3 className='SectionTitleDashboard'><span><a href="">Residents</a></span></h3>
+                        {/* <Button variant='text' className={stepper== 1? "active":""} onClick={()=>setStepper(1)}>Residents</Button>
+                        <Button variant='text' className={stepper== 2? "active":""} onClick={()=>setStepper(2)}>Join Requests</Button> */}
+                        
+                        {/* <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>Incoming</Button>
+                        <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>History</Button> */}
+                    </div>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
                             {/* <SearchInput/> */}

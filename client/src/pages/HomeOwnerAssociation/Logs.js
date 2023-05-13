@@ -44,6 +44,23 @@ function Logs() {
 				.then((response) => {
 					setLogs(response.data);
                     console.log(response.data);
+                    // console.log(Object.keys(response.data[0]));
+
+                    // // get object headers keys
+                    // const headers = Object.keys(response.data[0]).toString();
+                    // console.log(headers);
+                    
+                    // // get object values
+                    // const main = response.data.map((data) => {
+                    //     return Object.values(data).toString();
+                    // });
+                    // console.log(main);
+
+                    // // combine headers and values
+                    // const csv = [headers, ...main].join('\n');
+                    // console.log(csv);
+
+                    // downloadCSV(csv);
 				});
 		};
 		fetchLogs();
@@ -269,7 +286,7 @@ function Logs() {
                                             </TableRow>
                                         ))} */}
                                     </TableBody>
-                                    <TableFooter>
+                                    {/* <TableFooter>
                                         <TableRow>
                                             <TablePagination
                                             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
@@ -288,7 +305,7 @@ function Logs() {
                                             // ActionsComponent={TablePaginationActions}
                                             />
                                         </TableRow>
-                                    </TableFooter>
+                                    </TableFooter> */}
                                 </Table>
                             </TableContainer>
                         </div>
