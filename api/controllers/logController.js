@@ -4,7 +4,8 @@ const {
 	UserNotFoundError,
 	VisitorNotFoundError,
 	VehicleNotFoundError,
-	NotFoundError
+	NotFoundError,
+    UnauthorizedError
 } = require('../helpers/errors');
 const {
 	roles: { USER },
@@ -80,11 +81,13 @@ const getRecords = async (req, res, next) => {
 	}
 
 	// Get logs of specific entity
-	if(objId) {
+	if (objId) {
 		const { user } = req.user;
 		const { home } = req.user;
-		if(logType==='visitor') logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
-		if(logType==='vehicle') logs = await getLogsByLookup(logType, user.vehicles, 'visitorId');
+		if (logType === 'visitor')
+			logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
+		if (logType === 'vehicle')
+			logs = await getLogsByLookup(logType, user.vehicles, 'visitorId');
 	}
 
 	res.json(logs);
@@ -94,28 +97,36 @@ const addRecord = async (req, res, next) => {
 	const { objectId, logType } = req.body;
 	const { hoa } = req.user;
 
-
-    console.log(req.body)
+	console.log(req.body);
 
 	// Validate input
 	checkString(objectId, 'Object ID');
 	checkString(logType, 'Log Type');
 
 	// Extract all data from homes under hoa
-	const { residents, visitors, vehicles } = await extractHomes({ hoa: hoa._id });
-
-    console.log(visitors)
+	const { residents, visitors, vehicles } = await extractHomes({
+		hoa: hoa._id
+	});
 
 	switch (logType) {
 		case 'user':
-			if (residents.find(({ user: { userId } }) => userId == objectId))
+			if (residents.find(({ user: { userId } }) => userId === objectId))
 				break;
 			throw new UserNotFoundError();
 		case 'visitor':
-			if (visitors.find(({ visitorId }) => visitorId == objectId)) break;
-			throw new VisitorNotFoundError();
+			const visitor = visitors.find(
+				({ visitorId }) => visitorId === objectId
+			);
+			if (!visitor) throw new VisitorNotFoundError();
+
+            const current = new Date();
+
+            // Check if visitor is within the arrival and departure
+			if (visitor.arrival <= current && visitor.departure >= current) break;
+
+            throw new UnauthorizedError('Visitor is out of the arrival and departure duration');
 		case 'vehicle':
-			if (vehicles.find(({ plateNumber }) => plateNumber == objectId))
+			if (vehicles.find(({ plateNumber }) => plateNumber === objectId))
 				break;
 			throw new VehicleNotFoundError();
 	}

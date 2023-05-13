@@ -48,7 +48,15 @@ module.exports = model(
 					color: {
 						type: String,
 						required: [true, 'Color is required']
-					}
+					},
+                    frontImage: {
+                        type: String,
+                        required: [true, 'Front Image is required']
+                    },
+                    backImage: {
+                        type: String,
+                        required: [true, 'Back Image is required']
+                    }
 				}
 			]
 		},

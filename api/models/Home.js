@@ -28,6 +28,21 @@ module.exports = model(
 				},
 				phase: String
 			},
+			color: {
+				type: String,
+				required: [true, 'Color is required'],
+				enum: {
+					values: [
+						'red',
+						'orange',
+						'yellow',
+						'green',
+						'blue',
+						'violet'
+					],
+                    message: "'{VALUE}' is not supported"
+				}
+			},
 			paidUntil: {
 				type: Date,
 				default: new Date()

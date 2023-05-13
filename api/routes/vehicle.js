@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const fileUpload = require('express-fileupload');
 
 const asyncHandler = require('../middlewares/asyncHandler');
 const {
@@ -35,6 +36,6 @@ router.get('/', allowAdmin, allowGuard, allowResident, getVehicles);
  * type
  * color
  */
-router.post('/', addVehicle);
+router.post('/', fileUpload(), addVehicle);
 
 module.exports = router;
