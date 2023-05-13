@@ -7,29 +7,36 @@ import Navbar from '../../layouts/NavBar';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
 import loading from '../../images/loading.gif';
+import Filter from '../../components/Filter/Filter';
 function Vehicles() {
     
     const [vehicles, setVehicles] = useState();
     const [data,setData] = useState({});
+    const [filterValue,setFilterValue] = useState(
+        {
+            sortBy:"A_Z"
+        }
+    );
+
     // Retrieve All User Vehicles Data
     useEffect(() => {
-      const fetchVehicles = async () => {
+        const fetchVehicles = async () => {
         await axios
             .get(`vehicles`)
             .then((response) => {
                 setVehicles(response.data);
             });
-      };
-      fetchVehicles();
+        };
+        fetchVehicles();
     }, []);
 
     // Returns loading if data is not yet retrieved
     if(!vehicles) return <>
-    <div className='Loading'>
-      <img src={loading} alt="" />
-      <h3>Loading...</h3>
-    </div>
-  </>
+        <div className='Loading'>
+            <img src={loading} alt="" />
+            <h3>Loading...</h3>
+        </div>
+    </>
 
     return <>
         <Navbar type="vehicles"/>
@@ -38,8 +45,9 @@ function Vehicles() {
             <h3 className='SectionTitleDashboard'> Vehicles</h3>
             <div className='SectionController'>
                 <div id='SearchInput__Container'>
-                    <SearchInput setData={setData} data={vehicles} keys={["plateNumber","brand","model","type"]}/>
+                    <SearchInput setData={setData} data={vehicles} keys={["plateNumber","brand","model","type"]} filterValue={filterValue}/>
                 </div>
+                <Filter value={filterValue} setValue={setFilterValue}/>
                 <Button variant="contained" href='/vehicles/add'>Add Vehicles</Button>
             </div>
 

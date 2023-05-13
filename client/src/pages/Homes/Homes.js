@@ -14,18 +14,17 @@ import {useAuth} from '../../utils/AuthContext.js';
 import Filter from '../../components/Filter/Filter.js';
 
 function Homes() {
-    const {user, isAdmin} = useAuth();
+  const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
   const [data,setData] = useState({});
 
-
-  const [filter,setFilter] = useState({
-    sortBy:"A_Z",
-  })
-
   // States for popup filter
-  const [anchorElFilter, setAnchorElFilter] = React.useState(null);
-  const openFilter = Boolean(anchorElFilter);
+  const [filterValue,setFilterValue] = useState(
+    {
+      sortBy:"A_Z"
+    }
+  );
+
 
   useEffect(() => {
 		// Retrieves Homes
@@ -39,7 +38,7 @@ function Homes() {
     fetchHomes();
 	}, []);
   
-
+  
 
 
   // Returns if member is null
@@ -59,33 +58,32 @@ function Homes() {
         <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput setData={setData} data={homes} keys={["hoa","name","owner.name"]}/>
+            <SearchInput setData={setData} data={homes} keys={["name","hoa","owner.name"]}  filterValue={filterValue} />
           </div>
-          <Filter/>
+          <Filter value={filterValue} setValue={setFilterValue}/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
 
         <div className='SectionList'>
-          
           {(data.length === 0 )?
-                  <p>No homes found!</p>
-              :
-              <>
-                  {data.length > 0 &&
-                      data.map((home) => {
-                      return (
-                      <Card 
-                          type="Home"
-                          key={home.homeId}
-                          id={home.homeId}
-                          title={home.name}
-                          subTitle1={home.address.number}
-                          subTitle2={home.address.street}
-                          url={`/homes/${home.homeId}`}
-                      />
-                      );
-                  })}
-              </>
+              <p>No homes found!</p>
+            :
+            <>
+              {data.length > 0 &&
+                  data.map((home) => {
+                  return (
+                  <Card 
+                      type="Home"
+                      key={home.homeId}
+                      id={home.homeId}
+                      title={home.name}
+                      subTitle1={home.address.number}
+                      subTitle2={home.address.street}
+                      url={`/homes/${home.homeId}`}
+                  />
+                  );
+              })}
+            </>
           }
         </div>
       </section>

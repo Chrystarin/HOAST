@@ -15,17 +15,39 @@ function SearchInput(props) {
     })
 
     useEffect(() => {
-        props.setData(searchData(props.data))
-    }, [search.focus, search.value]);
+        
+        props.setData(()=>{
+            return sortBy(
+                searchData(props.data),
+                props.filterValue.sortBy
+            );
+        })
+    }, [search.focus, search.value,props.filterValue]);
 
 
     const searchData = (data) => {
-        console.log(data);
         return data.filter(
-            (item)=>
-                keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
+            (item)=>keys.some((key)=>item[key]?.toString().toLowerCase().includes(search.value.toLowerCase()))
         )
     }
+
+
+    const sortBy = (data,type)=>{
+        
+        switch (type) {
+            case "A_Z":
+                return data.sort((a, b) => a[props.keys[0]] > b[props.keys[0]]?1:-1)
+            case "Z_A":
+                return data.sort((a, b) => a[props.keys[0]] < b[props.keys[0]]?1:-1)
+            case "Recent":
+                return data.sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt)?1:-1)
+            default:
+                return data
+                break;
+        }
+    }
+
+
     return <>
         <div id='SearchInput'>
             <div  id='SearchInput__Container'>
@@ -36,7 +58,9 @@ function SearchInput(props) {
                     id="input" 
                     type="text" 
                     value={search.value} 
-                    onChange={(e)=> setSearch(search => ({...search,value: e.target.value}))} 
+                    onChange={(e)=> 
+                        setSearch(search => ({...search,value: e.target.value})
+                    )} 
                     placeholder={"Search..."} 
                     onFocus={()=>setSearch(search => ({...search,focus: !search.focus}))} 
                     onBlur={()=>setSearch(search => ({...search,focus: !search.focus}))}
@@ -45,19 +69,12 @@ function SearchInput(props) {
                     <ClearIcon fontSize="small" />
                 </IconButton>
             </div>
-            
-            {/* {props.suggested?<>
-                {(!search.focus)?"":
-                    !search.value?"":<SearchSuggested data={searchData(props.data)}/>
-                }
-            </>:<></>
-            } */}
             {
             props.suggested?<>
                 {(!search.focus)?"":
                     !search.value?"":<SearchSuggested data={searchData(props.data)}/>
                 }
-            </>:""
+                </>:""
             }
             
         </div>

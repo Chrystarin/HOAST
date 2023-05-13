@@ -11,6 +11,7 @@
     border: 1px solid rgba(128, 128, 128, 0.216);
     opacity: .8;
     transition: all .3s ease-in-out;
+    cursor: pointer;
     img{
         height: 100%;
     }
@@ -24,6 +25,9 @@
     opacity: 1;
 }
 
+.cardactive{
+    border: 1px solid rgba(15, 15, 95, 0.219);
+}
 .Form{
     max-width: 1800px;
 

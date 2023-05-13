@@ -23,12 +23,18 @@ function AddHome() {
     const [filteredHoa, setFilteredHoa] = useState([])
     const [searchText, setSearchText] = useState("");
     const [selectedHoa, setSelectedHoa] = useState(null);
+    
     const [data,setData] = useState({});
     const [openSnackBar, setOpenSnackBar] = React.useState({
         open:false,
         type:"",
         note:""
     });
+    const [filterValue,setFilterValue] = useState(
+        {
+            sortBy:"A_Z"
+        }
+    );
     // Collection of form data
     const [form, setForm] = useState({
         hoaId: '',
@@ -143,7 +149,7 @@ function AddHome() {
                     {stepper==2?<>
                         <form onSubmit={Submit} className='Form' id='GeneralInformation'>
                             <div>
-                                <SearchInput setData={setData} data={hoas} keys={["name"]}/>
+                                <SearchInput setData={setData} data={hoas} keys={["name"]} filterValue={filterValue}/>
                             </div>
                             <div className='SectionList'>
                                 {(hoas.length === 0 )?
@@ -153,9 +159,15 @@ function AddHome() {
                                         {
                                             data.length > 0 && data.map((hoa) => {
                                                 return (
-                                                    <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    // <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
+                                                    <div className='Card__Horizontal' 
+                                                        onClick={(e)=>{
+                                                                e.currentTarget.classList.add('cardactive');
+                                                                setSelectedHoa(hoa.name); 
+                                                                updateForm({ hoaId: hoa.hoaId }) 
+                                                            }} key={hoa._id} id={hoa._id}>
                                                         <img src={VillageIcon} alt="" />
-                                                        <div>
+                                                    <div>
                                                             <h6>{hoa.name}</h6>
                                                             <p>{hoa.city}</p>
                                                         </div>
