@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import loading from '../../images/loading.gif';
-
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 
 import axios from './../../utils/axios';
 
@@ -24,6 +24,11 @@ function AddHome() {
     const [searchText, setSearchText] = useState("");
     const [selectedHoa, setSelectedHoa] = useState(null);
     const [data,setData] = useState({});
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     // Collection of form data
     const [form, setForm] = useState({
         hoaId: '',
@@ -73,12 +78,18 @@ function AddHome() {
                 })
             )
             .then((response) => {
-                alert("Request Submitted! Wait for admin to approve your request.");
+                // alert("Request Submitted! Wait for admin to approve your request.");
                 navigate("/homes");
             })
         }
         catch(err){
-            alert(err.message);
+            setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                open:true,
+                type:'error',
+                note:"Check your inputs",
+            }));
+            // alert(err.message);
         }
     }
     if(!hoas) return <>
@@ -94,8 +105,8 @@ function AddHome() {
                 <h3 className='SectionTitleDashboard'><span><a href="/homes">Homes</a></span> <span>Add Home</span></h3>
 
                 <div className='SectionStepper'> 
-                    <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
-                    <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>Join Homeowners Association</Button>
+                    <Button variant='text' className={(stepper === 1)?"active":""}>General Information</Button>
+                    <Button variant='text' className={(stepper === 2)?"active":""}>Join Homeowners Association</Button>
                 </div>
                 <div className='SectionContent'>
                     {/* <Stepper hoas={hoas}/> */}
@@ -108,7 +119,24 @@ function AddHome() {
                                 <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                             </div>
                             <div className='Form__Button'>
-                                <Button variant='contained' type='submit' className='Submit' onClick={()=> {setStepper(2);console.log(form)}}>Next</Button>
+                                <Button 
+                                    variant='contained' 
+                                    type='submit' 
+                                    className='Submit' 
+                                    onClick={()=> {
+                                        
+                                        if(form.houseName !== "" && form.houseNumber!== "" && form.phase !=="" && form.phase !==""){
+                                            setStepper(2);
+                                        }else{
+                                            setOpenSnackBar(openSnackBar => ({
+                                                ...openSnackBar,
+                                                open:true,
+                                                type:'error',
+                                                note:"Check your inputs!",
+                                            }));
+                                        }
+                                        console.log(form)
+                                    }}>Next</Button>
                             </div>
                         </div>
                     </>:<></>}
@@ -146,6 +174,7 @@ function AddHome() {
                     </>:<></>}
                 </div>
             </section>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
     </>
 }

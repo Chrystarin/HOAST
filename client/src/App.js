@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-
+import './styles/main.scss'
 import Error404 from './pages/Error/Error404.js';
 import LandingPage from './pages/LandingPage/LandingPage.js';
 import Login from './pages/Login/Login.js';
@@ -12,6 +12,7 @@ import ViewHome from './pages/Homes/ViewHome.js';
 import EditHome from './pages/Homes/EditHome.js';
 
 import Vehicles from './pages/Vehicles/Vehicles.js';
+import UpdateVehicle from './pages/Vehicles/UpdateVehicle.js'
 import AddVehicle from './pages/Vehicles/AddVehicle.js';
 import VehicleView from './pages/Vehicles/VehicleView.js';
 
@@ -61,6 +62,7 @@ function App() {
 				<Route path="/vehicles">
 					<Route path="" element={<Vehicles />} />
 					<Route path="add" element={<AddVehicle />} />
+					<Route path="update" element={<UpdateVehicle />} />
 					<Route path=":id" element={<VehicleView />} />
 				</Route>
 

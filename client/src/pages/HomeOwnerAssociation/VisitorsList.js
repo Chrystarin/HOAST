@@ -53,10 +53,10 @@ function VisitorsList() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Visitors List</a></span></h3>
                     
                     <div >
-                        <div className='SectionStepper'> 
+                        {/* <div className='SectionStepper'> 
                             <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>Incoming</Button>
                             <Button variant='text' className={(stepper === 2)?"active":""} onClick={()=> setStepper(2)}>History</Button>
-                        </div>
+                        </div> */}
                         <div>
                             {stepper===1?<>
                                 <div className='SectionController'>
