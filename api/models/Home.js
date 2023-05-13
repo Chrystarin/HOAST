@@ -52,15 +52,7 @@ module.exports = model(
 					user: {
 						type: ObjectId,
 						ref: 'User',
-						required: [true, 'User is required'],
-						validate: {
-							validator: function (value) {
-								return !this.residents?.find(({ user }) =>
-									user.equals(value)
-								);
-							},
-							message: 'User is already a resident'
-						}
+						required: [true, 'User is required']
 					},
 					status: {
 						type: String,

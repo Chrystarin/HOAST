@@ -12,6 +12,7 @@ const authenticate = require('./middlewares/authentication');
 const errorHandler = require('./middlewares/errorHandler');
 
 // Route Controllers
+const deviceRoute = require('./routes/device');
 const dueRoute = require('./routes/due');
 const hoaRoute = require('./routes/hoa');
 const homeRoute = require('./routes/home');
@@ -28,11 +29,13 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/device', deviceRoute);
+
 app.use(
 	cors({
 		credentials: true,
-		// methods: ['POST', 'PUT', 'GET', 'PATCH', 'OPTIONS', 'HEAD'],
-		origin: 'http://localhost:3000'
+		origin: 'http://localhost:4000'
 	})
 );
 

@@ -22,6 +22,7 @@ module.exports = model(
 					required: [true, 'Province is required']
 				}
 			},
+            deviceIP: String,
 			admin: {
 				type: ObjectId,
 				ref: 'User',
