@@ -64,13 +64,14 @@ const processRequest = async (req, res, next) => {
 
 	// Process request if approved
 	if (status == 'approved') {
-		const { name, color, ...address } = request.details;
+		const { name, contactNo, color, ...address } = request.details;
 
 		// Create home
 		const home = await Home.create({
 			homeId: genHomeId(),
 			name,
             color,
+            contactNo,
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
