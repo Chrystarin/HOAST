@@ -179,7 +179,7 @@ function VisitorView() {
 																		</TableCell>
 																		<TableCell align="center">
 																			{
-																				new Date(log.createdAt).getMonth() + 1 + " - " + new Date(log.createdAt).getDate() + " - " + new Date(log.createdAt).getFullYear() + " " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() + " " + (new Date(log.createdAt).getHours() >= 12 ? "PM" : "AM")
+																				new Date(log.createdAt).toLocaleString('default', { month: 'long' }) + " " + new Date(log.createdAt).getDate() + ", " + new Date(log.createdAt).getFullYear() + " | " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() + " " + (new Date(log.createdAt).getHours() >= 12 ? "PM" : "AM")
 																			}
 																		</TableCell>
 																	</TableRow>

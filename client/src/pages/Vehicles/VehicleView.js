@@ -144,7 +144,7 @@ function VehicleView() {
                                                             <TableCell component="th" scope="row" align='center'>
                                                                 {log.logId}
                                                             </TableCell>
-                                                            <TableCell align="center">{log.createdAt}</TableCell>
+                                                            <TableCell align="center">{ new Date(log.createdAt).toLocaleString('default', { month: 'long' }) + " " +  new Date(log.createdAt).getDate() + ", " +  new Date(log.createdAt).getFullYear() + " | " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() }</TableCell>
                                                         </TableRow>
                                                     );
                                                 })}

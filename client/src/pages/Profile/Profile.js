@@ -45,7 +45,7 @@ function Profile() {
                                     <h6>Email: </h6>
                                     <h5>{user.email}</h5>
                                     <h6>Registered Since: </h6>
-                                    <h5>{user.createdAt}</h5>
+                                    <h5>{new Date(user.createdAt).toLocaleString('default', { month: 'long' }) + " " + new Date(user.createdAt).getDate() + ", " + new Date(user.createdAt).getFullYear() }</h5>
                                 </div>
                                 <Button variant="contained" href='/profile/edit'>Edit Profile</Button>
 
