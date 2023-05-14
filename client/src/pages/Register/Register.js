@@ -36,11 +36,19 @@ function Register() {
         
     });}
 
-    const validateName = () => {
-        if (!registerForm.firstName && registerForm.lastName) {
+    const validateFirstName = () => {
+        if (!registerForm.firstName) {
             setNameError('Name is required');
         } else {
-            setNameError('');
+            return registerForm.firstName;
+        }
+    };
+
+    const validateLastName = () => {
+        if (!registerForm.lastName) {
+            setNameError('Name is required');
+        } else {
+            return registerForm.lastName;
         }
     };
 
@@ -49,8 +57,7 @@ function Register() {
             setEmailError('Please enter a valid email address');
             return;
         } else {
-        setEmailError('');
-        // submit logic here if form is valid
+            return registerForm.email;
         }
     };
 
@@ -60,17 +67,13 @@ function Register() {
         } else if (!/(?=.*[A-Z])(?=.*\d)/.test(registerForm.password)) {
             setPasswordError('Password must contain at least one uppercase letter and one number');
         } else {
-            setPasswordError('');
+            return registerForm.password;
         }
     };
 
     // Submit function for register
     async function Submit(e){
         e.preventDefault();
-        
-        validateName();
-        validateEmail();
-        validatePassword();
 
         try{
             // API call for user signup
@@ -78,10 +81,10 @@ function Register() {
             .post(
                 `users/signup`,
                 JSON.stringify({ 
-                    firstName: registerForm.firstName,
-                    lastName: registerForm.lastName,
-                    email: registerForm.email,
-                    password: registerForm.password
+                    firstName: validateFirstName(),
+                    lastName: validateLastName(),
+                    email: validateEmail(),
+                    password: validatePassword()
                 }),
                 {
                     headers: { 'Content-Type': 'application/json' }
