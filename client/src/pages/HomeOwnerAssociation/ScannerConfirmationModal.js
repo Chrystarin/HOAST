@@ -3,16 +3,57 @@ import './ScannerConfirmationModal.scss';
 import Avatar from '@mui/material/Avatar';
 import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
+
+import axios from '../../utils/axios';
+
 function ScannerConfirmationModal(props) {
     const [viewMore, setViewMore] = useState(false);
+
+    console.log(props.info)
+
+    async function acceptEntry(){
+        try{
+            await axios
+            .post(
+                `logs`,
+                JSON.stringify({
+                    objectId: props.data.objId,
+                    logType: props.data.logType,
+                    hoaId: localStorage.getItem('hoaId')
+                })
+            )
+            .then((response) => {
+                fetch('http://192.168.0.24:80/?header=true')
+                alert("Record Added Successfully!");
+                props.close()
+            })
+        }
+        catch(error){
+            alert(error)
+            props.close()
+        }
+    }
+
+    async function denyEntry(){
+        try{
+            alert("Entry Denied")
+            props.close()
+        }
+        catch(error){
+            alert(error)
+            props.close()
+        }
+    }
+
     return <>
         <div id='ConfirmationModal'>
+            
             {props.type==="user"?<>
                 <div className='ConfirmationModal__Template' id='ConfirmationModal__User'>
                     <div className='ConfirmationModal__Header'>
                         <Avatar className='ConfirmationModal__Avatar'/>
                         <div className='ConfirmationModal__HeaderInfo'>
-                            <h6 className='ConfirmationModal__Title'>Dianne Chrystalin Brandez</h6>
+                            <h6 className='ConfirmationModal__Title'>{props.info.user.name.firstName} {props.info.user.name.lastName}</h6>
                             <p className="ConfirmationModal__SubTitle">Resident</p>
                         </div>
                     </div>
@@ -20,12 +61,13 @@ function ScannerConfirmationModal(props) {
                             <ul>
                                 <li>
                                     <p className='ConfirmationModal__BodyInfo__Title'>Address:</p>
-                                    <p className="BodyText3 ConfirmationModal__BodyInfo__Value">#17, Abuab II</p>
+                                    <p className="BodyText3 ConfirmationModal__BodyInfo__Value">{props.info.home}</p>
                                 </li>
                             </ul>
                         </div>
                         <div className='ConfirmationModal__Footer'>
-                            <Button variant='contained' onClick={()=>props.close()}>Continue</Button>
+                            <Button variant='contained' onClick={()=>{props.close(); acceptEntry();}}>Accept</Button>
+                            <Button variant='contained' onClick={()=>{props.close(); denyEntry();}}>Decline</Button>
                         </div>
                 </div>
             </>:<></>}
@@ -33,7 +75,7 @@ function ScannerConfirmationModal(props) {
                 <div className='ConfirmationModal__Template' id='ConfirmationModal__User'>
                     <div className='ConfirmationModal__Header'>
                         <div className='ConfirmationModal__HeaderInfo'>
-                            <h6 className='ConfirmationModal__Title'>Digi Ann Brandez</h6>
+                            <h6 className='ConfirmationModal__Title'>{props.info.name}</h6>
                             <p className="ConfirmationModal__SubTitle">Visitor/s</p>
                         </div>
                     </div>
@@ -41,25 +83,26 @@ function ScannerConfirmationModal(props) {
                         <ul>
                             <li>
                                 <p className='ConfirmationModal__BodyInfo__Title'>Arrival Date - Departure Date:</p>
-                                <p className="BodyText3 ConfirmationModal__BodyInfo__Value"><span>Jan 1,2023</span> - <span>Jan 6, 2023</span></p>
+                                <p className="BodyText3 ConfirmationModal__BodyInfo__Value"><span>{props.info.arrival}</span> - <span>{props.info.departure}</span></p>
                             </li>
                             <li className={viewMore?"BodyText3":"BodyText3 ConfirmationModal__BodyInfo__More "}>
                                 <p className='ConfirmationModal__BodyInfo__Title'>Note:</p>
-                                <p className="ConfirmationModal__BodyInfo__Value">Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus et voluptates magnam eos explicabo cumque, omnis temporibus, culpa, ad sed voluptatum mollitia reprehenderit ullam. Officia eveniet nihil cupiditate consequatur adipisci!</p>
+                                <p className="ConfirmationModal__BodyInfo__Value">{props.info.note}</p>
                             </li>
                             <li className={viewMore?"BodyText3":"BodyText3 ConfirmationModal__BodyInfo__More "}>
-                                <p className='ConfirmationModal__BodyInfo__Title'>To Be Visited:</p>
-                                <p className="ConfirmationModal__BodyInfo__Value">Dianne Chrystalin Brandez</p>
+                                <p className='ConfirmationModal__BodyInfo__Title'>Purpose:</p>
+                                <p className="ConfirmationModal__BodyInfo__Value">{props.info.purpose}</p>
                             </li>
                             <li className={viewMore?"BodyText3":"BodyText3 ConfirmationModal__BodyInfo__More "}>
                                 <p className='ConfirmationModal__BodyInfo__Title'>Address to be visited:</p>
-                                <p className="ConfirmationModal__BodyInfo__Value">Abuab II</p>
+                                <p className="ConfirmationModal__BodyInfo__Value">{props.info.home}</p>
                             </li>
                         </ul>
                         <Button className='ConfirmationModal__BodyInfo__Button' variant='text' onClick={()=>setViewMore(!viewMore)}>{viewMore?"View Less!":"View More!"}</Button>
                     </div>
                     <div className='ConfirmationModal__Footer'>
-                    <Button variant='contained' onClick={()=>props.close()}>Continue</Button>
+                        <Button variant='contained' onClick={()=>{props.close(); acceptEntry();}}>Accept</Button>
+                        <Button variant='contained' onClick={()=>{props.close(); denyEntry();}}>Decline</Button>
                     </div>
                 </div>
             </>:<></>}
@@ -93,7 +136,8 @@ function ScannerConfirmationModal(props) {
                         <Button className='ConfirmationModal__BodyInfo__Button' variant='text' onClick={()=>setViewMore(!viewMore)}>{viewMore?"View Less!":"View More!"}</Button>
                     </div>
                     <div className='ConfirmationModal__Footer'>
-                        <Button variant='contained' onClick={()=>props.close()}>Continue</Button>
+                        <Button variant='contained' onClick={()=>{props.close(); acceptEntry();}}>Accept</Button>
+                        <Button variant='contained' onClick={()=>{props.close(); denyEntry();}}>Decline</Button>
                     </div>
                 </div>
             </>:<></>}

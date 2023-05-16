@@ -47,6 +47,9 @@ const addVehicle = async (req, res, next) => {
 	const { plateNumber, brand, model, type, color } = req.body;
 	const { user } = req.user;
 
+    console.log(req.body)
+    console.log(req.files)
+
 	checkString(plateNumber, 'Plate Number');
 	checkString(brand, 'Brand');
 	checkString(model, 'Model');

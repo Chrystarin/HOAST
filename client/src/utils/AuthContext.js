@@ -31,9 +31,17 @@ function AuthProvider({ children }) {
                 .then((response) => {
                     setUser(response.data)
                     localStorage.setItem('user', JSON.stringify(response.data))
-                    fetchRole();
-                    alert("Logged In Successfully!")
-                    navigate("/homes");
+                    const subFetchRole = async () => {
+                        await fetchRole();
+                    }
+                    subFetchRole();
+                    if (localStorage.getItem('guardOf')){
+                        navigate("/scanner");
+                    } 
+                    else{
+                        navigate("/homes");
+                    }
+                    
                 });
         } catch (error) {
         console.log(error);
@@ -49,6 +57,7 @@ function AuthProvider({ children }) {
         await axios
             .get(`roles`)
             .then((response) => {
+                // console.log(response.data)
                 let roles = []
                 if (response.data.admin.length>=1){
                     localStorage.setItem('hoaId', response.data.admin)
@@ -57,7 +66,7 @@ function AuthProvider({ children }) {
                 }
                 if (response.data.guard.length>=1){
                     localStorage.setItem('hoaId', response.data.guard)
-                    localStorage.setItem('guardOf', response.data.admin)
+                    localStorage.setItem('guardOf', response.data.guard)
                     roles.push('guard')
                 }
                 if (response.data.homeowner.length>=1){

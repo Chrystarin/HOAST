@@ -16,6 +16,10 @@ import sjcl from '../../layouts/sjcl';
 
 function Scanner() {
     const [data, setData] = useState(null);
+    const [manualType, setManualType] = useState();
+    const [manualId, setManualId] = useState();
+    const [decryptedData, setDecryptedData] = useState();
+    const [information, setInformation] = useState();
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [openFullScreen, setOpenFullScreen] = useState(false);
 
@@ -31,60 +35,87 @@ function Scanner() {
     };
     const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
 
+    const fetchVisitor = async (id) => {
+        await axios
+            .get(`visitors`, {
+                params: {
+                    visitorId: id,
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setInformation(response.data);
+            });
+    };
+
+    const fetchVehicle = async (id) => {
+        await axios
+            .get(`vehicles`,{
+                params: {
+                    plateNumber: id,
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setInformation(response.data);
+            });
+    };
+
+    const fetchResident = async (id) => {
+        await axios
+            .get(`residents`, {
+                params: {
+                    residentId: id,
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setInformation(response.data);
+            });
+    };
+
     // Function upon scanning
     async function handleScan(data){
         if (data) {
-            try{
-                // log = JSON.parse(decryptData(password, data))
-                log = JSON.parse(sjcl.decrypt(password, data.text))
-                console.log(log)
-                alert("QR Code Detected!")
-                
-                // Add Record of Log
-                await axios
-                .post(
-                    `logs`,
-                    JSON.stringify({
-                        objectId: log.objId,
-                        logType: log.logType,
-                        hoaId: localStorage.getItem('hoaId')
-                    })
-                )
-                .then((response) => {
-                    fetch('http://192.168.0.24:80/?header=true')
-                    alert("Record Added Successfully!");
-                })
+            setDecryptedData(JSON.parse(sjcl.decrypt(password, data.text)))
+            log = JSON.parse(sjcl.decrypt(password, data.text))
+            switch(log.logType){
+                case 'visitor':
+                    await fetchVisitor(log.objId);
+                    break;
+                case 'vehicle':
+                    await fetchVehicle(log.objId);
+                    break;
+                case 'user':
+                    await fetchResident(log.objId);
+                    break;
+                default:
+                    break;
             }
-            catch(err){
-                console.error(err.message);
-                fetch('http://192.168.0.24:80/?header=false')
-                alert("Record Not Detected!");
-            }
+            setOpenConfirmation(true); 
         }
     };
+
+    async function manualEntry(){
+        switch(manualType){
+            case 'visitor':
+                await fetchVisitor(manualId);
+                break;
+            case 'vehicle':
+                await fetchVehicle(manualId);
+                break;
+            case 'user':
+                await fetchResident(manualId);
+                break;
+            default:
+                break;
+        }
+        setOpenConfirmation(true); 
+    }
 
     let handleError = (err) => {
         alert(err);
     };
-
-    // Function to decrypt data
-    function decryptData(password, encryptedData) {
-        return sjcl.decrypt(
-            password,
-            encryptedData
-                .match(/.{2}/g)
-                .map(
-                    hex =>
-                        String.fromCharCode(
-                            parseInt(
-                                hex,
-                                16
-                            )
-                        )
-                )
-                .join('')
-        );
-    }
 
     return <>
         <NavBar/>
@@ -135,8 +166,9 @@ function Scanner() {
                                 }}
                             >
                                 <div id='ManualInput'>
-                                    <TextField className='input' id="filled-basic"  label="Input ID" variant="filled" />
-                                    <Button variant='contained' onClick={()=> setOpenConfirmation(true)}>Search</Button>
+                                    <TextField className='input' id="filled-basic" label="Type" variant="filled" onChange={(e)=>setManualType(e.target.value)}/>
+                                    <TextField className='input' id="filled-basic" label="ID" variant="filled" onChange={(e)=>setManualId(e.target.value)} />
+                                    <Button variant='contained' onClick={()=> manualEntry()}>Search</Button>
                                 </div>
                             </Menu>
                         </div>
@@ -144,13 +176,13 @@ function Scanner() {
                 </div>
             </section>
             <Modal
-            open={openConfirmation || openFullScreen}
-            onClose={()=>{setOpenConfirmation(false); setOpenFullScreen(false)}}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description">
-                <div></div>
+                open={openConfirmation || openFullScreen}
+                onClose={()=>{setOpenConfirmation(false); setOpenFullScreen(false)}}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description">
+                    <div></div>
             </Modal>
-            {openConfirmation?<><ScannerConfirmationModal type={"visitor"} close={()=>setOpenConfirmation(false)}/></>:<></>}
+            {openConfirmation?<><ScannerConfirmationModal type={manualType ? manualType : decryptedData.logType} info={information} data={decryptedData} close={()=>setOpenConfirmation(false)}/></>:<></>}
         </div>
     </>
 }

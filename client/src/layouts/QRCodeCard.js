@@ -12,6 +12,8 @@ function QRCodeCard(props) {
 
     const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
 
+    console.log(props.objId)
+
     // download QR Code
     const DownloadQRCode = (divId, filename) => {
         // Get the div element
@@ -60,8 +62,6 @@ function QRCodeCard(props) {
         }
 
     }
-
-    console.log(sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId)))
 
     return <>
         <div className='SidePanel__Container' id='QRCodeContainer'>

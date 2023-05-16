@@ -154,7 +154,11 @@ function ResidentsView() {
                         </div>
                     </div>
                     <div className='SectionView__SidePanel' id="ViewResident__QRCode__Container">
-                        <QRCodeCard/>
+                        {/* <QRCodeCard/> */}
+                        <QRCodeCard
+                            objId={resident.user.userId}
+                            logType={'user'}
+						/>
                     </div>
                 </div>
             </section>

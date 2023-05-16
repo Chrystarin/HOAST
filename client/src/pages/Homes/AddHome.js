@@ -42,7 +42,8 @@ function AddHome() {
         houseNumber: '',
         street: '',
         phase: '',
-        color: ''
+        color: '',
+        contactNumber: ''
     });
 
     // Retrieves All HOA Data onLoad
@@ -83,7 +84,8 @@ function AddHome() {
                     number: form.houseNumber,
                     street: form.street,
                     phase: form.phase,
-                    color: form.color
+                    color: form.color,
+                    contactNumber: form.contactNumber
                 })
             )
             .then((response) => {
@@ -128,6 +130,7 @@ function AddHome() {
                                 <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                             </div>
                             <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/>
+                            <TextField fullWidth label="Contact Number" variant="filled" onChange={(e)=>updateForm({ contactNumber: e.target.value })} defaultValue={form.contactNumber}/>
                             <div className='Form__Button'>
                                 <Button 
                                     variant='contained' 

@@ -13,10 +13,10 @@ import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 function EditHome() {
     const { id } = useParams();
     const {isHomeowner} = useAuth();
-    
-    console.log(isHomeowner(id));
 
     const [name, setName] = useState()
+    const [color, setColor] = useState()
+    const [contactNumber, setContactNumber] = useState()
     const [home, setHome] = useState()
     const [residents, setResidents] = useState()
     const [residentAdd, setResidentAdd] = useState()
@@ -51,11 +51,12 @@ function EditHome() {
                     `homes`,
                     JSON.stringify({ 
                         name: name,
+                        color: color,
+                        contactNumber: contactNumber,
                         homeId: id
                     })
                 )
                 .then((response) => {
-                    // alert("Name Updated") 
                     console.log(response.data)
                 })
         } catch(err){
@@ -145,6 +146,26 @@ function EditHome() {
                                     variant="filled"
                                     defaultValue={home.name}
                                     onChange={(e)=>setName(e.target.value )}
+                                />
+                                <TextField
+                                    className='EditHome__Name'
+                                    id="filled-password-input"
+                                    label="Color"
+                                    type="text"
+                                    autoComplete="current-password"
+                                    variant="filled"
+                                    defaultValue={home.color}
+                                    onChange={(e)=>setColor(e.target.value )}
+                                />
+                                <TextField
+                                    className='EditHome__Name'
+                                    id="filled-password-input"
+                                    label="Contact Number"
+                                    type="text"
+                                    autoComplete="current-password"
+                                    variant="filled"
+                                    defaultValue={home.conactNumber}
+                                    onChange={(e)=>setContactNumber(e.target.value )}
                                 />
                                 <div className='EditHome__ResidentList'>
                                     <h5>List of Residents</h5>
