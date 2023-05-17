@@ -12,7 +12,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
-import sjcl from '../../layouts/sjcl';
+// import sjcl from '../../layouts/sjcl';
 
 function Scanner() {
     const [data, setData] = useState(null);

@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import QRCode from "react-qr-code";
 import html2canvas from 'html2canvas';
-import sjcl from './sjcl';
+// import sjcl from './sjcl';
 
 function QRCodeCard(props) {
 
