@@ -135,7 +135,7 @@ function Register() {
 									autoComplete="current-password"
 									variant="filled"
 									onChange={(e) =>updateForm({ password: e.target.value })}
-									inputProps={{ pattern:"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}                                                                                                                          " }} 
+									inputProps={{ pattern:"(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" }} 
                                     // Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters
 								/>
 								<div>
