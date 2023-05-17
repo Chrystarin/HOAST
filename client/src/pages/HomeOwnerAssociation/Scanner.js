@@ -77,8 +77,11 @@ function Scanner() {
     // Function upon scanning
     async function handleScan(data){
         if (data) {
-            setDecryptedData(JSON.parse(sjcl.decrypt(password, data.text)))
-            log = JSON.parse(sjcl.decrypt(password, data.text))
+            // setDecryptedData(JSON.parse(sjcl.decrypt(password, data.text)))
+            // log = JSON.parse(sjcl.decrypt(password, data.text))
+            setDecryptedData(data.text)
+            log=JSON.parse(data.text)
+            
             switch(log.logType){
                 case 'visitor':
                     await fetchVisitor(log.objId);

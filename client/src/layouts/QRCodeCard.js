@@ -71,7 +71,8 @@ function QRCodeCard(props) {
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                 // value={encryptData(createQrData(props.objId, props.logType, props.hoaId), password)}
-                value={sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId))}
+                // value={sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId))}
+                value={createQrData(props.objId, props.logType, props.hoaId)}
                 viewBox={`0 0 256 256`}
             />
         </div>

@@ -16,35 +16,35 @@ function HomeList() {
     const [requests, setRequests] = useState();
 
 	useEffect(() => {
-		// Retrieves Homes
-		const fetchHomes = async () => {
-			await axios
-				.get(`homes`, {
-					params: {
-						hoaId: localStorage.getItem('hoaId')
-					}
-				})
-				.then((response) => {
-					setHomes(response.data);
-					console.log(response.data);
-				});
-		};
-        // Retrieves Requests
-        const fetchRequests = async () => {
-            await axios
-                .get(`requests`, { 
-                    params: { 
-                        hoaId: localStorage.getItem('hoaId')
-                    } 
-                })
-                .then((response) => {
-                    setRequests(response.data);
-            });
-        };
-
 		fetchHomes();
         fetchRequests();
 	}, []);
+
+    // Retrieves Homes
+    const fetchHomes = async () => {
+        await axios
+            .get(`homes`, {
+                params: {
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setHomes(response.data);
+                console.log(response.data);
+            });
+    };
+    // Retrieves Requests
+    const fetchRequests = async () => {
+        await axios
+            .get(`requests`, { 
+                params: { 
+                    hoaId: localStorage.getItem('hoaId')
+                } 
+            })
+            .then((response) => {
+                setRequests(response.data);
+        });
+    };
 
     async function approveRequest( hoaId, reqId){
         try{
@@ -59,7 +59,30 @@ function HomeList() {
             .then((response) => {
                 setRequests(response.data);
                 alert("Request Approved!")
-                window.location.reload(true);
+                fetchHomes();
+                fetchRequests();
+            });
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+    async function declineRequest( hoaId, reqId){
+        try{
+            await axios
+            .patch(`requests`, 
+                JSON.stringify({
+                    hoaId: hoaId,
+                    requestId: reqId,
+                    status: 'rejected'
+                })
+            )
+            .then((response) => {
+                setRequests(response.data);
+                alert("Request Rejected!")
+                fetchHomes();
+                fetchRequests();
             });
         }
         catch(err){
@@ -271,7 +294,7 @@ function HomeList() {
                                                             </div>
                                                         </div>
                                                         <div className='RequestCard__Buttons'>
-                                                            <Button className='SecondaryBtn' variant='contained' onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Decline</Button>
+                                                            <Button className='SecondaryBtn' variant='contained' onClick={()=>declineRequest(request.hoa.hoaId,request.requestId)}>Decline</Button>
                                                             <Button className='PrimaryBtn' variant='contained' onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Approve</Button>
                                                         </div>
                                                     </div>
