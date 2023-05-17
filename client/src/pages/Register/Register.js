@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 
 import './Register.scss'
 
@@ -22,6 +22,10 @@ function Register() {
         password: ''
     });
 
+    const [emailError, setEmailError] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
         return setRegisterForm((prev) => {
@@ -31,6 +35,41 @@ function Register() {
             return prev;
         
     });}
+
+    const validateFirstName = () => {
+        if (!registerForm.firstName) {
+            setNameError('Name is required');
+        } else {
+            return registerForm.firstName;
+        }
+    };
+
+    const validateLastName = () => {
+        if (!registerForm.lastName) {
+            setNameError('Name is required');
+        } else {
+            return registerForm.lastName;
+        }
+    };
+
+    const validateEmail = () => {
+        if (!registerForm.email.includes('@') || !registerForm.email.endsWith('.com')) {
+            setEmailError('Please enter a valid email address');
+            return;
+        } else {
+            return registerForm.email;
+        }
+    };
+
+    const validatePassword = () => {
+        if (!registerForm.password) {
+            setPasswordError('Password is required');
+        } else if (!/(?=.*[A-Z])(?=.*\d)/.test(registerForm.password)) {
+            setPasswordError('Password must contain at least one uppercase letter and one number');
+        } else {
+            return registerForm.password;
+        }
+    };
 
     // Submit function for register
     async function Submit(e){
@@ -42,10 +81,10 @@ function Register() {
             .post(
                 `users/signup`,
                 JSON.stringify({ 
-                    firstName: registerForm.firstName,
-                    lastName: registerForm.lastName,
-                    email: registerForm.email,
-                    password: registerForm.password
+                    firstName: validateFirstName(),
+                    lastName: validateLastName(),
+                    email: validateEmail(),
+                    password: validatePassword()
                 }),
                 {
                     headers: { 'Content-Type': 'application/json' }
@@ -76,37 +115,52 @@ function Register() {
                     <form onSubmit={Submit}>
                     <div className='Input__Wrapper2'>
                         <TextField
+                        required
                         id="filled-password-input"
                         label="First Name"
                         type="text"
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ firstName: e.target.value })}
+                        inputProps={{ pattern: "^[a-zA-Z\\s]*$" }}
+                        error={!!nameError}
+                        helperText={nameError}
                         />
                         <TextField
+                        required
                         id="filled-password-input"
                         label="Last Name"
                         type="text"
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ lastName: e.target.value })}
+                        inputProps={{ pattern: "^[a-zA-Z\\s]*$" }}
+                        error={!!nameError}
+                        helperText={nameError}
                         />
                     </div>
                     <TextField
+                        required
                         id="filled-password-input"
                         label="Email"
-                        type="text"
+                        type="email"
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ email: e.target.value })}
+                        error={!!emailError}
+                        helperText={emailError}
                     />
                     <TextField
+                        required
                         id="filled-password-input"
                         label="Password"
                         type="password"
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ password: e.target.value })}
+                        inputProps={{ pattern: '(?=.*[A-Z])(?=.*\\d).{8,}' }}
+                        error={!!passwordError}
+                        helperText={passwordError}
                     />
                     <div>
                         <Button variant="contained" size="large" type='submit' >

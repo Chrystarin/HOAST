@@ -11,7 +11,7 @@ import NativeSelect from '@mui/material/NativeSelect';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import loading from '../../images/loading.gif';
 import {useAuth} from '../../utils/AuthContext.js';
-import Filter from '../../components/Filter/Filter.js';
+import Filter from '../../components/Filter/filter.js';
 
 function Homes() {
   const {user, isAdmin} = useAuth();

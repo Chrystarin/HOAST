@@ -18,6 +18,8 @@ function Login() {
         password: ''
     });
 
+    const [emailError, setEmailError] = useState('');
+
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
         return setForm((prev) => {
@@ -26,6 +28,16 @@ function Login() {
             return prev;
         
     });}
+
+    const validateEmail = () => {
+      if (!form.email.includes('@') || !form.email.endsWith('.com')) {
+          setEmailError('Please enter a valid email address');
+          return;
+      } else {
+      setEmailError('');
+      // submit logic here if form is valid
+      }
+  };
 
   return (
     <div>
@@ -42,10 +54,12 @@ function Login() {
                 <div className='FormReplacement'>
                     <TextField
                         label="Email"
-                        type="text"
+                        type="email"
                         autoComplete="current-password"
                         variant="filled"
                         onChange={(e)=>updateForm({ email: e.target.value })}
+                        error={!!emailError}
+                        helperText={emailError}
                     />
                     <TextField
                         id="filled-password-input"

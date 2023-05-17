@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import loading from '../../images/loading.gif';
-import Filter from '../../components/Filter/Filter';
+import Filter from '../../components/Filter/filter.js';
 function Visitors() {
 
     const [visitors, setVisitors] = useState();

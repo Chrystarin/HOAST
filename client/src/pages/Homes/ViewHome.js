@@ -78,7 +78,7 @@ function ViewHome() {
                                     </div>
                                     <div>
                                         <h4>HOA Dues Paid Until</h4>
-                                        <p>{home.paidUntil}</p>
+                                        <p>{new Date(home.paidUntil).toLocaleString('default', { month: 'long' }) + " " + new Date(home.paidUntil).getDate() + ", " + new Date(home.paidUntil).getFullYear() }</p>
                                     </div>
                                 </div>
                             </div>
@@ -144,8 +144,8 @@ function ViewHome() {
                                             type="Visitor" 
                                             key={visitor.visitorId} 
                                             title={visitor.name} 
-                                            subTitle1={visitor.arrival} 
-                                            subTitle2={visitor.departure}
+                                            subTitle1={new Date(visitor.arrival).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.arrival).getDate() + ", " + new Date(visitor.arrival).getFullYear()} 
+                                            subTitle2={new Date(visitor.departure).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.departure).getDate() + ", " + new Date(visitor.departure).getFullYear()}
                                             url={`/visitors/${visitor.visitorId}`}
                                             />
                                         );

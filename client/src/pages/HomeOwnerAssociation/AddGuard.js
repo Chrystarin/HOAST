@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import axios from '../../utils/axios';
 import SideBar from './SideBar';
-import SnackbarComp from '../../components/SnackBar/SnackbarComp';
+import SnackbarComp from '../../components/SnackBar/SnackbarComp.js';
 export default function AddGuard() {
 
     const navigate = useNavigate();
