@@ -35,9 +35,11 @@ app.use('/device', deviceRoute);
 app.use(
 	cors({
 		credentials: true,
-		origin: 'http://localhost:3000'
+        origin: process.env.CORS_ORIGIN
 	})
 );
+
+
 
 app.use('/users', userRoute);
 app.use(authenticate);

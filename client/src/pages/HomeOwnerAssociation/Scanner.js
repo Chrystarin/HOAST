@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import NavBar from '../../layouts/NavBar';
 import './Scanner.scss';
 import SideBar from './SideBar';
@@ -20,6 +20,7 @@ function Scanner() {
     const [manualId, setManualId] = useState();
     const [decryptedData, setDecryptedData] = useState();
     const [information, setInformation] = useState();
+    const [hoa, setHoa] = useState();
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [openFullScreen, setOpenFullScreen] = useState(false);
 
@@ -34,6 +35,10 @@ function Scanner() {
       setAnchorEl(null);
     };
     const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
+
+    useEffect(() => {
+        fetchHoa()
+    }, []);
 
     const fetchVisitor = async (id) => {
         await axios
@@ -74,12 +79,25 @@ function Scanner() {
             });
     };
 
+    const fetchHoa = async (id) => {
+        await axios
+            .get(`hoas`, {
+                params: {
+                    hoaId: localStorage.getItem('hoaId')
+                }
+            })
+            .then((response) => {
+                setHoa(response.data);
+                console.log(response.data)
+            });
+    };
+
     // Function upon scanning
     async function handleScan(data){
         if (data) {
             // setDecryptedData(JSON.parse(sjcl.decrypt(password, data.text)))
             // log = JSON.parse(sjcl.decrypt(password, data.text))
-            setDecryptedData(data.text)
+            setDecryptedData(JSON.parse(data.text))
             log=JSON.parse(data.text)
             
             switch(log.logType){
@@ -119,6 +137,8 @@ function Scanner() {
     let handleError = (err) => {
         alert(err);
     };
+
+    if(!hoa) return <div>Loading...</div>
 
     return <>
         <NavBar/>
@@ -185,7 +205,7 @@ function Scanner() {
                 aria-describedby="modal-modal-description">
                     <div></div>
             </Modal>
-            {openConfirmation?<><ScannerConfirmationModal type={manualType ? manualType : decryptedData.logType} info={information} data={decryptedData} close={()=>setOpenConfirmation(false)}/></>:<></>}
+            {openConfirmation?<><ScannerConfirmationModal type={manualType ? manualType : decryptedData.logType} info={information} data={decryptedData} ipAdd={hoa.deviceIP} close={()=>setOpenConfirmation(false)}/></>:<></>}
         </div>
     </>
 }
