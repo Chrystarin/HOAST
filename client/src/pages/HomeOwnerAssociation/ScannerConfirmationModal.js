@@ -10,6 +10,7 @@ function ScannerConfirmationModal(props) {
     const [viewMore, setViewMore] = useState(false);
 
     console.log(props.info)
+    console.log(props.data)
 
     async function acceptEntry(){
         try{
@@ -23,13 +24,14 @@ function ScannerConfirmationModal(props) {
                 })
             )
             .then((response) => {
-                fetch('http://192.168.0.24:80/?header=true')
+                fetch(`${props.ipAdd}/?header=true`)
                 alert("Record Added Successfully!");
                 props.close()
             })
         }
         catch(error){
             alert(error)
+            fetch(`${props.ipAdd}/?header=false`)
             props.close()
         }
     }
@@ -37,6 +39,7 @@ function ScannerConfirmationModal(props) {
     async function denyEntry(){
         try{
             alert("Entry Denied")
+            fetch(`${props.ipAdd}/?header=false`)
             props.close()
         }
         catch(error){
