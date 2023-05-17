@@ -19,6 +19,7 @@ export default function RegisterHoa() {
         if (!registerForm.name.endsWith('HOA')) {
             setNameError('HOA at the end is required');
         } else {
+            setNameError('');
             return registerForm.name;
         }
     };
