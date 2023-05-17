@@ -28,6 +28,10 @@ module.exports = model(
 				},
 				phase: String
 			},
+			contactNo: {
+				type: String,
+				required: [true, 'Contact Number is required']
+			},
 			color: {
 				type: String,
 				required: [true, 'Color is required'],
@@ -40,7 +44,7 @@ module.exports = model(
 						'blue',
 						'violet'
 					],
-                    message: "'{VALUE}' is not supported"
+					message: "'{VALUE}' is not supported"
 				}
 			},
 			paidUntil: {

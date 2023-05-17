@@ -27,7 +27,7 @@ const getResidents = async (req, res, next) => {
 	if (RESIDENT.has(type)) {
 		const { home } = req.user;
 		residents = home.residents;
-		console.log("check resident")
+		console.log('check resident');
 	}
 
 	if (EMPLOYEE.has(type)) {
@@ -37,16 +37,11 @@ const getResidents = async (req, res, next) => {
 		({ residents } = await extractHomes({ hoa: hoa._id }));
 	}
 
-	
-
 	// Get specific resident
 	if (residentId) {
-
 		residents = residents.find(
 			({ user: { userId } }) => residentId == userId
 		);
-
-		
 
 		if (!residents) throw new NotFoundError('User is not resident');
 	}
@@ -83,8 +78,7 @@ const removeResident = async (req, res, next) => {
 	const { residentId } = req.body;
 	const { home, user } = req.user;
 
-
-    console.log(residentId)
+	console.log(residentId);
 
 	// Validate input
 	checkString(residentId, 'Resident ID');

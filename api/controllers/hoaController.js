@@ -13,8 +13,7 @@ const { genHoaId, genRequestId } = require('../helpers/generateId');
 const { checkDate } = require('../helpers/validData');
 
 const registerHoa = async (req, res, next) => {
-	const { name, street, barangay, city, province } =
-		req.body;
+	const { name, street, barangay, city, province } = req.body;
 	const { user } = req.user;
 
 	// Validate strings
@@ -48,22 +47,23 @@ const getHoas = async (req, res, next) => {
 	if (hoaId) {
 		hoas = await HOA.findOne({ hoaId });
 		if (!hoas) throw new HOANotFoundError();
-	} 
+	}
 
 	res.json(hoas);
 };
 
 const joinHoa = async (req, res, next) => {
-	const { hoaId, name, color, number, street, phase } = req.body;
+	const { hoaId, name, contactNo, color, number, street, phase } = req.body;
 	const { user } = req.user;
     
 	console.log(req.body)
 
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
-    checkString(color, 'Home Color');
-	checkString(number, 'Home Number');
+	checkString(color, 'Home Color');
+	checkNumber(number, 'Home Number');
 	checkString(street, 'Street');
+    checkString(contactNo, 'Contact Number');
 	checkString(phase, 'Phase', true);
 
 	// Find HOA
@@ -71,20 +71,20 @@ const joinHoa = async (req, res, next) => {
 	if (!hoa) throw new HOANotFoundError();
 
 	// Check if address already exists
-    const homeExists = await Home.exists({
-        hoa: hoa._id,
-        'address.number': number,
-        'address.street': street,
-        'address.phase': phase
-    });
-    if (homeExists) throw new DuplicateEntryError('Home already saved');
+	const homeExists = await Home.exists({
+		hoa: hoa._id,
+		'address.number': number,
+		'address.street': street,
+		'address.phase': phase
+	});
+	if (homeExists) throw new DuplicateEntryError('Home already saved');
 
 	// Create request
 	const request = await Request.create({
 		requestId: genRequestId(),
 		hoa: hoa._id,
 		requestor: user._id,
-		details: { name, color, number, street, phase }
+		details: { name, color, number, street, phase, contactNo }
 	});
 
 	res.status(201).json({
