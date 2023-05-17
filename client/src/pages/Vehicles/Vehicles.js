@@ -7,7 +7,7 @@ import Navbar from '../../layouts/NavBar';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Card from '../../components/Card/Card.js';
 import loading from '../../images/loading.gif';
-import Filter from '../../components/Filter/filter.js';
+import Filter from '../../components/Filter/Filter.js';
 function Vehicles() {
     
     const [vehicles, setVehicles] = useState();
