@@ -167,12 +167,12 @@ function AddHome() {
                                             data.length > 0 && data.map((hoa) => {
                                                 return (
                                                     <div className={hoa._id===selectedHoa?'Card__Horizontal Active': 'Card__Horizontal'}  onClick={()=>{setSelectedHoa(hoa._id); updateForm({ hoaId: hoa.hoaId }) }} key={hoa._id} id={hoa._id}>
-                                                    {/* <div className='Card__Horizontal' 
-                                                        onClick={(e)=>{
-                                                                e.currentTarget.classList.add('cardactive');
-                                                                setSelectedHoa(hoa.name); 
-                                                                updateForm({ hoaId: hoa.hoaId }) 
-                                                            }} key={hoa._id} id={hoa._id}> */}
+                                                    {/* // <div className='Card__Horizontal' 
+                                                    //     onClick={(e)=>{
+                                                    //             e.currentTarget.classList.add('cardactive');
+                                                    //             setSelectedHoa(hoa.name); 
+                                                    //             updateForm({ hoaId: hoa.hoaId }) 
+                                                    //         }} key={hoa._id} id={hoa._id}> */}
                                                         <img src={VillageIcon} alt="" />
                                                     <div>
                                                             <h6>{hoa.name}</h6>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../layouts/NavBar';
-import './Dashboard.scss';
+import './HomeList.scss';
 import SideBar from './SideBar';
 import Button from '@mui/material/Button';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -10,6 +10,7 @@ import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import axios from '../../utils/axios';
 import loading from '../../images/loading.gif';
+import { Avatar } from '@mui/material';
 function HomeList() {
 	const [homes, setHomes] = useState();
     const [requests, setRequests] = useState();
@@ -243,13 +244,38 @@ function HomeList() {
                                         {requests.length > 0 &&
                                         requests.map((request) => {
                                             if (request.status=='pending'){
-                                                return (
-                                                    <div key={request.requestId} style={{ border: '1px solid rgba(0, 0, 0, 1)', padding: "5px", margin: "5px" }}>
-                                                        <h3>{request.details.name}</h3>
-                                                        <h4>{request.requestor.name.firstName}{' '}{request.requestor.name.lastName}</h4>
-                                                        <button onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Approve</button>
+                                                return <>
+                                                    <div key={request.requestId} className="RequestCard">
+                                                        <div className='RequestCard__Header'>
+                                                            <h6>Address:</h6>
+                                                            <div className='RequestCard__Header__Address__Container'>
+                                                                <div>
+                                                                    <p className="BodyText3">#</p>
+                                                                    <p>{request.details.number}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="BodyText3">Street</p>
+                                                                    <p>{request.details.street}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="BodyText3">Phase</p>
+                                                                    <p>{request.details.phase}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='RequestCard__Requestor'>
+                                                            <Avatar sx={{ width: 46, height: 46 }}/>
+                                                            <div>
+                                                                <p className="BodyText2">{request.requestor.name.firstName}{' '}{request.requestor.name.lastName}</p>
+                                                                <p className="BodyText3">Home Owner</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className='RequestCard__Buttons'>
+                                                            <Button className='SecondaryBtn' variant='contained' onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Decline</Button>
+                                                            <Button className='PrimaryBtn' variant='contained' onClick={()=>approveRequest(request.hoa.hoaId,request.requestId)}>Approve</Button>
+                                                        </div>
                                                     </div>
-                                                );
+                                                </>
                                             }
                                         })}
                                     </>
