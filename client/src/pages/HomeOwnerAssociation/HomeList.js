@@ -57,7 +57,6 @@ function HomeList() {
             )
             .then((response) => {
                 setRequests(response.data);
-                alert("Request Approved!")
                 window.location.reload(true);
             });
         }

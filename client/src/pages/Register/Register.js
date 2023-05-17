@@ -52,7 +52,6 @@ function Register() {
                 }
             )
             .then((response) => {
-                alert("Registered Successfully!");
                 navigate("/");
             })
         }

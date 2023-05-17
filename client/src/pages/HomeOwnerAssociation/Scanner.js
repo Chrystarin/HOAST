@@ -14,11 +14,16 @@ import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
 import sjcl from '../../layouts/sjcl';
 
+import SnackbarComp from '../../components/SnackBar/SnackbarComp'
 function Scanner() {
     const [data, setData] = useState(null);
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [openFullScreen, setOpenFullScreen] = useState(false);
-
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     let log = null;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,7 +43,12 @@ function Scanner() {
                 // log = JSON.parse(decryptData(password, data))
                 log = JSON.parse(sjcl.decrypt(password, data.text))
                 console.log(log)
-                alert("QR Code Detected!")
+                setOpenSnackBar(openSnackBar => ({
+                    ...openSnackBar,
+                    open:true,
+                    type:'info',
+                    note:"QR Code Detected!",
+                }));
                 
                 // Add Record of Log
                 await axios
@@ -52,19 +62,33 @@ function Scanner() {
                 )
                 .then((response) => {
                     fetch('http://192.168.0.24:80/?header=true')
-                    alert("Record Added Successfully!");
+                    setOpenSnackBar(openSnackBar => ({
+                        ...openSnackBar,
+                        open:true,
+                        type:'success',
+                        note:"Record Added Successfully!",
+                    }));
                 })
             }
             catch(err){
-                console.error(err.message);
                 fetch('http://192.168.0.24:80/?header=false')
-                alert("Record Not Detected!");
+                setOpenSnackBar(openSnackBar => ({
+                    ...openSnackBar,
+                    open:true,
+                    type:'error',
+                    note:err.message,
+                }));
             }
         }
     };
 
     let handleError = (err) => {
-        alert(err);
+        setOpenSnackBar(openSnackBar => ({
+            ...openSnackBar,
+            open:true,
+            type:'error',
+            note:err.message,
+        }));
     };
 
     // Function to decrypt data
@@ -151,6 +175,7 @@ function Scanner() {
                 <div></div>
             </Modal>
             {openConfirmation?<><ScannerConfirmationModal type={"visitor"} close={()=>setOpenConfirmation(false)}/></>:<></>}
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
         </div>
     </>
 }

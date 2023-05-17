@@ -12,7 +12,10 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import loading from '../../images/loading.gif';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
-
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import axios from './../../utils/axios';
 
 function AddHome() {
@@ -87,7 +90,6 @@ function AddHome() {
                 })
             )
             .then((response) => {
-                // alert("Request Submitted! Wait for admin to approve your request.");
                 navigate("/homes");
             })
         }
@@ -98,7 +100,6 @@ function AddHome() {
                 type:'error',
                 note:"Check your inputs",
             }));
-            // alert(err.message);
         }
     }
     if(!hoas) return <>
@@ -127,7 +128,26 @@ function AddHome() {
                                 <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
                                 <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                             </div>
-                            <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/>
+                            <FormControl variant="filled" fullWidth>
+                                <InputLabel id="demo-simple-select-filled-label">Color</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={form.color}
+                                    onChange={(e)=>{
+                                        setForm({color:e.target.value})
+                                    }}
+                                >
+                                    <MenuItem value={"red"}>Red</MenuItem>
+                                    <MenuItem value={"blue"}>Blue</MenuItem>
+                                    <MenuItem value={"yellow"}>Yellow</MenuItem>
+                                    <MenuItem value={"green"}>Green</MenuItem>
+                                    <MenuItem value={"orange"}>Orange</MenuItem>
+                                    <MenuItem value={"violet"}>Violet</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            
                             <div className='Form__Button'>
                                 <Button 
                                     variant='contained' 

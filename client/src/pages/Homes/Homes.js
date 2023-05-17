@@ -58,7 +58,7 @@ function Homes() {
         <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput setData={setData} data={homes} keys={["name","hoa","owner.name"]}  filterValue={filterValue} />
+            <SearchInput setData={setData} data={homes} keys={["name","hoa._id","owner.name.firstName"]}  filterValue={filterValue} />
           </div>
           <Filter value={filterValue} setValue={setFilterValue}/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
@@ -73,12 +73,13 @@ function Homes() {
                   data.map((home) => {
                   return (
                   <Card 
+                    color={home.color}
                       type="Home"
                       key={home.homeId}
                       id={home.homeId}
                       title={home.name}
-                      subTitle1={home.address.number}
-                      subTitle2={home.address.street}
+                      subTitle1={home["address.number"]}
+                      subTitle2={home["address.street"]}
                       url={`/homes/${home.homeId}`}
                   />
                   );

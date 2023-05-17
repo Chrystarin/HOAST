@@ -55,12 +55,16 @@ function AddVehicle() {
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
-                alert("Registered Successfully!");
                 navigate("/vehicles");
             })
         }
         catch(err){
-            console.error(err.message);
+            setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                open:true,
+                type:'error',
+                note:err.message,
+            }));
         }
     }
 

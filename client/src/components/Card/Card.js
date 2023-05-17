@@ -8,7 +8,7 @@ function Card(props) {
     function CardType( ){
         switch (props.type) {
             case "Home":
-                return <CottageIcon id="Icon"/>
+                return <CottageIcon style={{color:props.color}} id="Icon"/>
                 break;
             case "Vehicles":
                 return <DriveEtaIcon id="Icon"/>

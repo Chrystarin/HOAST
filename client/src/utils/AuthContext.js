@@ -32,7 +32,6 @@ function AuthProvider({ children }) {
                     setUser(response.data)
                     localStorage.setItem('user', JSON.stringify(response.data))
                     fetchRole();
-                    alert("Logged In Successfully!")
                     navigate("/homes");
                 });
         } catch (error) {

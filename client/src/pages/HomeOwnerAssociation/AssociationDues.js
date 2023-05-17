@@ -129,52 +129,7 @@ function AssociationDues() {
 							</span>
 						</h3>
 						<div className='SectionController'>
-							<div id='SearchInput__Container'>
-								{/* <SearchInput/> */}
-							</div>
-							<Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
-							<Menu
-							id="basic-menu"
-							anchorEl={anchorElFilter}
-							open={openFilter}
-							onClose={() => {
-								setAnchorElFilter(null);
-							}}
-							MenuListProps={{
-							'aria-labelledby': 'basic-button',
-							}}
-							transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-							anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-						>
-							<div className='Filter'>
-								<h6 className='Filter__Title'>Filter</h6>
-								<ul>
-									<li>
-									<p className="BodyText3 Filter__Titles">Sort by</p>
-									<div>
-									<NativeSelect
-										defaultValue={null}
-										inputProps={{
-										name: 'age',
-										id: 'uncontrolled-native',
-										}}
-									>
-										<option value={10}>A to Z</option>
-										<option value={20}>Recent Register</option>
-										<option value={30}>More Residents</option>
-									</NativeSelect>
-									</div>
-									</li>
-								</ul>
-									<div className='Filter__Buttons'>
-										<div>
-										<Button variant=''>Reset All</Button>
-										</div>
-										<Button variant=''>Cancel</Button>
-										<Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
-									</div>
-								</div>
-							</Menu>
+							
 							{/* <Button variant="contained" onClick={(event) => {setAnchorAddDues(event.currentTarget)}}>New Payment</Button> */}
 							<Menu
 								id="basic-menu"
@@ -226,10 +181,9 @@ function AssociationDues() {
 										label="paidUntil"
 										type="date"
 										autoComplete="current-password"
+										InputProps={{ inputProps: { min: ((new Date(selectedPaidUntil)).getFullYear()) + "-" + String((new Date(selectedPaidUntil)).getMonth() + 1).padStart(2, '0') + "-" + String((new Date(selectedPaidUntil)).getDate()).padStart(2, '0') } }}
 										// defaultValue={"2023-01-01"}
-                                        defaultValue={
-                                            ((new Date(selectedPaidUntil)).getFullYear()) + "-" + String((new Date(selectedPaidUntil)).getMonth() + 1).padStart(2, '0') + "-" + String((new Date(selectedPaidUntil)).getDate()).padStart(2, '0')
-                                        }
+                                        defaultValue={((new Date(selectedPaidUntil)).getFullYear()) + "-" + String((new Date(selectedPaidUntil)).getMonth() + 1).padStart(2, '0') + "-" + String((new Date(selectedPaidUntil)).getDate()).padStart(2, '0')}
 										variant="filled"
 										onChange={(e) =>
 											{
