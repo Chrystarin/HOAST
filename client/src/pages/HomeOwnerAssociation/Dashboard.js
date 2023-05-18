@@ -10,12 +10,11 @@ import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
 
 function HomeOwnerAssociation() {
-
-    const [guard, setGuard] = useState();
     const [hoa, setHoa] = useState();
 
     // Runs onLoad
 	useEffect(() => {
+        
 		const fetchHoa = async () => {
 			await axios
 				.get(`hoas`, {
@@ -24,14 +23,14 @@ function HomeOwnerAssociation() {
 					}
 				})
 				.then((response) => {
+                    console.log(response.data)
 					setHoa(response.data);
-					setGuard(response.data.guards);
 				});
 		};
 		fetchHoa();
 	}, []);
 
-    if(!hoa || !guard) return <>
+    if(!hoa) return <>
     <div className='Loading'>
       <img src={loading} alt="" />
       <h3>Loading...</h3>
@@ -60,7 +59,7 @@ function HomeOwnerAssociation() {
                                     <div></div>
                                 </div>
                             </div>
-                            <div className='SectionView__Sections'>
+                            {/* <div className='SectionView__Sections'>
                                 <h5 className='SectionView__Sections__Title'>Guard/s</h5>
                                 <div id='Guard__Content'>
                                     <div id='Guard__Card'>
@@ -70,7 +69,7 @@ function HomeOwnerAssociation() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>   */}
                         </div>
                         <div className='SectionView__SidePanel' id='SectionView_Sidebar'>
                             <div className="SidePanel__Container SidePanelShowInfo" >

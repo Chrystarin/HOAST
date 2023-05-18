@@ -10,7 +10,7 @@ import {useAuth} from '../../utils/AuthContext.js';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 
 export default function RegisterHoa() {
-    const {isRole} = useAuth();
+    const {isRole, fetchRole} = useAuth();
     const navigate = useNavigate();
     const [nameError, setNameError] = useState('');
 
@@ -67,6 +67,7 @@ export default function RegisterHoa() {
                 })
             )
             .then((response) => {
+                fetchRole()
                 alert("Registered Successfully!");
                 navigate("/dashboard");
             })

@@ -140,7 +140,7 @@ function AuthProvider({ children }) {
         return false
     }
 
-    const value = { user, login, logout, isAuth, isAdmin, isGuard, isHomeowner, isResident, isRole};
+    const value = { user, login, logout, isAuth, isAdmin, isGuard, isHomeowner, isResident, isRole, fetchRole};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
