@@ -41,6 +41,11 @@ app.use(
 app.use(helmet());   
 
 app.use('/users', userRoute);
+app.get('/test', (req, res, next) => {
+    console.log('public po[uiasklfgjhasdhjkfg');
+
+    res.json('ptaiognaashjdfgasjdhfgasdhjfg');
+});
 app.use(authenticate);
 app.use('/roles', roleRoute);
 
