@@ -9,6 +9,8 @@ const addDevice = async (req, res, next) => {
 	// Find user by email and check password using bcrypt
 	const user = await User.findOne({ 'credentials.email': email });
 
+	console.log(user._id, user);
+
 	if (!user || !bcrypt.compareSync(password, user.credentials.password))
 		throw new UnauthorizedError('Invalid user credentials');
 
@@ -20,6 +22,7 @@ const addDevice = async (req, res, next) => {
 			{ 'guards.user': user._id, 'guards.status': 'active' }
 		]
 	});
+	console.log(hoa)
 	if (!hoa) throw new ForbiddenError('User not guard or admin of HOA');
 
 	hoa.deviceIP = deviceIP;
