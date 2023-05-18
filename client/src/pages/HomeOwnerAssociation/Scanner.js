@@ -12,12 +12,13 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
-// import sjcl from '../../layouts/sjcl';
+import { AES, enc } from 'crypto-js';
+import moment from 'moment';
 
 import SnackbarComp from '../../components/SnackBar/SnackbarComp'
 function Scanner() {
-    const [data, setData] = useState(null);
-    const [manualType, setManualType] = useState();
+    const [scanned, setScanned] = useState(null);
+    const [manualType, setManualType] = useState(null);
     const [manualId, setManualId] = useState();
     const [decryptedData, setDecryptedData] = useState();
     const [information, setInformation] = useState();
@@ -39,14 +40,15 @@ function Scanner() {
     const handleClose = () => {
       setAnchorEl(null);
     };
-    const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
+    const password = process.env.REACT_APP_ENCRYPT_KEY;
 
     useEffect(() => {
         fetchHoa()
     }, []);
 
     const fetchVisitor = async (id) => {
-        await axios
+        if(id){
+            await axios
             .get(`visitors`, {
                 params: {
                     visitorId: id,
@@ -55,34 +57,50 @@ function Scanner() {
             })
             .then((response) => {
                 setInformation(response.data);
+                if(manualId) setManualType('visitor')
+            })
+            .catch(()  => {
+                console.log("error")
             });
-    };
+        }
+       
+    }; 
 
     const fetchVehicle = async (id) => {
-        await axios
-            .get(`vehicles`,{
-                params: {
-                    plateNumber: id,
-                    hoaId: localStorage.getItem('hoaId')
-                }
-            })
-            .then((response) => {
-                setInformation(response.data);
-            });
-    };
+        if(id){
+            await axios
+                .get(`vehicles`,{
+                    params: {
+                        plateNumber: id,
+                        hoaId: localStorage.getItem('hoaId')
+                    }
+                })
+                .then((response) => {
+                    setInformation(response.data);
+                })
+                .catch(()  => {
+                    console.log("error")
+                });
+        }
+    }; 
 
     const fetchResident = async (id) => {
-        await axios
-            .get(`residents`, {
-                params: {
-                    residentId: id,
-                    hoaId: localStorage.getItem('hoaId')
-                }
-            })
-            .then((response) => {
-                setInformation(response.data);
-            });
-    };
+        if(id){
+            await axios
+                .get(`residents`, {
+                    params: {
+                        residentId: id,
+                        hoaId: localStorage.getItem('hoaId')
+                    }
+                })
+                .then((response) => {
+                    setInformation(response.data);
+                })
+                .catch(()  => {
+                    console.log("error")
+                });
+        }
+    }; 
 
     const fetchHoa = async (id) => {
         await axios
@@ -99,45 +117,54 @@ function Scanner() {
 
     // Function upon scanning
     async function handleScan(data){
+        console.log(data)
         if (data) {
-            // setDecryptedData(JSON.parse(sjcl.decrypt(password, data.text)))
-            // log = JSON.parse(sjcl.decrypt(password, data.text))
-            setDecryptedData(JSON.parse(data.text))
-            log=JSON.parse(data.text)
-            
-            switch(log.logType){
-                case 'visitor':
-                    await fetchVisitor(log.objId);
-                    break;
-                case 'vehicle':
-                    await fetchVehicle(log.objId);
-                    break;
-                case 'user':
-                    await fetchResident(log.objId);
-                    break;
-                default:
-                    break;
+            setScanned(true)
+            console.log(scanned)
+            if (!scanned){
+                setDecryptedData(
+                    JSON.parse(
+                        AES.decrypt(
+                            data.text, 
+                            process.env.REACT_APP_ENCRYPT_KEY
+                        )
+                        .toString(enc.Utf8)
+                    )
+                )
+    
+                log=JSON.parse(AES.decrypt(
+                    data.text, 
+                    process.env.REACT_APP_ENCRYPT_KEY
+                ).toString(enc.Utf8))
+                
+                switch(log.logType){
+                    case 'visitor':
+                        await fetchVisitor(log.objId);
+                        break;
+                    case 'vehicle':
+                        await fetchVehicle(log.objId);
+                        break;
+                    case 'user':
+                        await fetchResident(log.objId);
+                        break;
+                    default:
+                        break;
+                }
+                setOpenConfirmation(true); 
             }
-            setOpenConfirmation(true); 
         }
     };
 
     async function manualEntry(){
-        switch(manualType){
-            case 'visitor':
-                await fetchVisitor(manualId);
-                break;
-            case 'vehicle':
-                await fetchVehicle(manualId);
-                break;
-            case 'user':
-                await fetchResident(manualId);
-                break;
-            default:
-                break;
+        await fetchResident(manualId);
+        await fetchVisitor(manualId);
+        await fetchVehicle(manualId);
+        if(manualType){
+            setOpenConfirmation(true);  
         }
-        setOpenConfirmation(true); 
+        
     }
+
 
     let handleError = (err) => {
         setOpenSnackBar(openSnackBar => ({
@@ -152,6 +179,33 @@ function Scanner() {
 
     // if(!hoa.deviceIP) return <div>No Device Connected</div>
 
+    hoa.deviceIP="89.207.132.170"
+
+    function QRCodeReader(){
+        return <>
+            {scanned?
+                <div>
+                    <QrReader
+                        onError={handleError}
+                        onScan={console.log("closed")}
+                        style={{ width: '100%' }}
+                        facingmode='front'
+                    />
+                </div>
+            :
+            <div>
+                <QrReader
+                    onError={handleError}
+                    onScan={handleScan}
+                    style={{ width: '100%' }}
+                    facingmode='front'
+                />
+            </div>
+                
+            }
+        </>
+    }
+
     return <>
         <NavBar/>
         <div className='SectionHolder'>
@@ -162,18 +216,12 @@ function Scanner() {
                     {(!hoa.deviceIP)? 
                         <div> No Device Connected </div>
                     :
-
                     <div className='SectionList' id='QRScanner'>
                         <div id="QRScanner__Holder" >
                             <div id={openFullScreen?"ScannerModal":""}>
                                 <div id='ScannerModal__Container'>
-                                    <QrReader
-                                        delay={10000}
-                                        onError={handleError}
-                                        onScan={handleScan}
-                                        style={{ width: '100%' }}
-                                        facingmode='front'
-                                    />
+                                    <QRCodeReader/>
+                                    
                                     <div id='ScannerModal__Buttons'>
                                         <Fab  aria-label="add" onClick={()=>{setOpenFullScreen(!openFullScreen)}}>
                                             {!openFullScreen? <FullscreenIcon />:<FullscreenExitIcon/>}
@@ -183,16 +231,16 @@ function Scanner() {
                             </div>
                         </div>
                         <div id='SidePanel'>
-                            <div className='SidePanel__Container' id='DateTime'>
+                            {/* <div className='SidePanel__Container' id='DateTime'>
                                 <div>
                                     <h6>Time:</h6>
-                                    <h5>3:65 PM</h5>
+                                    <h5>{moment().format('MMMM Do YYYY, h:mm:ss a')}</h5>
                                 </div>
                                 <div>
                                     <h6>Date:</h6>
                                     <h5>June 1, 2019</h5>
                                 </div>
-                            </div>
+                            </div> */}
                             <Button variant='contained' onClick={handleClick}>Manual Check</Button>
                             <Menu
                                 id="basic-menu"
@@ -205,11 +253,11 @@ function Scanner() {
                                 }}
                             >
                                 <div id='ManualInput'>
-                                    <TextField className='input' id="filled-basic" label="Type" variant="filled" onChange={(e)=>setManualType(e.target.value)}/>
+                                    {/* <TextField className='input' id="filled-basic" label="Type" variant="filled" onChange={(e)=>setManualType(e.target.value)}/> */}
                                     <TextField className='input' id="filled-basic" label="ID" variant="filled" onChange={(e)=>setManualId(e.target.value)} />
                                     <Button variant='contained' onClick={()=> manualEntry()}>Search</Button>
                                 </div>
-                            </Menu>
+                            </Menu> 
                         </div>
                     </div>
                     }
@@ -218,12 +266,36 @@ function Scanner() {
             </section>
             <Modal
                 open={openConfirmation || openFullScreen}
-                onClose={()=>{setOpenConfirmation(false); setOpenFullScreen(false)}}
+                onClose={()=>{
+                    setOpenConfirmation(false); 
+                    setOpenFullScreen(false);
+                    setScanned(null);
+                    setManualType(null);
+                    setManualId(null);
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description">
                     <div></div>
             </Modal>
-            {openConfirmation?<><ScannerConfirmationModal type={manualType ? manualType : decryptedData.logType} info={information} data={decryptedData} ipAdd={hoa.deviceIP} close={()=>setOpenConfirmation(false)}/></>:<></>}
+            {openConfirmation?<>
+            <ScannerConfirmationModal 
+                // type={manualType ? manualType : decryptedData?.logType} 
+                type={decryptedData?.logType ?? manualType} 
+                info={information} 
+                data={decryptedData ?? 
+                    JSON.parse(JSON.stringify({
+                        logType: manualType,
+                        objId: manualId
+                    }))
+                } 
+                ipAdd={hoa.deviceIP} 
+                close={()=>{
+                    setOpenConfirmation(false);
+                    setScanned(null);
+                    setManualType(null);
+                    setManualId(null);
+                }}
+            /></>:<></>}
         </div>
     </>
 }
