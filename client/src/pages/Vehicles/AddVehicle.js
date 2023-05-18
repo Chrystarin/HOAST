@@ -86,7 +86,7 @@ function AddVehicle() {
         <Navbar type="vehicle"/>
         <div className='SectionHolder'>
             <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span> > <span>Vehicle Form</span></h3>
+                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span> {'>'} <span>Vehicle Form</span></h3>
                 <div className='SectionStepper'> 
                     <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
                 </div>
