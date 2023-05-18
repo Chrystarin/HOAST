@@ -31,8 +31,7 @@ function Homes() {
 		const fetchHomes = async () => {
 			await axios
 				.get(
-                    `homes`,
-                    {withCredentials: true}
+                    `homes`
                 )
 				.then((response) => {
 					setHomes(response.data);
