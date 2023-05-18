@@ -90,7 +90,6 @@ function Homes() {
               })}
             </>
           }
-
         </div>
         <div className='Pagination__Container'>
           <Pagination data={data} setter={setPaginationData}/>

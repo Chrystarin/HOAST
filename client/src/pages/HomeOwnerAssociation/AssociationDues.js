@@ -301,32 +301,11 @@ function AssociationDues() {
 											</>
 										}
 										</TableBody>
-										<TableFooter>
-												<div className='Pagination__Container'>
-													<Pagination data={data} setter={setPaginationData}/>
-												</div>
-
-											{/* <TableRow>
-												<TablePagination
-												rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-												colSpan={3}
-												// count={rows.length}
-												// rowsPerPage={rowsPerPage}
-												// page={page}
-												SelectProps={{
-													inputProps: {
-													'aria-label': 'rows per page',
-													},
-													native: true,
-												}}
-												// onPageChange={handleChangePage}
-												// onRowsPerPageChange={handleChangeRowsPerPage}
-												// ActionsComponent={TablePaginationActions}
-												/>
-											</TableRow> */}
-										</TableFooter>
 									</Table>
 								</TableContainer>
+								<div className='Pagination__Container'>
+													<Pagination data={data} setter={setPaginationData}/>
+												</div>
 							</div>
 						</div>
 					</div>
