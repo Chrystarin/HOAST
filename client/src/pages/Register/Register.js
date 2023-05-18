@@ -12,6 +12,7 @@ import axios from '../../utils/axios';
 import { useNavigate } from 'react-router';
 
 function Register() {
+    const {login} = useAuth();
 	const navigate = useNavigate();
 
 	const [registerForm, setRegisterForm] = useState({
@@ -52,7 +53,7 @@ function Register() {
 				)
 				.then((response) => {
 					alert('Registered Successfully!');
-					navigate('/');
+                    login(registerForm.email, registerForm.password)
 				});
 		} catch (err) {
 			console.error(err.message);
