@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 
 require('dotenv/config');
 
@@ -26,10 +27,9 @@ const visitorRoute = require('./routes/visitor');
 
 const app = express();
 
-app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
+// app.use(express.urlencoded({ extended: true }));
 app.use('/device', deviceRoute);
 
 app.use(
@@ -38,8 +38,7 @@ app.use(
         origin: process.env.CORS_ORIGIN
 	})
 );
-
-
+app.use(helmet());   
 
 app.use('/users', userRoute);
 app.use(authenticate);
