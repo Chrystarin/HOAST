@@ -12,12 +12,13 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import loading from '../../images/loading.gif';
 import {useAuth} from '../../utils/AuthContext.js';
 import Filter from '../../components/Filter/Filter.js';
-
+import Pagination from '../../components/Pagination/Pagination';
 function Homes() {
   const {user, isAdmin} = useAuth();
   const [homes, setHomes] = useState();
   const [data,setData] = useState({});
-
+  const [paginationData,setPaginationData]=useState({})
+  
   // States for popup filter
   const [filterValue,setFilterValue] = useState(
     {
@@ -36,10 +37,12 @@ function Homes() {
 				.then((response) => {
 					setHomes(response.data);
 				});
-		};
+      };
     fetchHomes();
-	}, []);
-  
+    console.log(data)
+    console.log("---------------------")
+    console.log(paginationData)
+	}, [data,paginationData]);
   
 
 
@@ -60,33 +63,37 @@ function Homes() {
         <h3 className='SectionTitleDashboard'>Homes</h3>
         <div className='SectionController'>
           <div id='SearchInput__Container'>
-            <SearchInput setData={setData} data={homes} keys={["name","hoa","owner.name"]}  filterValue={filterValue} />
+            <SearchInput setData={setData} data={homes} keys={["name","hoa._id","owner.name.firstName"]}  filterValue={filterValue} />
           </div>
           <Filter value={filterValue} setValue={setFilterValue}/>
           <Button variant="contained" href='/homes/add'>Add Home</Button>
         </div>
-
         <div className='SectionList'>
-          {(data.length === 0 )?
+          {(paginationData.length === 0 )?
               <p>No homes found!</p>
             :
             <>
-              {data.length > 0 &&
-                  data.map((home) => {
-                  return (
-                  <Card 
-                      type="Home"
-                      key={home.homeId}
-                      id={home.homeId}
-                      title={home.name}
-                      subTitle1={home.address.number}
-                      subTitle2={home.address.street}
-                      url={`/homes/${home.homeId}`}
-                  />
-                  );
+              {paginationData.length > 0 &&
+                  paginationData.map((home) => {
+                  return <>
+                    <Card 
+                      color={home.color}
+                        type="Home"
+                        key={home.homeId}
+                        id={home.homeId}
+                        title={home.name}
+                        subTitle1={home["address.number"]}
+                        subTitle2={home["address.street"]}
+                        url={`/homes/${home.homeId}`}
+                    />
+                  </>
               })}
             </>
           }
+
+        </div>
+        <div className='Pagination__Container'>
+          <Pagination data={data} setter={setPaginationData}/>
         </div>
       </section>
     </div>

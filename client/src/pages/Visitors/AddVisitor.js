@@ -18,6 +18,7 @@ function AddVisitor() {
 
     const [stepper, setStepper] = useState(1);
     const [homes, setHomes] = useState();
+    const [arrivalDateMax, setArrivalDateMax] = useState();
     const [openSnackBar, setOpenSnackBar] = React.useState({
         open:false,
         type:"",
@@ -28,7 +29,7 @@ function AddVisitor() {
         homeId: '',
         name: '',
         purpose: '',
-        arrival: "(3-34-45)",
+        arrival: '',
         departure: null,
         note: '',
     });
@@ -72,7 +73,6 @@ function AddVisitor() {
                 )
                 .then((response) => {
                     console.log(JSON.stringify(response?.data));
-                    // alert("Registered Successfully!");
                     navigate("/visitors");
                 })
             }
@@ -128,8 +128,28 @@ function AddVisitor() {
                         </FormControl>
                         <TextField required fullWidth  label="Name" variant="filled" onChange={(e)=>updateForm({ name: e.target.value })}/>
                         <div className='FormWrapper__2'>
-                            <TextField required id="filled-number" InputLabelProps={{shrink: true}} fullWidth type="date" label="Arrival Date" variant="filled" onChange={(e)=>updateForm({ arrival: e.target.value })} defaultValue/>
-                            <TextField required  id="filled-number" InputLabelProps={{shrink: true}} fullWidth type="date" label="Departure Date" variant="filled" onChange={(e)=>updateForm({ departure: e.target.value })} />
+                            <TextField required id="filled-number" type="date" label="Arrival Date" 
+                                defaultValue={"2019/02/02"} 
+                                InputLabelProps={{shrink: true}}  
+                                
+                                variant="filled" 
+                                onChange={(e)=>{
+                                    setArrivalDateMax(((new Date(e.target.value)).getFullYear()) + "-" + String((new Date(e.target.value)).getMonth() + 1).padStart(2, '0') + "-" + String((new Date(e.target.value)).getDate()).padStart(2, '0'))
+                                    updateForm({ arrival: e.target.value })
+                                }
+                                
+                                } defaultValue
+                            />
+                            <TextField 
+                                required  
+                                id="filled-number" 
+                                InputProps={{ inputProps: { min: arrivalDateMax}}}
+                                InputLabelProps={{shrink: true}} 
+                                fullWidth type="date" 
+                                label="Departure Date" 
+                                variant="filled"
+                                onChange={(e)=>updateForm({ departure: e.target.value })} 
+                            />
                         </div>
                         <div className='FormWrapper__2'>
                             <TextField required fullWidth  label="Purpose" variant="filled" onChange={(e)=>updateForm({ purpose: e.target.value })}/>

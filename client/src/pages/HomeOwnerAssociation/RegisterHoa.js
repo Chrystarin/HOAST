@@ -7,6 +7,7 @@ import NavBar from '../../layouts/NavBar';
 import axios from '../../utils/axios';
 import './RegisterHoa.scss'
 import {useAuth} from '../../utils/AuthContext.js';
+import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 
 export default function RegisterHoa() {
     const {isRole} = useAuth();
@@ -29,6 +30,11 @@ export default function RegisterHoa() {
         barangay: '',
         city: '',
         province: ''
+    });
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
     });
 
     // Retrieves data from text input then assigns to form
@@ -66,7 +72,12 @@ export default function RegisterHoa() {
             })
         }
         catch(err){
-            alert("Invalid Credentials!");
+            setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                open:true,
+                type:'error',
+                note:"Invalid Credentials!",
+            }));
             console.error(err.message);
         }
     }
@@ -137,6 +148,7 @@ export default function RegisterHoa() {
                     </div>
                 </form>
             </div>
+            <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/> 
         </div>
     </>
 

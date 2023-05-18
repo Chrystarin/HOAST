@@ -14,6 +14,7 @@ import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
 // import sjcl from '../../layouts/sjcl';
 
+import SnackbarComp from '../../components/SnackBar/SnackbarComp'
 function Scanner() {
     const [data, setData] = useState(null);
     const [manualType, setManualType] = useState();
@@ -23,7 +24,11 @@ function Scanner() {
     const [hoa, setHoa] = useState();
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [openFullScreen, setOpenFullScreen] = useState(false);
-
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open:false,
+        type:"",
+        note:""
+    });
     let log = null;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -135,7 +140,12 @@ function Scanner() {
     }
 
     let handleError = (err) => {
-        alert(err);
+        setOpenSnackBar(openSnackBar => ({
+            ...openSnackBar,
+            open:true,
+            type:'error',
+            note:err.message,
+        }));
     };
 
     if(!hoa) return <div>Loading...</div>

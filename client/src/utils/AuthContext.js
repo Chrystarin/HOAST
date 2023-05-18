@@ -41,7 +41,6 @@ function AuthProvider({ children }) {
                     else{
                         navigate("/homes");
                     }
-                    
                 });
         } catch (error) {
         console.log(error);
