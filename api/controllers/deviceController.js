@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const addDevice = async (req, res, next) => {
 	const { email, password, hoaId, deviceIP } = req.body;
 
-    console.log("ENTERED")
+    console.log("ENTERED", deviceIP)
 
     return res.json(deviceIP);
 
