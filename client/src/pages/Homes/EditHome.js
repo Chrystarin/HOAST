@@ -164,7 +164,7 @@ function EditHome() {
                                     onChange={(e)=>setContactNumber(e.target.value )}
                                 />
                                 <FormControl variant="filled" fullWidth>
-                                    <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+                                    <InputLabel id="demo-simple-select-filled-label">Color</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-filled-label"
                                         id="demo-simple-select-filled"
