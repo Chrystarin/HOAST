@@ -55,7 +55,10 @@ function AuthProvider({ children }) {
 
     const fetchRole = async () => {
         await axios
-            .get(`roles`)
+            .get(
+                `roles`,
+                {withCredentials: true}
+            )
             .then((response) => {
                 // console.log(response.data)
                 let roles = []

@@ -30,7 +30,10 @@ function Homes() {
 		// Retrieves Homes
 		const fetchHomes = async () => {
 			await axios
-				.get(`homes`)
+				.get(
+                    `homes`,
+                    {withCredentials: true}
+                )
 				.then((response) => {
 					setHomes(response.data);
 				});
