@@ -14,13 +14,26 @@ import Filter from '../../components/Filter/Filter';
 function Visitors() {
     const [stepper, setStepper] = useState(1);
     const [visitors, setVisitors] = useState();
-    const [data,setData] = useState({});
-    const [paginationData,setPaginationData]=useState({})
+    const [data, setData] = useState({});
+
+    const [activeVisitor,setActiveVisitor] = useState({});
+    const [paginationDataActiveVisitor,setPaginationDataActiveVisitor]=useState({})
+    const [historyVisitor,setHistoryVisitor] = useState({});
+    const [paginationDataHistoryVisitor,setPaginationDataHistoryVisitor]=useState({})
+    const valueSetter = (data) => {
+        setActiveVisitor(data.filter((item)=> new Date(item.departure) >= new Date()))
+        setHistoryVisitor(data.filter((item)=> new Date(item.departure) < new Date()))
+    }
+
+
     const [filterValue,setFilterValue] = useState(
         {
             sortBy:"A_Z"
         }
     );
+
+
+    
 
     // Retrieves All User Visitors Data onLoad
     useEffect(() => {
@@ -29,11 +42,16 @@ function Visitors() {
                 .get(`visitors`)
                 .then((response) => {
                     setVisitors(response.data);
-                    console.log(response.data)
                 });
             };
+        
         fetchVisitors();
-    }, []);
+
+        if(data instanceof Array && data.length > 0)
+            valueSetter(data)
+
+
+    }, [data]);
 
     // Returns loading if data is not yet retrieved
     if(!visitors) return <>
@@ -61,57 +79,50 @@ function Visitors() {
                 <Button variant="contained" href='/visitors/add'>Add Visitors</Button>
                 </div>
 
-                <div className='SectionList'>
+                
                     {/* Displays All User's Visitors */}
-                    {(data.length === 0 )?
-                        <p>No Visitors Available!</p>
-                        :
-                        <>
-                            {stepper === 1?<>
-                                {data.length > 0 && data.map((visitor) => {
-                                    if(new Date(visitor.departure) >= new Date()){
-                                        return (
-                                            <Card 
-                                                type="Visitor"
-                                                key={visitor.visitorId}
-                                                title={visitor.name}
-                                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
-                                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
-                                                url={`/visitors/${visitor.visitorId}`}
-                                            />
-                                        );
-                                    }else{
-                                        return 
-                                    }
-                                })}
-                            </>:<></>}
-                            {stepper === 2?<>
-                                {data.length > 0 && data.map((visitor) => {
-                                    if(new Date(visitor.departure) < new Date()){
-                                        return (
-                                            <Card 
-                                                type="Visitor"
-                                                key={visitor.visitorId}
-                                                title={visitor.name}
-                                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
-                                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
-                                                url={`/visitors/${visitor.visitorId}`}
-                                            />
-                                        );
-                                    }else{
-                                        return 
-                                    }
-                                })}
-                            </>:<></>}
-                        </>
-                    }
-                </div>
-                <div className='Pagination__Container'>
-                    <Pagination data={data} setter={setPaginationData}/>
-                </div>
+                    {stepper === 1?<>
+                        <div className='SectionList'>
+                            {(paginationDataActiveVisitor.length > 0)&&paginationDataActiveVisitor.map((visitor) => {
+                                return (
+                                    <Card 
+                                        type="Visitor"
+                                        key={visitor.visitorId}
+                                        title={visitor.name}
+                                        subTitle1={new Date(visitor.arrival).toLocaleDateString()}
+                                        subTitle2={new Date(visitor.departure).toLocaleDateString()}
+                                        url={`/visitors/${visitor.visitorId}`}
+                                    />
+                                );
+                            })}
+                        </div>
+                        <div className='Pagination__Container'>
+                            <Pagination data={activeVisitor} setter={setPaginationDataActiveVisitor}/>
+                        </div>
+                    </>:<></>}
+                    {stepper === 2?<>
+                        <div className='SectionList'>
+                            {(paginationDataHistoryVisitor.length > 0)&&paginationDataHistoryVisitor.map((visitor) => {
+                                return (
+                                    <Card 
+                                        type="Visitor"
+                                        key={visitor.visitorId}
+                                        title={visitor.name}
+                                        subTitle1={new Date(visitor.arrival).toLocaleDateString()}
+                                        subTitle2={new Date(visitor.departure).toLocaleDateString()}
+                                        url={`/visitors/${visitor.visitorId}`}
+                                    />
+                                );
+                            })}
+                        </div>
+                        <div className='Pagination__Container'>
+                            <Pagination data={historyVisitor} setter={setPaginationDataHistoryVisitor}/>
+                        </div>
+                    </>:<></>}
+                
             </section>
         </div>
-  </>
+    </>
 }
 
 export default Visitors

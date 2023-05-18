@@ -44,6 +44,7 @@ function SearchInput(props) {
                 props.filterValue.sortBy
             );
         })
+        console.log(props.data.map((data)=>crawler(data)))
         // console.log(sortBy(
         //     searchData(props.data.map((data)=>crawler(data))),
         //     props.filterValue.sortBy

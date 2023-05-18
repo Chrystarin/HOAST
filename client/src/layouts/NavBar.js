@@ -24,6 +24,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import {useAuth} from '../utils/AuthContext.js';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function NavBar(props) {
     const {isRole} = useAuth();
@@ -115,6 +116,14 @@ function NavBar(props) {
                             <HomeWorkIcon/>
                         </ListItemIcon>
                         <ListItemText primary={"Homeowner Association"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={logout}>
+                        <ListItemIcon>
+                            <LogoutIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary={"Logout"} />
                     </ListItemButton>
                 </ListItem>
             </List>
