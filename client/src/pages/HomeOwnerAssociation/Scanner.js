@@ -150,7 +150,7 @@ function Scanner() {
 
     if(!hoa) return <div>Loading...</div>
 
-    if(!hoa.deviceIP) return <div>No Device Connected</div>
+    // if(!hoa.deviceIP) return <div>No Device Connected</div>
 
     return <>
         <NavBar/>
@@ -159,6 +159,10 @@ function Scanner() {
                 <SideBar active="Scanner"/>
                 <div id='HOA__Content'>
                     <h3 className='SectionTitleDashboard'><span><a >Scanner</a></span></h3>
+                    {(!hoa.deviceIP)? 
+                        <div> No Device Connected </div>
+                    :
+
                     <div className='SectionList' id='QRScanner'>
                         <div id="QRScanner__Holder" >
                             <div id={openFullScreen?"ScannerModal":""}>
@@ -208,6 +212,8 @@ function Scanner() {
                             </Menu>
                         </div>
                     </div>
+                    }
+                    
                 </div>
             </section>
             <Modal
