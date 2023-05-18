@@ -34,8 +34,8 @@ app.use('/device', deviceRoute);
 
 app.use(
 	cors({
-		credentials: true,
-        origin: process.env.CORS_ORIGIN
+        origin: process.env.CORS_ORIGIN,
+		credentials: true
 	})
 );
 app.use(helmet());   
@@ -56,6 +56,7 @@ app.use('/vehicles', vehicleRoute);
 app.use('/visitors', visitorRoute);
 
 app.use((err, req, res, next) => {
+    console.log(req.cookies)
 	console.log(err);
 
 	res.status(err.status || 500).json({
