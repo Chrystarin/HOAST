@@ -9,7 +9,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
-import Filter from '../../components/Filter/filter';
+import Filter from '../../components/Filter/Filter';
 import axios from '../../utils/axios';
 import loading from '../../images/loading.gif';
 function VisitorsList() {

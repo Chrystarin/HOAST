@@ -36,13 +36,19 @@ function SearchInput(props) {
 
 
     useEffect(() => {
+        
+        // console.log(props.data.map((data)=>crawler(data)))
         props.setData(()=>{
             return sortBy(
                 searchData(props.data.map((data)=>crawler(data))),
                 props.filterValue.sortBy
             );
         })
-        console.log(props.data.map((data)=>crawler(data)))
+        // console.log(sortBy(
+        //     searchData(props.data.map((data)=>crawler(data))),
+        //     props.filterValue.sortBy
+        // ))
+        
     }, [search.focus, search.value,props.filterValue]);
 
 

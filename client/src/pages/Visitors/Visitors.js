@@ -5,17 +5,17 @@ import Navbar from '../../layouts/NavBar';
 import Card from '../../components/Card/Card.js';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-
+import Pagination from '../../components/Pagination/Pagination';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import loading from '../../images/loading.gif';
-import Filter from '../../components/Filter/filter';
+import Filter from '../../components/Filter/Filter';
 function Visitors() {
-
+    const [stepper, setStepper] = useState(1);
     const [visitors, setVisitors] = useState();
     const [data,setData] = useState({});
-    
+    const [paginationData,setPaginationData]=useState({})
     const [filterValue,setFilterValue] = useState(
         {
             sortBy:"A_Z"
@@ -29,6 +29,7 @@ function Visitors() {
                 .get(`visitors`)
                 .then((response) => {
                     setVisitors(response.data);
+                    console.log(response.data)
                 });
             };
         fetchVisitors();
@@ -47,6 +48,10 @@ function Visitors() {
         <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'>Visitors</h3>
+                <div className='SectionStepper'> 
+                        <Button variant='text' className={stepper== 1? "active":""} onClick={()=>setStepper(1)}>My Visitors</Button>
+                        <Button variant='text' className={stepper== 2? "active":""} onClick={()=>setStepper(2)}>History</Button>
+                    </div>
                 <div className='SectionController'>
                 <div id='SearchInput__Container'>
                     <SearchInput setData={setData} data={visitors} keys={["name","hoa"]} filterValue={filterValue}/>
@@ -61,19 +66,48 @@ function Visitors() {
                     {(data.length === 0 )?
                         <p>No Visitors Available!</p>
                         :
-                        <>{data.length > 0 && data.map((visitor) => {
-                            return (
-                                <Card 
-                                type="Visitor"
-                                key={visitor.visitorId}
-                                title={visitor.name}
-                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
-                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
-                                url={`/visitors/${visitor.visitorId}`}
-                                />
-                            );
-                        })}</>
+                        <>
+                            {stepper === 1?<>
+                                {data.length > 0 && data.map((visitor) => {
+                                    if(new Date(visitor.departure) >= new Date()){
+                                        return (
+                                            <Card 
+                                                type="Visitor"
+                                                key={visitor.visitorId}
+                                                title={visitor.name}
+                                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
+                                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
+                                                url={`/visitors/${visitor.visitorId}`}
+                                            />
+                                        );
+                                    }else{
+                                        return 
+                                    }
+                                })}
+                            </>:<></>}
+                            {stepper === 2?<>
+                                {data.length > 0 && data.map((visitor) => {
+                                    if(new Date(visitor.departure) < new Date()){
+                                        return (
+                                            <Card 
+                                                type="Visitor"
+                                                key={visitor.visitorId}
+                                                title={visitor.name}
+                                                subTitle1={new Date(visitor.arrival).toLocaleDateString()}
+                                                subTitle2={new Date(visitor.departure).toLocaleDateString()}
+                                                url={`/visitors/${visitor.visitorId}`}
+                                            />
+                                        );
+                                    }else{
+                                        return 
+                                    }
+                                })}
+                            </>:<></>}
+                        </>
                     }
+                </div>
+                <div className='Pagination__Container'>
+                    <Pagination data={data} setter={setPaginationData}/>
                 </div>
             </section>
         </div>

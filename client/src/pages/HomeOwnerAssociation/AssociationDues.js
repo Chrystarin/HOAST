@@ -8,7 +8,6 @@ import SideBar from './SideBar';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import SearchInput from '../../components/SearchInput/SearchInput';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import Table from '@mui/material/Table';
@@ -21,14 +20,14 @@ import Paper from '@mui/material/Paper';
 import WalletIcon from '@mui/icons-material/Wallet';
 import axios from '../../utils/axios';
 import { TablePagination,TableFooter } from '@mui/material';
+import Pagination from '../../components/Pagination/Pagination';
+import SearchInput from '../../components/SearchInput/SearchInput';
 import './AssociationDues.scss';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
+import Filter from '../../components/Filter/Filter';
 
 function AssociationDues() {
 	const [homes, setHomes] = useState();
-
-	const [anchorElFilter, setAnchorElFilter] = React.useState(null);
-	const openFilter = Boolean(anchorElFilter);
 
 	const [anchorAddDues, setAnchorAddDues] = useState(null);
 	const open = Boolean(anchorAddDues);
@@ -38,11 +37,17 @@ function AssociationDues() {
 		note:""
 	});
 	const user = JSON.parse(localStorage.getItem('user'));
-	console.log(localStorage.getItem('hoaId'));
+	// console.log(localStorage.getItem('hoaId'));
 
     const [selectedHome, setSelectedHome] = useState(null);
     const [selectedPaidUntil, setSelectedPaidUntil] = useState(null);
-
+	const [data,setData] = useState({});
+	const [paginationData,setPaginationData]=useState({})
+	const [filterValue,setFilterValue] = useState(
+		{
+			sortBy:"A_Z"
+		}
+	);
 	// Collection of form data
 	const [form, setForm] = useState({
 		hoaId: '',
@@ -53,7 +58,8 @@ function AssociationDues() {
 
 	useEffect(() => {
 		fetchHomes();
-	}, []);
+		console.log(data)
+	}, [data]);
 
 	function updateForm(e) {
 		return setForm((prev) => {
@@ -63,6 +69,7 @@ function AssociationDues() {
 		});
 	}
 
+	
 	// Retrieves Homes
     const fetchHomes = async () => {
         await axios
@@ -73,14 +80,14 @@ function AssociationDues() {
             })
             .then((response) => {
                 setHomes(response.data);
-                console.log(response.data);
+                // console.log(response.data);
             });
     };
 
 	async function Submit(e) {
 		e.preventDefault();
 
-		console.log(new Date(form.months).getMonth());
+		// console.log(new Date(form.months).getMonth());
 		try {
 			await axios
 				.post(
@@ -93,7 +100,7 @@ function AssociationDues() {
 					})
 				)
 				.then((response) => {
-					console.log(response?.data);
+					// console.log(response?.data);
                     setAnchorAddDues(null)
 					setOpenSnackBar(openSnackBar => ({
 						...openSnackBar,
@@ -209,6 +216,12 @@ function AssociationDues() {
 								</form>
 							</Menu>
 						</div>
+						<div className='SectionController'>
+							<div id='SearchInput__Container'>
+								<SearchInput setData={setData} data={homes} keys={["homeId","name","owner.name.firstName","owner.name.lastName","status"]}  filterValue={filterValue} />
+							</div>
+							<Filter value={filterValue} setValue={setFilterValue}/>
+						</div>
 						<div id='Manage__Hoa' className='SectionView'>
 							<div className='SectionView__Content'>
 								<TableContainer component={Paper} >
@@ -216,27 +229,27 @@ function AssociationDues() {
 										<TableHead>
 											<TableRow>
 												<TableCell component="th" align="center" >
-													<h6>HomeId</h6>
+													HomeId
 												</TableCell>
 												<TableCell component="th" align="center" >
-													<h6>Name</h6>
+													Name
 												</TableCell>
                                                 <TableCell component="th" align="center" >
-													<h6>Homeowner</h6>
+													Homeowner
 												</TableCell>
 												<TableCell component="th" align="center" >
-													<h6> Paid Until </h6>
+													Paid Until
 												</TableCell>
 												<TableCell component="th" align="center" >
-													<h6>Status</h6>
+													Status
 												</TableCell>
                                                 
 											</TableRow>
 										</TableHead>
 										<TableBody className='ListBody'>
-										{homes.length === 0 ? <></> : 
+										{paginationData.length === 0 ? <></> : 
 											<>
-												{homes.length > 0 && homes.map( ( home ) => {
+												{paginationData.length > 0 && paginationData.map( ( home ) => {
                                                     return (
                                                         <TableRow
                                                             key={ home.homeId }
@@ -255,11 +268,10 @@ function AssociationDues() {
                                                                 { home.name }
                                                             </TableCell>
                                                             <TableCell align="center">
-                                                                { home.owner.name.firstName + " " + home.owner.name.lastName }
+                                                                { home["owner.name.firstName"] + " " + home["owner.name.lastName"] }
                                                             </TableCell>
                                                             <TableCell
-                                                                component="th"
-                                                                scope="row"
+                                                                
                                                                 align="center"
                                                             >
                                                                 { ((new Date(home.paidUntil)).getMonth() + 1) + " / " + (new Date(home.paidUntil)).getFullYear() }
@@ -290,7 +302,11 @@ function AssociationDues() {
 										}
 										</TableBody>
 										<TableFooter>
-											<TableRow>
+												<div className='Pagination__Container'>
+													<Pagination data={data} setter={setPaginationData}/>
+												</div>
+
+											{/* <TableRow>
 												<TablePagination
 												rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
 												colSpan={3}
@@ -307,7 +323,7 @@ function AssociationDues() {
 												// onRowsPerPageChange={handleChangeRowsPerPage}
 												// ActionsComponent={TablePaginationActions}
 												/>
-											</TableRow>
+											</TableRow> */}
 										</TableFooter>
 									</Table>
 								</TableContainer>

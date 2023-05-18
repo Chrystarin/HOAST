@@ -203,7 +203,7 @@ function AddHome() {
                                 }
                             </div>
                             <div className='Form__Button'>
-                            <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
+                                <Button variant='text' onClick={()=> setStepper(1)}>Back</Button>
                                 <Button variant='contained' type='submit' className='Submit' >Submit</Button>
                             </div>
                         </form>

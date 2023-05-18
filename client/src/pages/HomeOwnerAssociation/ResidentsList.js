@@ -5,7 +5,7 @@ import SideBar from './SideBar';
 import Button from '@mui/material/Button';
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
 
-import Filter from '../../components/Filter/filter';
+import Filter from '../../components/Filter/Filter';
 import SearchInput from '../../components/SearchInput/SearchInput';
 
 import NativeSelect from '@mui/material/NativeSelect';
