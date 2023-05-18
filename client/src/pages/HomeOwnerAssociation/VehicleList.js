@@ -10,7 +10,7 @@ import Card from '../../components/Card/Card';
 import Menu from '@mui/material/Menu';
 import NativeSelect from '@mui/material/NativeSelect';
 import loading from '../../images/loading.gif'
-
+import Filter from '../../components/Filter/Filter';
 import axios from '../../utils/axios';
 
 function VehicleList() {
@@ -20,7 +20,12 @@ function VehicleList() {
     const openFilter = Boolean(anchorElFilter);
 
     const [vehicles, setVehicles] = useState();
-
+    const [data,setData] = useState({});
+    const [filterValue,setFilterValue] = useState(
+        {
+            sortBy:"A_Z"
+        }
+    );
     // Retrieve All User Vehicles Data
     useEffect(() => {
       const fetchVehicles = async () => {
@@ -33,8 +38,8 @@ function VehicleList() {
             .then((response) => {
                 setVehicles(response.data);
             });
-      };
-      fetchVehicles();
+         };
+        fetchVehicles();
     }, []);
 
     if (!vehicles) return <>
@@ -53,51 +58,9 @@ function VehicleList() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Vehicles List</a></span></h3>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
-                            {/* <SearchInput/> */}
+                            <SearchInput setData={setData} data={vehicles} keys={["homeId","name","owner.name.firstName","owner.name.lastName","status"]}  filterValue={filterValue} />
                         </div>
-                        <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorElFilter}
-                            open={openFilter}
-                            onClose={() => {
-                                setAnchorElFilter(null);
-                            }}
-                            MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                            }}
-                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                        >
-                            <div className='Filter'>
-                                <h6 className='Filter__Title'>Filter</h6>
-                                <ul>
-                                    <li>
-                                    <p className="BodyText3 Filter__Titles">Sort by</p>
-                                    <div>
-                                    <NativeSelect
-                                        defaultValue={null}
-                                        inputProps={{
-                                        name: 'age',
-                                        id: 'uncontrolled-native',
-                                        }}
-                                    >
-                                        <option value={10}>A to Z</option>
-                                        <option value={20}>Recent Register</option>
-                                        <option value={30}>More Residents</option>
-                                    </NativeSelect>
-                                    </div>
-                                    </li>
-                                </ul>
-                                <div className='Filter__Buttons'>
-                                    <div>
-                                    <Button variant=''>Reset All</Button>
-                                    </div>
-                                    <Button variant=''>Cancel</Button>
-                                    <Button variant='contained' onClick={() => {setAnchorElFilter(null)}}>Apply</Button>
-                                </div>
-                            </div>
-                        </Menu>
+                        <Filter value={filterValue} setValue={setFilterValue}/>
                     </div>
                     <div className='SectionList'>
                     {(vehicles.length === 0 )?

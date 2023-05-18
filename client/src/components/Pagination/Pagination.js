@@ -7,7 +7,7 @@ import PaginationMU from '@mui/material/Pagination';
 function Pagination({data,setter}) {
     const [paginationValue, setPaginationValue] = React.useState({
         page:1,
-        items: 3,
+        items: 10,
         count:1,
         show:false
     });

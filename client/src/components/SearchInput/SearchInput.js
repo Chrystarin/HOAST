@@ -9,12 +9,12 @@ import { getAccordionDetailsUtilityClass } from '@mui/material';
 
 
 {/* 
-const [data,setData] = useState({});
-const [filterValue,setFilterValue] = useState(
-    {
-        sortBy:"A_Z"
-    }
-);
+    const [data,setData] = useState({});
+    const [filterValue,setFilterValue] = useState(
+        {
+            sortBy:"A_Z"
+        }
+    );
 */}
 
 
@@ -113,7 +113,6 @@ function SearchInput(props) {
                 }
                 </>:""
             }
-            
         </div>
     </>
 }

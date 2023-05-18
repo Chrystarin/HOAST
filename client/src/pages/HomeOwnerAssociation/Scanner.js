@@ -150,6 +150,8 @@ function Scanner() {
 
     if(!hoa) return <div>Loading...</div>
 
+    if(!hoa.deviceIP) return <div>No Device Connected</div>
+
     return <>
         <NavBar/>
         <div className='SectionHolder'>

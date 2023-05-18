@@ -304,8 +304,8 @@ function AssociationDues() {
 									</Table>
 								</TableContainer>
 								<div className='Pagination__Container'>
-													<Pagination data={data} setter={setPaginationData}/>
-												</div>
+									<Pagination data={data} setter={setPaginationData}/>
+								</div>
 							</div>
 						</div>
 					</div>

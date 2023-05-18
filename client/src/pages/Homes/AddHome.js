@@ -141,6 +141,7 @@ function AddHome() {
                                         setForm({...form, color:e.target.value})
                                     }}
                                 >
+                                    <MenuItem value={"black"}>Black</MenuItem>
                                     <MenuItem value={"red"}>Red</MenuItem>
                                     <MenuItem value={"blue"}>Blue</MenuItem>
                                     <MenuItem value={"yellow"}>Yellow</MenuItem>
