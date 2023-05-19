@@ -15,7 +15,7 @@ import loading from '../../images/loading.gif';
 
 function AddVisitor() {
     const navigate = useNavigate();
-
+    const [submitted, setSubmitted] = useState(false);
     const [stepper, setStepper] = useState(1);
     const [homes, setHomes] = useState();
     const [arrivalDateMax, setArrivalDateMax] = useState();
@@ -57,6 +57,7 @@ function AddVisitor() {
     // Submit button for Adding Visitor
     async function Submit(e){
         e.preventDefault();
+        setSubmitted(true);
         if(form.arrival < form.departure){
             try{
                 await axios
@@ -80,6 +81,7 @@ function AddVisitor() {
                 console.error(err.message);
             }
         }else{
+            setSubmitted(false);
             setOpenSnackBar(openSnackBar => ({
                 ...openSnackBar,
                 open:true,
@@ -157,7 +159,7 @@ function AddVisitor() {
                         </div>
                         <div className='Form__Button'>
                             <Button variant='text'>Cancel</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Submit</Button>
+                            <Button disabled={submitted} variant='contained' type='submit' className='Submit'>Submit</Button>
                         </div>
                     </form>
                 </div>
