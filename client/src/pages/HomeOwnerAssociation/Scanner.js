@@ -118,7 +118,6 @@ function Scanner() {
 
     // Function upon scanning
     async function handleScan(data){
-        console.log(data)
         if (data) {
             setScanned(true)
             console.log(scanned)
@@ -163,9 +162,7 @@ function Scanner() {
         if(manualType){
             setOpenConfirmation(true);  
         }
-        
     }
-
 
     let handleError = (err) => {
         setOpenSnackBar(openSnackBar => ({

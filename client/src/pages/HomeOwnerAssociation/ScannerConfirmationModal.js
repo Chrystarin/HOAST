@@ -9,10 +9,6 @@ import axios from '../../utils/axios';
 function ScannerConfirmationModal(props) {
     const [viewMore, setViewMore] = useState(false);
 
-    console.log(props.info)
-    console.log(props.data)
-    console.log(props.type)
-
     async function acceptEntry(){
         try{
             await axios
