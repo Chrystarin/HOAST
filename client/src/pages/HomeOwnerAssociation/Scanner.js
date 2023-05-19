@@ -207,7 +207,7 @@ function Scanner() {
                 <SideBar active="Scanner"/>
                 <div id='HOA__Content'>
                     <h3 className='SectionTitleDashboard'><span><a >Scanner</a></span></h3>
-                    {(!hoa.deviceIP)? 
+                    {(hoa.deviceIP)? 
                         <div> No Device Connected </div>
                     :
                     <div className='SectionList' id='QRScanner'>

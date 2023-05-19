@@ -54,7 +54,7 @@ function Guard() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Guard</a></span></h3>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
-                            <SearchInput setData={setData} data={guards} keys={["name"]} filterValue={filterValue}/>
+                            <SearchInput setData={setData} data={guards} keys={["user.name.firstName","user.name.lastName"]} filterValue={filterValue}/>
                         </div>
                         <Filter value={filterValue} setValue={setFilterValue}/> 
                         <Button variant="contained" href='/addguard'>Add Guard</Button>
@@ -70,7 +70,7 @@ function Guard() {
                                         {data.length > 0 &&
                                         data.map((guard) => {
                                             return (
-                                                <ResidentCard key={guard._id} username={guard.user.name.firstName + ' ' + guard.user.name.lastName} type={"View"}/>
+                                                <ResidentCard key={guard._id} username={guard["user.name.firstName"] + ' ' + guard["user.name.lastName"]} type={"View"}/>
                                             );
                                         })}
                                     </>
