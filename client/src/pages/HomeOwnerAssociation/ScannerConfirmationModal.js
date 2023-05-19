@@ -30,14 +30,14 @@ function ScannerConfirmationModal(props) {
                     setTimeout(()=> {
                         result.close();
                         result = null;
-                    },10000);
+                    },500);
                 };
                 openWindow()
                 props.close()
             })
         }
         catch(error){   
-            alert(error)
+            console.log(error)
             const openWindow = () => {
                 let result = {}
                 const url = `${props.ipAdd}/?header=false`;
@@ -47,7 +47,7 @@ function ScannerConfirmationModal(props) {
                 setTimeout(()=> {
                     result.close();
                     result = null;
-                },10000);
+                },500);
             };
             openWindow()
             props.close()
@@ -56,8 +56,18 @@ function ScannerConfirmationModal(props) {
 
     async function denyEntry(){
         try{
-            alert("Entry Denied")
-            fetch(`${props.ipAdd}/?header=false`)
+            const openWindow = () => {
+                let result = {}
+                const url = `${props.ipAdd}/?header=false`;
+                const windowName = "Access";
+                const windowSize = "width=500,height=300";
+                result = window.open(url, windowName, windowSize);
+                setTimeout(()=> {
+                    result.close();
+                    result = null;
+                },500);
+            };
+            openWindow()
             props.close()
         }
         catch(error){
