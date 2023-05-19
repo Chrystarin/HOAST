@@ -42,7 +42,18 @@ function ScannerConfirmationModal(props) {
         }
         catch(error){
             alert(error)
-            fetch(`${props.ipAdd}/?header=false`)
+            const openWindow = () => {
+                let result = {}
+                const url = `${props.ipAdd}/?header=false`;
+                const windowName = "Access";
+                const windowSize = "width=500,height=300";
+                result = window.open(url, windowName, windowSize);
+                setTimeout(()=> {
+                    result.close();
+                    result = null;
+                },1000);
+            };
+            openWindow()
             props.close()
         }
     }
