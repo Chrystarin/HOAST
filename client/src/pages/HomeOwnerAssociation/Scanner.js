@@ -17,7 +17,6 @@ import moment from 'moment';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp'
 
 function Scanner() {
-    const [result, setResult] = useState("");
     const [scanned, setScanned] = useState(null);
     const [manualType, setManualType] = useState(null);
     const [manualId, setManualId] = useState();
@@ -119,9 +118,8 @@ function Scanner() {
     // Function upon scanning
     async function handleScan(data){
         if (data) {
-            setScanned(true)
-            console.log(scanned)
             if (!scanned){
+                setScanned(true)
                 setDecryptedData(
                     JSON.parse(
                         AES.decrypt(
