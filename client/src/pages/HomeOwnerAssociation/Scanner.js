@@ -119,7 +119,6 @@ function Scanner() {
     async function handleScan(data){
         if (data) {
             if (!scanned){
-                setScanned(true)
                 setDecryptedData(
                     JSON.parse(
                         AES.decrypt(
@@ -149,6 +148,7 @@ function Scanner() {
                         break;
                 }
                 setOpenConfirmation(true); 
+                setScanned(true)
             }
         }
     };
