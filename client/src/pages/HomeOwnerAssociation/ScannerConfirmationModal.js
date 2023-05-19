@@ -34,13 +34,13 @@ function ScannerConfirmationModal(props) {
                     setTimeout(()=> {
                         result.close();
                         result = null;
-                    },1000);
+                    },10000);
                 };
                 openWindow()
                 props.close()
             })
         }
-        catch(error){
+        catch(error){   
             alert(error)
             const openWindow = () => {
                 let result = {}
@@ -51,7 +51,7 @@ function ScannerConfirmationModal(props) {
                 setTimeout(()=> {
                     result.close();
                     result = null;
-                },1000);
+                },10000);
             };
             openWindow()
             props.close()
