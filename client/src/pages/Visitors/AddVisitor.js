@@ -100,7 +100,7 @@ function AddVisitor() {
   </>
 
     return<>
-        <Navbar type="vehicle"/>
+        <Navbar type="visitor"/>
         <div className='SectionHolder'>
             <section className='Section'>
                 <h3 className='SectionTitleDashboard'><span><a href="/visitors">Visitors</a></span>  > <span>Add Visitors</span></h3>
