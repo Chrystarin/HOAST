@@ -147,8 +147,9 @@ function Scanner() {
                     default:
                         break;
                 }
-                setOpenConfirmation(true); 
                 setScanned(true)
+                setOpenConfirmation(true); 
+                
             }
         }
     };
@@ -177,7 +178,7 @@ function Scanner() {
 
     function QRCodeReader(){
         return <>
-            {scanned?
+            {/* {scanned?
                 <div>
                     <QrReader
                         onError={handleError}
@@ -186,7 +187,7 @@ function Scanner() {
                         facingmode='front'
                     />
                 </div>
-            :
+            : */}
             <div>
                 <QrReader
                     onError={handleError}
@@ -195,7 +196,7 @@ function Scanner() {
                     facingmode='front'
                 />
             </div>   
-            }
+            {/* } */}
         </>
     }
 
