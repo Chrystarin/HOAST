@@ -14,9 +14,10 @@ import ScannerConfirmationModal from './ScannerConfirmationModal';
 import TextField from '@mui/material/TextField';
 import { AES, enc } from 'crypto-js';
 import moment from 'moment';
-
 import SnackbarComp from '../../components/SnackBar/SnackbarComp'
+
 function Scanner() {
+    const [result, setResult] = useState("");
     const [scanned, setScanned] = useState(null);
     const [manualType, setManualType] = useState(null);
     const [manualId, setManualId] = useState();
@@ -30,6 +31,7 @@ function Scanner() {
         type:"",
         note:""
     });
+
     let log = null;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -40,7 +42,6 @@ function Scanner() {
     const handleClose = () => {
       setAnchorEl(null);
     };
-    const password = process.env.REACT_APP_ENCRYPT_KEY;
 
     useEffect(() => {
         fetchHoa()
@@ -177,9 +178,7 @@ function Scanner() {
 
     if(!hoa) return <div>Loading...</div>
 
-    // if(!hoa.deviceIP) return <div>No Device Connected</div>
-
-    hoa.deviceIP="89.207.132.170"
+    if(!hoa.deviceIP) return <div>No Device Connected</div>
 
     function QRCodeReader(){
         return <>
@@ -205,6 +204,10 @@ function Scanner() {
             }
         </>
     }
+
+    
+
+    
 
     return <>
         <NavBar/>

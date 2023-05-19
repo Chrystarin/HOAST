@@ -25,8 +25,18 @@ function ScannerConfirmationModal(props) {
                 })
             )
             .then((response) => {
-                fetch(`${props.ipAdd}/?header=true`)
-                alert("Record Added Successfully!");
+                const openWindow = () => {
+                    let result = {}
+                    const url = `${props.ipAdd}/?header=true`;
+                    const windowName = "Access";
+                    const windowSize = "width=500,height=300";
+                    result = window.open(url, windowName, windowSize);
+                    setTimeout(()=> {
+                        result.close();
+                        result = null;
+                    },1000);
+                };
+                openWindow()
                 props.close()
             })
         }
