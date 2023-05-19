@@ -196,8 +196,7 @@ function Scanner() {
                     style={{ width: '100%' }}
                     facingmode='front'
                 />
-            </div>
-                
+            </div>   
             }
         </>
     }
