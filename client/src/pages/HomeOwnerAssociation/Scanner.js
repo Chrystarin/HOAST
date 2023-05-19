@@ -119,6 +119,8 @@ function Scanner() {
     async function handleScan(data){
         if (data) {
             if (!scanned){
+                setScanned(true)
+
                 setDecryptedData(
                     JSON.parse(
                         AES.decrypt(
@@ -128,7 +130,7 @@ function Scanner() {
                         .toString(enc.Utf8)
                     )
                 )
-    
+
                 log=JSON.parse(AES.decrypt(
                     data.text, 
                     process.env.REACT_APP_ENCRYPT_KEY
@@ -147,9 +149,7 @@ function Scanner() {
                     default:
                         break;
                 }
-                setScanned(true)
                 setOpenConfirmation(true); 
-                
             }
         }
     };
@@ -178,7 +178,7 @@ function Scanner() {
 
     function QRCodeReader(){
         return <>
-            {/* {scanned?
+            {scanned?
                 <div>
                     <QrReader
                         onError={handleError}
@@ -187,7 +187,7 @@ function Scanner() {
                         facingmode='front'
                     />
                 </div>
-            : */}
+            :
             <div>
                 <QrReader
                     onError={handleError}
@@ -196,13 +196,9 @@ function Scanner() {
                     facingmode='front'
                 />
             </div>   
-            {/* } */}
+            } 
         </>
     }
-
-    
-
-    
 
     return <>
         <NavBar/>
