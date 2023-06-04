@@ -82,7 +82,7 @@ function QRCodeCard(props) {
                 }
                 viewBox={`0 0 256 256`}
             />
-            <h5>{props.objId}</h5>
+            <h5 style={{textAlign:'center',marginTop:"15px"}}>ID: {props.objId}</h5>
         </div>
         <div id="DownloadQR">
             <Button variant='contained' maxWidth onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >Download QR</Button>

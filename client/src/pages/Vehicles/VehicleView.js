@@ -38,6 +38,7 @@ function VehicleView() {
                 })
             .then((response) => {
                 setVehicle(response.data);
+                console.log(response.data)
             })
             .catch((err)=>{
                 navigate(`${err}`);
@@ -108,9 +109,16 @@ function VehicleView() {
                                         <h6>Model:</h6>
                                         <h5>{vehicle.model}</h5>
                                     </div>
-                                    <div className='GeneralInformation__InfoContainer'>
-                                        <h6>Registered Since: </h6>
-                                        <h5>{vehicle.createdAt}</h5>
+                                    
+                                </div>
+                                <div className='Input__Wrapper2'>
+                                    <div className='GeneralInformation__InfoContainer ImageHolder'>
+                                        <h6>Front Image:</h6>
+                                        <img src={vehicle.frontImage}/>
+                                    </div>
+                                    <div className='GeneralInformation__InfoContainer ImageHolder'>
+                                        <h6>Back Image: </h6>
+                                        <img src={vehicle.backImage}/>
                                     </div>
                                 </div>
                             <Button variant='contained' href='/vehicles/update'> Update</Button>

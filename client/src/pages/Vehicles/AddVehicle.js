@@ -56,7 +56,7 @@ function AddVehicle() {
         formData.append('brand', form.brand);
         formData.append('type', form.type);
         formData.append('color', form.color);
-
+        
         try{
             // Login
             await axios
@@ -64,8 +64,10 @@ function AddVehicle() {
                 `vehicles`,
                 formData,
                 {headers: { 'Content-Type': 'multipart/form-data' }}
+                
             )
             .then((response) => {
+                
                 console.log(JSON.stringify(response?.data));
                 navigate("/vehicles");
             })
@@ -175,8 +177,6 @@ function AddVehicle() {
                                 </div> */}
                                 <img style={{width:"100%"}} src={URL.createObjectURL(frontImage)} alt="" />
                             </div>
-                                
-
                             </>
                             }
 
@@ -233,8 +233,22 @@ function AddVehicle() {
                         </div>
 
                         <div className='Form__Button'>
-                            <Button variant='text'>Cancel</Button>
-                            <Button variant='contained' type='submit' className='Submit'>Submit</Button>
+                            <Button variant='text' onClick={()=>{navigate('/vehicles')}}>Cancel</Button>
+                            <Button 
+                                variant='contained' 
+                                type='submit' 
+                                className='Submit'
+                                onClick={()=>{
+                                    setOpenSnackBar(openSnackBar => ({
+                                        ...openSnackBar,
+                                        open:true,
+                                        type:'info',
+                                        note:'Sending',
+                                    }));
+                                }}
+                            >
+                                Submit
+                            </Button>
                         </div>
                     </form>
                 </div>
