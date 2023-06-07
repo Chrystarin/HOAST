@@ -89,10 +89,6 @@ function LandingPage() {
 					>
 						<div className="SectionTitleLandingPage">
 							<h4>Frequently Ask Questions</h4>
-							<h6>
-								Lorem ipsum dolor sit amet consectetur
-								adipisicing elit. Maiores, dolor.
-							</h6>
 						</div>
 						<div id="AccordionFAQ">
 							<Accordion>
