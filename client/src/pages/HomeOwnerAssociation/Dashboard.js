@@ -10,10 +10,11 @@ import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
 
 function HomeOwnerAssociation() {
-	const [hoa, setHoa] = useState();
+    const [hoa, setHoa] = useState();
 
-	// Runs onLoad
+    // Runs onLoad
 	useEffect(() => {
+        
 		const fetchHoa = async () => {
 			await axios
 				.get(`hoas`, {
@@ -22,14 +23,14 @@ function HomeOwnerAssociation() {
 					}
 				})
 				.then((response) => {
-					console.log(response.data);
+                    console.log(response.data)
 					setHoa(response.data);
 				});
 		};
 		fetchHoa();
 	}, []);
 
-	if (!hoa)
+	if (!hoa || !guard)
 		return (
 			<>
 				<div className="Loading">
