@@ -9,15 +9,14 @@ const addDevice = async (req, res, next) => {
 	console.log(req.body);
 
 	// Find user by email and check password using bcrypt
-	// const user = await User.findOne(
-	// 	{ 'credentials.email': email },
-	// 	{ 'credentials.password': 1 }
-	// );
+	const user = await User.findOne(
+		{ 'credentials.email': email },
+		{ 'credentials.password': 1 }
+	);
 
-	const user = await User.findOne({ email });
+	// const user = await User.findOne({ email });
 
 	console.log(user.credentials.password);
-
 	console.log(user);
 
 	console.log(bcrypt.compareSync(password, user.credentials.password));
