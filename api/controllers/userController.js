@@ -12,11 +12,7 @@ const createToken = (userId) =>
 	jwt.sign({ userId, createdAt: new Date() }, JWT_SECRET, {
 		expiresIn: '7d'
 	});
-const cookieOptions = { 
-    httpOnly: true, 
-    sameSite: 'none', 
-    secure: true 
-};
+const cookieOptions = { httpOnly: true, sameSite: 'strict', secure: true };
 
 const signup = async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body;
@@ -78,7 +74,5 @@ const updateUser = async (req, res, next) => {
 
 	res.json({ message: 'User updated' });
 };
-
-
 
 module.exports = { signup, login, getUser, updateUser };

@@ -120,16 +120,11 @@ a:active{
         display: grid;
         gap: 25px;
         grid-template-columns: 250px 1fr;
-
-        @media only screen and (max-width: 768px) {
-            grid-template-columns: 0 1fr;
-        }
         
         .SectionManage__SideNav{
-            background-color: var(--secondary-color);
-            height: 100%;
-            min-height: calc(100vh - 80px);
-            
+        background-color: var(--secondary-color);
+        height: 100%;
+        min-height: calc(100vh - 80px);
             ul{
                 display: flex;
                 flex-direction: column;
@@ -138,9 +133,6 @@ a:active{
                 margin-top: 40px;
                 position: sticky;
                 top: 100px;
-                @media only screen and (max-width: 768px) {
-                    display: none;
-                }
                 li{
                     a{
                         display: block;
@@ -209,7 +201,6 @@ a:active{
 .SectionView{
     padding-bottom: 40px;
     display: flex;
-    flex-wrap: wrap;
     gap:25px;
     .SectionView__Content{
         display: flex;
@@ -324,16 +315,5 @@ a:active{
     align-items: center;
     h3{
         color: var(--primary-color);
-    }
-}
-.Pagination__Container{
-    margin-top: 25px;
-    display: flex;
-    justify-content: center;
-}
-#SpeedDial{
-    display: none;
-    @media only screen and (max-width: 768px) {
-        display: block;
     }
 }

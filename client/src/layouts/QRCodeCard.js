@@ -7,9 +7,12 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import QRCode from "react-qr-code";
 import html2canvas from 'html2canvas';
 // import sjcl from './sjcl';
-import { AES, enc } from 'crypto-js';
 
 function QRCodeCard(props) {
+
+    const password = '#WllcDmAgf^SM4qmC%JBG&L95gqU$&MME9X0%XV*g#tKB2psZX';
+
+    console.log(props.objId)
 
     // download QR Code
     const DownloadQRCode = (divId, filename) => {
@@ -64,25 +67,14 @@ function QRCodeCard(props) {
         <div className='SidePanel__Container' id='QRCodeContainer'>
             {/* <img src={QRCodeimg} alt="" /> */}
             {/* <CardInfo category={props.logType}/> */}
-            <h4>{(props.logType).toUpperCase()}'s Pass</h4>
-            <br/><hr/><br/>
             <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={
-                    AES.encrypt(
-                        createQrData(
-                            props.objId, 
-                            props.logType, 
-                            props.hoaId
-                        ).toString(), 
-                        process.env.REACT_APP_ENCRYPT_KEY
-                    )
-                    .toString()
-                }
+                // value={encryptData(createQrData(props.objId, props.logType, props.hoaId), password)}
+                // value={sjcl.encrypt(password, createQrData(props.objId, props.logType, props.hoaId))}
+                value={createQrData(props.objId, props.logType, props.hoaId)}
                 viewBox={`0 0 256 256`}
             />
-            <h5 style={{textAlign:'center',marginTop:"15px"}}>ID: {props.objId}</h5>
         </div>
         <div id="DownloadQR">
             <Button variant='contained' maxWidth onClick={()=>DownloadQRCode("QRCodeContainer", "QRCode.png")} id='DownloadButton' aria-label="add to shopping cart" >Download QR</Button>

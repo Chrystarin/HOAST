@@ -9,6 +9,9 @@ import axios from '../../utils/axios';
 function ScannerConfirmationModal(props) {
     const [viewMore, setViewMore] = useState(false);
 
+    console.log(props.info)
+    console.log(props.data)
+
     async function acceptEntry(){
         try{
             await axios
@@ -21,53 +24,22 @@ function ScannerConfirmationModal(props) {
                 })
             )
             .then((response) => {
-                const openWindow = () => {
-                    let result = {}
-                    const url = `${props.ipAdd}/?header=true`;
-                    const windowName = "Access";
-                    const windowSize = "width=500,height=300";
-                    result = window.open(url, windowName, windowSize);
-                    setTimeout(()=> {
-                        result.close();
-                        result = null;
-                    },1000);
-                };
-                openWindow()
+                fetch(`${props.ipAdd}/?header=true`)
+                alert("Record Added Successfully!");
                 props.close()
             })
         }
-        catch(error){   
-            console.log(error)
-            const openWindow = () => {
-                let result = {}
-                const url = `${props.ipAdd}/?header=false`;
-                const windowName = "Access";
-                const windowSize = "width=500,height=300";
-                result = window.open(url, windowName, windowSize);
-                setTimeout(()=> {
-                    result.close();
-                    result = null;
-                },1000);
-            };
-            openWindow()
+        catch(error){
+            alert(error)
+            fetch(`${props.ipAdd}/?header=false`)
             props.close()
         }
     }
 
     async function denyEntry(){
         try{
-            const openWindow = () => {
-                let result = {}
-                const url = `${props.ipAdd}/?header=false`;
-                const windowName = "Access";
-                const windowSize = "width=500,height=300";
-                result = window.open(url, windowName, windowSize);
-                setTimeout(()=> {
-                    result.close();
-                    result = null;
-                },1000);
-            };
-            openWindow()
+            alert("Entry Denied")
+            fetch(`${props.ipAdd}/?header=false`)
             props.close()
         }
         catch(error){

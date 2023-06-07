@@ -9,32 +9,24 @@ import MuiAlert from '@mui/material/Alert';
 
 // Step 1 
 // Initialize useState on the page
-{/*
-    const [openSnackBar, setOpenSnackBar] = React.useState({
-        open:false,
-        type:"",
-        note:""
-    });
-*/}
-
+// const [openSnackBar, setOpenSnackBar] = React.useState({
+//     open:false,
+//     type:"",
+//     note:""
+// });
 
 // Step 2 
 //  Place this anywhere inside of the page
-{/* 
-    <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/> 
-*/}
+// {/* <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/> */}
 
 // Step 3
 // Update value usestate to call Snackbar
-{/* 
-    setOpenSnackBar(openSnackBar => ({
-        ...openSnackBar,
-        open:true,
-        type:'success',
-        note:"Profile Updated!",
-    }));
-*/}
-
+// setOpenSnackBar(openSnackBar => ({
+//     ...openSnackBar,
+//     open:true,
+//     type:'success',
+//     note:"Profile Updated!",
+// }));
 
 // Severity types = error,warning,info,success
 

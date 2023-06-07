@@ -61,7 +61,7 @@ const joinHoa = async (req, res, next) => {
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
 	checkString(color, 'Home Color');
-	checkString(number, 'Home Number');
+	checkNumber(number, 'Home Number');
 	checkString(street, 'Street');
     checkString(contactNo, 'Contact Number');
 	checkString(phase, 'Phase', true);

@@ -49,6 +49,7 @@ function AddVehicle() {
             )
             .then((response) => {
                 console.log(JSON.stringify(response?.data));
+                // alert("Registered Successfully!");
                 navigate("/vehicles");
             })
         }

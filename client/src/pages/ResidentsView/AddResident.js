@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import VillageIcon from '../../images/icons/Village.png'
 import ResidentCard from '../../components/ResidentCard/ResidentCard';
-import SnackbarComp from '../../components/SnackBar/SnackbarComp';
+
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -25,11 +25,7 @@ function AddResident() {
     const [filteredHome, setFilteredHome] = useState([])
     const [searchText, setSearchText] = useState("");
     const [selectedHome, setSelectedHome] = useState(null);
-    const [openSnackBar, setOpenSnackBar] = React.useState({
-        open:false,
-        type:"",
-        note:""
-    });
+
     // Collection of form data
     const [form, setForm] = useState({
         homeId: '',
@@ -83,17 +79,12 @@ function AddResident() {
                 })
             )
             .then((response) => {
+                alert("Request Submitted! Wait for admin to approve your request.");
                 navigate("/homes");
             })
         }
         catch(err){
-            setOpenSnackBar(openSnackBar => ({
-                ...openSnackBar,
-                open:true,
-                type:'error',
-                note:err.message,
-            }));
-           
+            alert(err.message);
         }
     }
     
@@ -202,7 +193,6 @@ function AddResident() {
                 <div className='SectionContent'>
                     <Stepper homes={homes}/>
                 </div>
-                <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
             </section>
         </div>
     </>

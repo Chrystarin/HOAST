@@ -44,10 +44,6 @@ module.exports = model(
                         message: "'{VALUE}' is not supported"
                     }
                 },
-				contactNo: {
-					type: String,
-					required: [true, 'Contact Number is required']
-				},
 				phase: String
 			},
 			status: {

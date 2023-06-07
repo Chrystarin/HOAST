@@ -3,36 +3,31 @@ import NavBar from '../../layouts/NavBar';
 import './Dashboard.scss';
 import SideBar from './SideBar';
 import Button from '@mui/material/Button';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchInput from '../../components/SearchInput/SearchInput';
-import Filter from '../../components/Filter/Filter'
-import TableBody from '@mui/material/TableBody';
+
 import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Menu from '@mui/material/Menu';
+import NativeSelect from '@mui/material/NativeSelect';
 import loading from '../../images/loading.gif';
 import axios from '../../utils/axios';
+import TablePagination from '@mui/material/TablePagination';
 import TableFooter from '@mui/material/TableFooter';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
-import Pagination from '../../components/Pagination/Pagination';
 function Logs() {
 
     const [logs, setLogs] = useState()
-    const [data,setData] = useState({});
-    const [paginationData,setPaginationData]=useState({})
-    const [filterValue,setFilterValue] = useState(
-        {
-            sortBy:"A_Z"
-        }
-    );
     const [openSnackBar, setOpenSnackBar] = React.useState({
         open:false,
         type:"",
         note:""
     });
-    
     // States for popup filter
     const [anchorElFilter, setAnchorElFilter] = React.useState(null);
     const openFilter = Boolean(anchorElFilter);
@@ -48,7 +43,7 @@ function Logs() {
 				})
 				.then((response) => {
 					setLogs(response.data);
-                    // console.log(response.data);
+                    console.log(response.data);
                     // console.log(Object.keys(response.data[0]));
 
                     // // get object headers keys
@@ -69,8 +64,7 @@ function Logs() {
 				});
 		};
 		fetchLogs();
-        console.log("data",data)
-	}, [data]);
+	}, []);
 
     // Function for downloading csv
     // function downloadCSV(input) {
@@ -173,9 +167,58 @@ function Logs() {
                     <h3 className='SectionTitleDashboard'><span><a href="">Logs</a></span></h3>
                     <div className='SectionController'>
                         <div id='SearchInput__Container'>
-                            <SearchInput setData={setData} data={logs} keys={["visitor.name","vehicle.plateNumber","createdAt",'name.firstName','name.lastName']} filterValue={filterValue}/>
+                            {/* <SearchInput/> */}
                         </div>
-                        {/* <Filter value={filterValue} setValue={setFilterValue}/> */}
+                        <Button variant="" startIcon={<FilterAltIcon/>} onClick={(event) => setAnchorElFilter(event.currentTarget)}>Filter</Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorElFilter}
+                            open={openFilter}
+                            onClose={() => {
+                                setAnchorElFilter(null);
+                            }}
+                            MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                            }}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        >
+                            <div className='Filter'>
+                                <h6 className='Filter__Title'>Filter</h6>
+                                <ul>
+                                    <li>
+                                    <p className="BodyText3 Filter__Titles">Sort by</p>
+                                    <div>
+                                    <NativeSelect
+                                        defaultValue={null}
+                                        inputProps={{
+                                        name: 'age',
+                                        id: 'uncontrolled-native',
+                                        }}
+                                    >
+                                        <option value={10}>A to Z</option>
+                                        <option value={20}>Recent Register</option>
+                                        <option value={30}>More Residents</option>
+                                    </NativeSelect>
+                                    </div>
+                                    </li>
+                                </ul>
+                                <div className='Filter__Buttons'>
+                                    <div>
+                                    <Button variant=''>Reset All</Button>
+                                    </div>
+                                    <Button variant=''>Cancel</Button>
+                                    <Button 
+                                        variant='contained' 
+                                        onClick={() => {
+                                            setAnchorElFilter(null)
+                                        }}
+                                        >
+                                            Apply
+                                    </Button>
+                                </div>
+                            </div>
+                        </Menu>
                         <Button variant="contained" id='downloadButton' 
                         onClick={() => {
                             tableToCSV(); 
@@ -202,12 +245,12 @@ function Logs() {
                                     </TableHead>
                                     <TableBody>
 
-                                        {paginationData.length === 0 ? (
+                                        {logs.length === 0 ? (
 													<></>
                                         ) : (
                                             <>
-                                                {paginationData.length > 0 &&
-                                                    paginationData.map((log) => {
+                                                {logs.length > 0 &&
+                                                    logs.map((log) => {
                                                         return (
                                                             <TableRow
                                                                 key={log.logId}
@@ -215,13 +258,13 @@ function Logs() {
                                                             >
                                                                 <TableCell component="th" scope="row" align='center'>
                                                                     {log.logType === 'user' ? log.user.userId :
-                                                                    log.logType === 'vehicle' ? log['vehicle.plateNumber'] :
-                                                                    log['visitor.visitorId']}
+                                                                    log.logType === 'vehicle' ? log.vehicle.plateNumber :
+                                                                    log.visitor.visitorId}
                                                                 </TableCell>
                                                                 <TableCell align="center">
-                                                                    {log.logType === 'user' ? log['user.name.firstName'] + ' ' + log['user.name.lastName'] :
-                                                                    log.logType === 'vehicle' ? log['vehicle.brand']:
-                                                                    log['visitor.name']}
+                                                                    {log.logType === 'user' ? log.user.name.firstName + ' ' + log.user.name.lastName :
+                                                                    log.logType === 'vehicle' ? log.vehicle.brand:
+                                                                    log.visitor.name}
                                                                 </TableCell>
                                                                 <TableCell component="th" scope="row" align='center'>{log.logType} </TableCell>
                                                                 <TableCell align="center">{new Date(log.createdAt).getMonth() + " - " + new Date(log.createdAt).getDate()  + " - " + new Date(log.createdAt).getFullYear() + " | " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds()}</TableCell>
@@ -230,12 +273,41 @@ function Logs() {
                                                     })}
                                             </>
                                         )}
+
+                                        {/* {Logs.map((Log) => (
+                                            <TableRow
+                                                key={Log.id}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row" align='center'>{Log.id} </TableCell>
+                                                <TableCell align="center">{Log.Resident}</TableCell>
+                                                <TableCell component="th" scope="row" align='center'>{Log.id} </TableCell>
+                                                <TableCell align="center">{Log.Timestamp}</TableCell>
+                                            </TableRow>
+                                        ))} */}
                                     </TableBody>
+                                    {/* <TableFooter>
+                                        <TableRow>
+                                            <TablePagination
+                                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                            colSpan={3}
+                                            // count={rows.length}
+                                            // rowsPerPage={rowsPerPage}
+                                            // page={page}
+                                            SelectProps={{
+                                                inputProps: {
+                                                'aria-label': 'rows per page',
+                                                },
+                                                native: true,
+                                            }}
+                                            // onPageChange={handleChangePage}
+                                            // onRowsPerPageChange={handleChangeRowsPerPage}
+                                            // ActionsComponent={TablePaginationActions}
+                                            />
+                                        </TableRow>
+                                    </TableFooter> */}
                                 </Table>
                             </TableContainer>
-                            <div className='Pagination__Container'>
-                                <Pagination data={data} setter={setPaginationData}/>
-                            </div>
                         </div>
                     </div>
                 </div>

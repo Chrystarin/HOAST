@@ -10,9 +10,8 @@ import Button from '@mui/material/Button';
 import axios from '../../utils/axios';
 
 import { useNavigate } from 'react-router';
-import {useAuth} from '../../utils/AuthContext.js';
+
 function Register() {
-    const {login} = useAuth();
 	const navigate = useNavigate();
 
 	const [registerForm, setRegisterForm] = useState({
@@ -53,7 +52,7 @@ function Register() {
 				)
 				.then((response) => {
 					alert('Registered Successfully!');
-                    login(registerForm.email, registerForm.password)
+					navigate('/');
 				});
 		} catch (err) {
 			console.error(err.message);
