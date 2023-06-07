@@ -5,6 +5,27 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchSuggested from './SearchSuggested';
 import { getAccordionDetailsUtilityClass } from '@mui/material';
+
+
+
+{/* 
+    const [data,setData] = useState({});
+    const [filterValue,setFilterValue] = useState(
+        {
+            sortBy:"A_Z"
+        }
+    );
+*/}
+
+
+{/* 
+<div id='SearchInput__Container'>
+    <SearchInput setData={setData} data={visitors} keys={["name","visitorId"]} filterValue={filterValue}/>
+</div>
+<Filter value={filterValue} setValue={setFilterValue}/> 
+*/}
+
+
 function SearchInput(props) {
     const keys = props.keys;
     const [search,setSearch] = useState({
@@ -16,12 +37,19 @@ function SearchInput(props) {
 
     useEffect(() => {
         
+        // console.log(props.data.map((data)=>crawler(data)))
         props.setData(()=>{
             return sortBy(
-                searchData(props.data),
+                searchData(props.data.map((data)=>crawler(data))),
                 props.filterValue.sortBy
             );
         })
+        console.log(props.data.map((data)=>crawler(data)))
+        // console.log(sortBy(
+        //     searchData(props.data.map((data)=>crawler(data))),
+        //     props.filterValue.sortBy
+        // ))
+        
     }, [search.focus, search.value,props.filterValue]);
 
 
@@ -32,8 +60,18 @@ function SearchInput(props) {
     }
 
 
+    const crawler = (data, parent)=> Object.entries(data).reduce((data,[key,value])=>{
+        if(value instanceof Array) return data;
+
+        key = parent ? `${parent}.${key}`:key;
+        if(typeof value === 'object')
+            return {
+                ... data,...crawler(value,key)
+            };
+        return {...data,[key]:value};
+    },{});
+    
     const sortBy = (data,type)=>{
-        
         switch (type) {
             case "A_Z":
                 return data.sort((a, b) => a[props.keys[0]] > b[props.keys[0]]?1:-1)
@@ -76,7 +114,6 @@ function SearchInput(props) {
                 }
                 </>:""
             }
-            
         </div>
     </>
 }

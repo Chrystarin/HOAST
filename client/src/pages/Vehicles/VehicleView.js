@@ -38,6 +38,7 @@ function VehicleView() {
                 })
             .then((response) => {
                 setVehicle(response.data);
+                console.log(response.data)
             })
             .catch((err)=>{
                 navigate(`${err}`);
@@ -75,7 +76,7 @@ function VehicleView() {
         <Navbar type="vehicles"/>
         <div className='SectionHolder'>
             <section className='Section'>
-            <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>{vehicle.plateNumber}</span></h3>
+                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span>  > <span>{vehicle.plateNumber}</span></h3>
                 <div className='SectionContent SectionView' id='ViewResident'>
                     <div className='SectionView__Content' id="ViewResident__Content__Container" >
                         <div className="SectionView__Sections">
@@ -108,9 +109,16 @@ function VehicleView() {
                                         <h6>Model:</h6>
                                         <h5>{vehicle.model}</h5>
                                     </div>
-                                    <div className='GeneralInformation__InfoContainer'>
-                                        <h6>Registered Since: </h6>
-                                        <h5>{vehicle.createdAt}</h5>
+                                    
+                                </div>
+                                <div className='Input__Wrapper2'>
+                                    <div className='GeneralInformation__InfoContainer ImageHolder'>
+                                        <h6>Front Image:</h6>
+                                        <img src={vehicle.frontImage}/>
+                                    </div>
+                                    <div className='GeneralInformation__InfoContainer ImageHolder'>
+                                        <h6>Back Image: </h6>
+                                        <img src={vehicle.backImage}/>
                                     </div>
                                 </div>
                             <Button variant='contained' href='/vehicles/update'> Update</Button>

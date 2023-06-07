@@ -41,7 +41,6 @@ function AuthProvider({ children }) {
                     else{
                         navigate("/homes");
                     }
-                    
                 });
         } catch (error) {
         console.log(error);
@@ -55,7 +54,10 @@ function AuthProvider({ children }) {
 
     const fetchRole = async () => {
         await axios
-            .get(`roles`)
+            .get(
+                `roles`,
+                {withCredentials: true}
+            )
             .then((response) => {
                 // console.log(response.data)
                 let roles = []
@@ -138,7 +140,7 @@ function AuthProvider({ children }) {
         return false
     }
 
-    const value = { user, login, logout, isAuth, isAdmin, isGuard, isHomeowner, isResident, isRole};
+    const value = { user, login, logout, isAuth, isAdmin, isGuard, isHomeowner, isResident, isRole, fetchRole};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

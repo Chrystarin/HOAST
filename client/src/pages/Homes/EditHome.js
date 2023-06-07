@@ -10,6 +10,10 @@ import ResidentCard from '../../components/ResidentCard/ResidentCard';
 import { useNavigate } from 'react-router';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 function EditHome() {
     const { id } = useParams();
     const {isHomeowner} = useAuth();
@@ -137,6 +141,7 @@ function EditHome() {
                     <div className='SectionContent' id='ViewHome'>
                         <div className='Form' id='ViewHome__Content'>
                             <div className='EditHome'>
+                                <div className='Form'>
                                 <TextField
                                     className='EditHome__Name'
                                     id="filled-password-input"
@@ -147,16 +152,7 @@ function EditHome() {
                                     defaultValue={home.name}
                                     onChange={(e)=>setName(e.target.value )}
                                 />
-                                <TextField
-                                    className='EditHome__Name'
-                                    id="filled-password-input"
-                                    label="Color"
-                                    type="text"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    defaultValue={home.color}
-                                    onChange={(e)=>setColor(e.target.value )}
-                                />
+ 
                                 <TextField
                                     className='EditHome__Name'
                                     id="filled-password-input"
@@ -167,6 +163,26 @@ function EditHome() {
                                     defaultValue={home.conactNumber}
                                     onChange={(e)=>setContactNumber(e.target.value )}
                                 />
+                                <FormControl variant="filled" fullWidth>
+                                    <InputLabel id="demo-simple-select-filled-label">Color</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-filled-label"
+                                        id="demo-simple-select-filled"
+                                        value={color}
+                                        defaultValue={home.color}
+                                        onChange={(e)=>{
+                                            setColor(e.target.value)
+                                        }}
+                                    >
+                                        <MenuItem value={"red"}>Red</MenuItem>
+                                        <MenuItem value={"blue"}>Blue</MenuItem>
+                                        <MenuItem value={"yellow"}>Yellow</MenuItem>
+                                        <MenuItem value={"green"}>Green</MenuItem>
+                                        <MenuItem value={"orange"}>Orange</MenuItem>
+                                        <MenuItem value={"violet"}>Violet</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                </div>
                                 <div className='EditHome__ResidentList'>
                                     <h5>List of Residents</h5>
                                     <div className='FormWrapper__2__1'>

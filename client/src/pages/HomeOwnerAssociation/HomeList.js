@@ -129,6 +129,11 @@ function HomeList() {
             <section className='Section SectionManage'>
                 <SideBar active="HomesList" access="admin"/>
                 <div id='HOA__Content'>
+                    <h3 className="SectionTitleDashboard">
+                        <span>
+                            <a href="">Home Lists</a>
+                        </span>
+                    </h3>
                     {/* <h3 className='SectionTitleDashboard'><span><a href="">Home List</a></span></h3> */}
                     <div className='SectionStepper'> 
                         <Button variant='text' className={stepper== 1? "active":""} onClick={()=>setStepper(1)}>Home List</Button>

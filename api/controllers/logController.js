@@ -122,7 +122,7 @@ const addRecord = async (req, res, next) => {
             const current = new Date();
 
             // Check if visitor is within the arrival and departure
-			if (visitor.arrival <= current && visitor.departure >= current) break;
+			if (visitor.arrival >= current && visitor.departure >= current) break;
 
             throw new UnauthorizedError('Visitor is out of the arrival and departure duration');
 		case 'vehicle':

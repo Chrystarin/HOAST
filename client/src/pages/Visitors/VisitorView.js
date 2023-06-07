@@ -77,18 +77,10 @@ function VisitorView() {
 	return (
 		<>
 			<Navbar type="visitors" />
-			<div id="SectionHolder">
+			<div className="SectionHolder">
 				<section className="Section">
-					<h3 className="SectionTitleDashboard">
-						<span>
-							<a href="/">Visitor</a>
-						</span>{' '}
-						> <span>{visitor.name}</span>
-					</h3>
-					<div
-						className="SectionContent SectionView"
-						id="ViewResident"
-					>
+					<h3 className="SectionTitleDashboard"><span><a href="/">Visitor</a></span>{' > '}<span>{visitor.name}</span></h3>
+					<div className="SectionContent SectionView" id="ViewResident">
 						<div
 							className="SectionView__Content"
 							id="ViewResident__Content__Container"

@@ -6,9 +6,11 @@ const bcrypt = require('bcrypt');
 const addDevice = async (req, res, next) => {
 	const { email, password, hoaId, deviceIP } = req.body;
 
+	console.log(req.body);
+
 	// Find user by email and check password using bcrypt
-	const user = await User.findOne({ email });
-	console.log(user.credentials.password)
+	const user = await User.findOne({ 'credentials.email': email }, { 'credentials.password': 1 });
+
 	if (!user || !bcrypt.compareSync(password, user.credentials.password))
 		throw new UnauthorizedError('Invalid user credentials');
 
