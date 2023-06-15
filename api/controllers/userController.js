@@ -12,7 +12,7 @@ const createToken = (userId) =>
 	jwt.sign({ userId, createdAt: new Date() }, JWT_SECRET, {
 		expiresIn: '7d'
 	});
-const cookieOptions = { httpOnly: true, sameSite: 'strict', secure: true };
+const cookieOptions = { httpOnly: true, sameSite: 'none', secure: true };
 
 const signup = async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body;
@@ -55,10 +55,12 @@ const login = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
 	const { user } = req.user;
-	const { credentials: { email } } = user;
+	const {
+		credentials: { email }
+	} = user;
 
 	res.json({ ...user.toJSON(), email });
-}
+};
 
 const updateUser = async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body;

@@ -27,10 +27,13 @@ function AuthProvider({ children }) {
 						password: password
 					})
 				)
-				.then(async (response) => {
+				.then((response) => {
 					setUser(response.data);
 					localStorage.setItem('user', JSON.stringify(response.data));
-					await fetchRole();
+					const subFetchRole = async () => {
+						await fetchRole();
+					};
+					subFetchRole();
 					if (localStorage.getItem('guardOf')) {
 						navigate('/scanner');
 					} else {
@@ -48,7 +51,6 @@ function AuthProvider({ children }) {
 	};
 
 	const fetchRole = async () => {
-		console.log('fetching roles');
 		await axios.get(`roles`).then((response) => {
 			// console.log(response.data)
 			let roles = [];
