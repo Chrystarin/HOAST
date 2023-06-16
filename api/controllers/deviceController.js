@@ -21,8 +21,18 @@ const addDevice = async (req, res, next) => {
 	});
 	if (!hoa) throw new ForbiddenError('User not guard or admin of HOA');
 
+
+	console.log("OLD DATA")
+	console.log(hoa)
+
+	console.log("DEVICE IP")
+	console.log(deviceIP)
+
 	hoa.deviceIP = deviceIP;
 	await hoa.save();
+
+	console.log("NEW DATA")
+	console.log(hoa)
 
 	res.status(201).send('Device added');
 };
