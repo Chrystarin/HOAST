@@ -10,6 +10,11 @@ import image from '../../images/Placeholder/QRcode.png'
 import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 import axios from './../../utils/axios';
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 function AddVehicle() {
     const navigate = useNavigate();
     const [openSnackBar, setOpenSnackBar] = React.useState({
