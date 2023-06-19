@@ -60,7 +60,7 @@ function Scanner() {
 
             let time = hour + ':' + minutes + ':' + seconds + ' ' + session;
 
-            document.getElementById('clock').innerText = time;
+            // document.getElementById('clock').innerText = time;
             let t = setTimeout(function () {
                 currentTime();
             }, 1000);
