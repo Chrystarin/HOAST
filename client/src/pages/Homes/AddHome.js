@@ -105,6 +105,7 @@ function AddHome() {
             })
         }
         catch(err){
+            console.log(err);
             setOpenSnackBar(openSnackBar => ({
                 ...openSnackBar,
                 open:true,
@@ -145,39 +146,39 @@ function AddHome() {
                             </div>
                             {/* <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/> */}
                             <FormControl
-                                    maxWidth
-									variant="filled"
-									sx={{ m: 1, minWidth: 120 }}
-								>
-									<InputLabel id="demo-simple-select-filled-label">
-										Color
-									</InputLabel>
-									<Select
-										labelId="demo-simple-select-filled-label"
-										id="demo-simple-select-filled"
-										value={colors}
-										onChange={(e) => {
-											setColor(e.target.value);
-											updateForm({
-												color: e.target.value
-											});
-										}}
-									>
-										<MenuItem value="">
-											<em>None</em>
-										</MenuItem>
-										{houseColor.map((houseColor, index) => {
-											return (
-												<MenuItem
-													key={index}
-													value={houseColor}
-												>
-													{houseColor}
-												</MenuItem>
-											);
-										})}
-									</Select>
-								</FormControl>
+                                maxWidth
+                                variant="filled"
+                                sx={{ m: 1, minWidth: 120 }}
+                            >
+                                <InputLabel id="demo-simple-select-filled-label">
+                                    Color
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={colors}
+                                    onChange={(e) => {
+                                        setColor(e.target.value);
+                                        updateForm({
+                                            color: e.target.value
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {houseColor.map((houseColor, index) => {
+                                        return (
+                                            <MenuItem
+                                                key={index}
+                                                value={houseColor}
+                                            >
+                                                {houseColor}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Select>
+							</FormControl>
                             <TextField fullWidth label="Contact Number" variant="filled" onChange={(e)=>updateForm({ contactNumber: e.target.value })} defaultValue={form.contactNumber}/>
                             <div className='Form__Button'>
                                 <Button 
