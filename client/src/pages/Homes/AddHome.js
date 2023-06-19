@@ -138,7 +138,7 @@ function AddHome() {
                                     className='Submit' 
                                     onClick={()=> {
                                         
-                                        if(form.houseName !== "" && form.houseNumber!== "" && form.phase !=="" && form.phase !==""){
+                                        if(form.houseName !== "" && form.houseNumber !== "" && form.houseNumber !== "" && form.street !== "" && form.phase !=="" && form.color !== "" && form.contactNumber !== ""){
                                             setStepper(2);
                                         }else{
                                             setOpenSnackBar(openSnackBar => ({
