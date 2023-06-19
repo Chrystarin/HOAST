@@ -150,7 +150,7 @@ function AddHome() {
 									sx={{ m: 1, minWidth: 120 }}
 								>
 									<InputLabel id="demo-simple-select-filled-label">
-										Type
+										Color
 									</InputLabel>
 									<Select
 										labelId="demo-simple-select-filled-label"
