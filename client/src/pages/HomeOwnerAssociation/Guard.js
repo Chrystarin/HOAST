@@ -63,7 +63,7 @@ function Guard() {
                                         {guards.length > 0 &&
                                         guards.map((guard) => {
                                             return (
-                                                <ResidentCard key={guard._id} username={guard.user.name.firstName + ' ' + guard.user.name.lastName} type={"View"}/>
+                                                <ResidentCard key={guard._id} username={guard.user.name.firstName + ' ' + guard.user.name.lastName} type={"Guard"}/>
                                             );
                                         })}
                                     </>

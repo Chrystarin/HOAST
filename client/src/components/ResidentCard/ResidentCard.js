@@ -48,6 +48,23 @@ function ResidentCard(props) {
                 </div>
             </div>:<></>
         }
+        {(props.type == "Guard")?<>
+            <div id='ResidentCard'>
+                <a href="">
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                    <h6 id='ResidentCard__Name'>{props.username}</h6>
+                </a>
+                <div id='ResidentCard__Buttons'>
+                    <IconButton aria-label="delete">
+                        <ClearIcon />
+                    </IconButton>
+                    <IconButton aria-label="delete" color='primary'>
+                        <CheckCircleIcon />
+                    </IconButton>
+                </div>
+            </div>
+            </>:<></>
+        }
     </>
 }
 
