@@ -161,7 +161,7 @@ function AddHome() {
 										<MenuItem value="">
 											<em>None</em>
 										</MenuItem>
-										{colors.map((houseColor, index) => {
+										{color.map((houseColor, index) => {
 											return (
 												<MenuItem
 													key={index}
