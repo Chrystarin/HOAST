@@ -30,6 +30,12 @@ function AddVehicle() {
         color: ''
     });
 
+    const [cartype, setCarType] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setCarType(event.target.value);
+    };
+
     // Retrieves data from text input then assigns to form
     function updateForm(e) {
         return setForm((prev) => {
@@ -101,7 +107,7 @@ function AddVehicle() {
                                 <Select
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
-                                value={age}
+                                value={cartype}
                                 onChange={handleChange}
                                 >
                                 <MenuItem value="">
