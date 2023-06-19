@@ -55,12 +55,7 @@ function ResidentCard(props) {
                     <h6 id='ResidentCard__Name'>{props.username}</h6>
                 </a>
                 <div id='ResidentCard__Buttons'>
-                    <IconButton aria-label="delete">
-                        <ClearIcon />
-                    </IconButton>
-                    <IconButton aria-label="delete" color='primary'>
-                        <CheckCircleIcon />
-                    </IconButton>
+                    
                 </div>
             </div>
             </>:<></>
