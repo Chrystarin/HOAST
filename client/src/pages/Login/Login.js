@@ -34,8 +34,7 @@ function Login() {
           setEmailError('Please enter a valid email address');
           return;
       } else {
-        setEmailError('');
-        return form.email;
+          return form.email;
       }
   };
 

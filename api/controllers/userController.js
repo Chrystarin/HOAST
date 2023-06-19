@@ -40,11 +40,11 @@ const login = async (req, res, next) => {
 
     // Find email
     const user = await User.findOne({ 'credentials.email': email }).exec();
-    if (!user) throw new UnauthorizedError('Incorrect email or password');
+    if (!user) throw new UnauthorizedError('Incorrect email');
 
     // Check password
     const samePassword = await bcrypt.compare(password, user.credentials.password);
-    if (!samePassword) throw new UnauthorizedError('Incorrect email or password');
+    if (!samePassword) throw new UnauthorizedError('Incorrect password');
 
     res.status(201).cookie('access-token', createToken(user.userId), cookieOptions).json({ user: user });
 };
