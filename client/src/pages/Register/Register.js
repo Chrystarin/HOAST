@@ -75,11 +75,6 @@ function Register() {
 					</div>
 					<div id="Register__Container">
 						<h2 className="Title">REGISTER</h2>
-						<p className="SubTitle">
-							Lorem ipsum dolor sit amet consectetur adipisicing
-							elit. Laborum, eveniet suscipit libero nesciunt odit
-							quo nobis culpa dignissimos. Aperiam.
-						</p>
 						<div className="Register__Form">
 							<form onSubmit={Submit}>
 								<div className="Input__Wrapper2">

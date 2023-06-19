@@ -49,7 +49,6 @@ function Login() {
             </div>
             <div id='Login__Container'>
               <h2 className='Title'>LOGIN</h2>
-              <p className='SubTitle'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, eveniet suscipit  libero nesciunt odit quo nobis culpa dignissimos. Aperiam.</p>
               <div className='Login__Form'>
                 <div className='FormReplacement'>
                     <TextField
