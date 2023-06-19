@@ -8,9 +8,8 @@ const {
 	DuplicateEntryError,
 	NotFoundError
 } = require('../helpers/errors');
-const { checkString, checkNumber } = require('../helpers/validData');
+const { checkString } = require('../helpers/validData');
 const { genHoaId, genRequestId } = require('../helpers/generateId');
-const { checkDate } = require('../helpers/validData');
 
 const registerHoa = async (req, res, next) => {
 	const { name, street, barangay, city, province } = req.body;
@@ -61,7 +60,7 @@ const joinHoa = async (req, res, next) => {
 	checkString(hoaId, 'HOA ID');
 	checkString(name, 'Home Name');
 	checkString(color, 'Home Color');
-	checkNumber(number, 'Home Number');
+	checkString(number, 'Home Number');
 	checkString(street, 'Street');
     checkString(contactNo, 'Contact Number');
 	checkString(phase, 'Phase', true);
