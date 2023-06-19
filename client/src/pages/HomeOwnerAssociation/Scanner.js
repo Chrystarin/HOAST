@@ -76,7 +76,7 @@ function Scanner() {
 
             let dateToday = month + " " + day + ", " + year;
 
-            document.getElementById('date').innerText = dateToday;
+            // document.getElementById('date').innerText = dateToday;
             let d = setTimeout(function (){
                 currentDate();
             }, 1000)
