@@ -63,7 +63,7 @@ export default function RegisterHoa() {
             .then((response) => {
                 alert("Registered Successfully!");
                 navigate("/dashboard");
-                location.reload();
+                window.location.reload();
             })
         }
         catch(err){
