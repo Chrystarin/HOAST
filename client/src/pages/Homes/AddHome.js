@@ -15,6 +15,11 @@ import SnackbarComp from '../../components/SnackBar/SnackbarComp';
 
 import axios from './../../utils/axios';
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 function AddHome() {
     const navigate = useNavigate();
     
@@ -45,6 +50,12 @@ function AddHome() {
         color: '',
         contactNumber: ''
     });
+
+    const [colors, setColor] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+		setColor(event.target.value);
+	};
 
     // Retrieves All HOA Data onLoad
     useEffect(() => {
@@ -103,6 +114,9 @@ function AddHome() {
             // alert(err.message);
         }
     }
+
+    const houseColor = ['red', 'orange', 'yellow', 'green', 'blue', 'violet'];
+
     if(!hoas) return <>
         <div className='Loading'>
             <img src={loading} alt="" />
@@ -129,7 +143,36 @@ function AddHome() {
                                 <TextField fullWidth  label="Street" variant="filled" onChange={(e)=>updateForm({ street: e.target.value })} defaultValue={form.street}/>
                                 <TextField fullWidth  label="Phase" variant="filled" onChange={(e)=>updateForm({ phase: e.target.value })} defaultValue={form.phase}/>
                             </div>
-                            <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/>
+                            {/* <TextField fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })} defaultValue={form.color}/> */}
+                            <FormControl
+                                    maxWidth
+									variant="filled"
+									sx={{ m: 1, minWidth: 120 }}
+								>
+									<InputLabel id="demo-simple-select-filled-label">
+										Type
+									</InputLabel>
+									<Select
+										labelId="demo-simple-select-filled-label"
+										id="demo-simple-select-filled"
+										value={colors}
+										onChange={(e)=>updateForm({ type: e.target.value })}
+									>
+										<MenuItem value="">
+											<em>None</em>
+										</MenuItem>
+										{colors.map((houseColor, index) => {
+											return (
+												<MenuItem
+													key={index}
+													value={houseColor}
+												>
+													{houseColor}
+												</MenuItem>
+											);
+										})}
+									</Select>
+								</FormControl>
                             <TextField fullWidth label="Contact Number" variant="filled" onChange={(e)=>updateForm({ contactNumber: e.target.value })} defaultValue={form.contactNumber}/>
                             <div className='Form__Button'>
                                 <Button 
