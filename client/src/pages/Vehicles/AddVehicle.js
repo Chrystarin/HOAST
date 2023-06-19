@@ -161,6 +161,7 @@ function AddVehicle() {
                                 })}
                             </NativeSelect> */}
 								<FormControl
+                                    maxWidth
 									variant="filled"
 									sx={{ m: 1, minWidth: 120 }}
 								>

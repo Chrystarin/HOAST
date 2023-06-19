@@ -44,7 +44,7 @@ function VisitorView() {
 						await axios
 						.get(`logs`, {
 							params: {
-								objId: `${id}`,
+								objId: id,
 								logType: 'visitor',
 								homeId: response.data.home
 							}
