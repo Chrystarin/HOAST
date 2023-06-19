@@ -171,7 +171,7 @@ function AddVehicle() {
 										labelId="demo-simple-select-filled-label"
 										id="demo-simple-select-filled"
 										value={cartype}
-										onChange={handleChange}
+										onChange={(e)=>updateForm({ type: e.target.value })}
 									>
 										<MenuItem value="">
 											<em>None</em>
