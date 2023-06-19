@@ -85,13 +85,13 @@ function AddVehicle() {
                         </div>
                         <div className='FormWrapper__2'>
                             {/* <TextField fullWidth  label="Type" variant="filled" onChange={(e)=>updateForm({ type: e.target.value })}/> */}
-                            <NativeSelect defaultValue={null} inputProps={{ name: 'age', id: 'uncontrolled-native', }} onChange={(e)=>updateForm({ type: e.target.value })}>
+                            <NativeSelect defaultValue={null} label="Type" inputProps={{ name: 'age', id: 'uncontrolled-native', }} onChange={(e)=>updateForm({ type: e.target.value })}>
                                 <option aria-label="None" value="" />
                                 {carTypes.map((type, index) => {
                                     return <option key={index} value={type}>{type}</option>
                                 })}
                             </NativeSelect>
-                            <TextField required fullWidth label="Type" variant="filled" onChange={(e)=>updateForm({ type: e.target.value })}/>
+                            {/* <TextField required fullWidth label="Type" variant="filled" onChange={(e)=>updateForm({ type: e.target.value })}/> */}
                             <TextField required fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })}/>
                         </div>
                         
