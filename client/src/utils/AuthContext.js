@@ -28,6 +28,7 @@ function AuthProvider({ children }) {
 					})
 				)
 				.then((response) => {
+					console.log(response);
 					setUser(response.data);
 					localStorage.setItem('user', JSON.stringify(response.data));
 					const subFetchRole = async () => {

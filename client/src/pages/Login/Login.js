@@ -30,12 +30,12 @@ function Login() {
     });}
 
     const validateEmail = () => {
-      if (!form.email.includes('@') || !form.email.endsWith('.com')) {
+      if (!form.email.includes('@')) {
           setEmailError('Please enter a valid email address');
           return;
       } else {
-      setEmailError('');
-      // submit logic here if form is valid
+        setEmailError('');
+        return form.email;
       }
   };
 
@@ -69,7 +69,7 @@ function Login() {
                         onChange={(e)=>updateForm({ password: e.target.value })}
                     />
                     <div>
-                        <Button variant="contained" size="large" type='submit' onClick={()=>login(form.email, form.password)}>
+                        <Button variant="contained" size="large" type='submit' onClick={()=>login(validateEmail(), form.password)}>
                             Login
                         </Button>
                     </div>
