@@ -90,12 +90,28 @@ function AddVehicle() {
                         </div>
                         <div className='FormWrapper__2'>
                             {/* <TextField fullWidth  label="Type" variant="filled" onChange={(e)=>updateForm({ type: e.target.value })}/> */}
-                            <NativeSelect defaultValue={null} label="Type" inputProps={{ name: 'age', id: 'uncontrolled-native', }} onChange={(e)=>updateForm({ type: e.target.value })}>
-                                <option aria-label="None" value="" />
+                            {/* <NativeSelect defaultValue={null} label="Type" inputProps={{ name: 'age', id: 'uncontrolled-native', }} onChange={(e)=>updateForm({ type: e.target.value })}>
+                                <option aria-label="None" value="Types" />
                                 {carTypes.map((type, index) => {
                                     return <option key={index} value={type}>{type}</option>
                                 })}
-                            </NativeSelect>
+                            </NativeSelect> */}
+                            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+                                <InputLabel id="demo-simple-select-filled-label">Type</InputLabel>
+                                <Select
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                value={age}
+                                onChange={handleChange}
+                                >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                {carTypes.map((type, index) => {
+                                    return <MenuItem key={index} value={type}>{type}</MenuItem>
+                                })}
+                                </Select>
+                            </FormControl>
                             {/* <TextField required fullWidth label="Type" variant="filled" onChange={(e)=>updateForm({ type: e.target.value })}/> */}
                             <TextField required fullWidth label="Color" variant="filled" onChange={(e)=>updateForm({ color: e.target.value })}/>
                         </div>
