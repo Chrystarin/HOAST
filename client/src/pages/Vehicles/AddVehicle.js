@@ -73,11 +73,16 @@ function AddVehicle() {
 
     const carTypes = ["Sedan", "SUV", "CUV", "Van", "Truck", "Motorcycle", "Micro", "Hatchback", "Jeep", "Wagon", "Pick-Up", "Mini Van", "Coupe", "Crossover", "Sport Car", "Super Car"];
 
-    function Stepper(){
-        switch (stepper) {
-            case 1:
-                return <>
-                    <form onSubmit={Submit} className='Form'>
+    return<>
+        <Navbar type="vehicle"/>
+        <div className='SectionHolder'>
+            <section className='Section'>
+                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span> > <span>Vehicle Form</span></h3>
+                <div className='SectionStepper'> 
+                    <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
+                </div>
+                <div className='SectionContent'>
+                <form onSubmit={Submit} className='Form'>
                         <TextField required fullWidth  label="Plate Number" variant="filled"  onChange={(e)=>updateForm({ plateNumber: e.target.value })}/>
                         <div className='FormWrapper__2'>
                             <TextField required fullWidth  label="Model" variant="filled" onChange={(e)=>updateForm({ model: e.target.value })}/>
@@ -157,22 +162,6 @@ function AddVehicle() {
                             <Button variant='contained' type='submit' className='Submit'>Submit</Button>
                         </div>
                     </form>
-                </>
-                break;
-            default:
-                break;
-        }
-    }
-    return<>
-        <Navbar type="vehicle"/>
-        <div className='SectionHolder'>
-            <section className='Section'>
-                <h3 className='SectionTitleDashboard'><span><a href="/vehicles">Vehicles</a></span> > <span>Vehicle Form</span></h3>
-                <div className='SectionStepper'> 
-                    <Button variant='text' className={(stepper === 1)?"active":""} onClick={()=> setStepper(1)}>General Information</Button>
-                </div>
-                <div className='SectionContent'>
-                    <Stepper/>
                 </div>
             </section>
             <SnackbarComp open={openSnackBar} setter={setOpenSnackBar}/>
