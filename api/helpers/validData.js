@@ -23,13 +23,13 @@ const checkNumber = (n, property, canbeUndefined) => {
 	if (n) {
 		// Check if input is type of number
 		if (typeof n !== 'number')
-			throw new InvalidInput(`'${property}' is not a number`);
+			throw new InvalidInputError(`'${property}' is not a number`);
 
 		return;
 	}
 
 	// Check if canbeUndefined is true if n is undefined
-	if (!canbeUndefined) throw new InvalidInput(`'${property}' is not defined`);
+	if (!canbeUndefined) throw new InvalidInputError(`'${property}' is not defined`);
 };
 
 const checkDate = (date, property) => {
