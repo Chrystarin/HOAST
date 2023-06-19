@@ -105,7 +105,7 @@ function VisitorView() {
 										</div>
 										<div className="GeneralInformation__InfoContainer">
 											<h6>Arrival Date: </h6>
-											<h5>{visitor.arrival}</h5>
+											<h5>{new Date(visitor.arrival).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.arrival).getDate() + ", " + new Date(visitor.arrival).getFullYear()}</h5>
 										</div>
 									</div>
 									<div className="Input__Wrapper2">
@@ -115,7 +115,7 @@ function VisitorView() {
 										</div>
 										<div className="GeneralInformation__InfoContainer">
 											<h6>Departure Date: </h6>
-											<h5>{visitor.departure}</h5>
+											<h5>{new Date(visitor.departure).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.departure).getDate() + ", " + new Date(visitor.departure).getFullYear()}</h5>
 										</div>
 									</div>
 									<div className="Input__Wrapper2">
