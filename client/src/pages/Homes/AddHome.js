@@ -156,7 +156,12 @@ function AddHome() {
 										labelId="demo-simple-select-filled-label"
 										id="demo-simple-select-filled"
 										value={colors}
-										onChange={(e)=>updateForm({ type: e.target.value })}
+										onChange={(e) => {
+											setColor(e.target.value);
+											updateForm({
+												color: e.target.value
+											});
+										}}
 									>
 										<MenuItem value="">
 											<em>None</em>
