@@ -85,17 +85,23 @@ const getRecords = async (req, res, next) => {
 	}
 
 	// Get logs of specific entity
-	if (objId) {
-		const { user } = req.user;
-		const { home } = req.user;
-		if (logType === 'visitor') {
-			logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
-			logs = logs.filter((log) => log[logType].visitorId === objId);
-		} else if (logType === 'vehicle') {
-			logs = await getLogsByLookup(logType, user.vehicles, 'plateNumber');
-			logs = logs.filter((log) => log[logType].plateNumber === objId);
-		}
+	if(objId && logType) {
+		objProp = logType === 'visitor' ? 'visitorId' : 'plateNumber';
+		logs = logs.filter(log => log[logType][objProp] === objId);
 	}
+
+	// Get logs of specific entity
+	// if (objId) {
+	// 	const { user } = req.user;
+	// 	const { home } = req.user;
+	// 	if (logType === 'visitor') {
+	// 		logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
+	// 		logs = logs.filter((log) => log[logType].visitorId === objId);
+	// 	} else if (logType === 'vehicle') {
+	// 		logs = await getLogsByLookup(logType, user.vehicles, 'plateNumber');
+	// 		logs = logs.filter((log) => log[logType].plateNumber === objId);
+	// 	}
+	// }
 
 	res.json(logs);
 };
