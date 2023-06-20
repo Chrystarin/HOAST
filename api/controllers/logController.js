@@ -75,6 +75,8 @@ const getRecords = async (req, res, next) => {
 		];
 	}
 
+	console.log(logs);
+
 	// Get spcefic log
 	if (logId) {
 		logs = logs.find(({ logId: li }) => logId == li);
