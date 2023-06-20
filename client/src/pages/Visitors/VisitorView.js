@@ -32,7 +32,7 @@ function VisitorView() {
 			await axios
 				.get(`visitors`, {
 					params: {
-						visitorId: `${id}`,
+						visitorId: id,
 						hoaId:
 							isRole('admin') || isRole('guard')
 								? localStorage.getItem('hoaId')
@@ -48,8 +48,7 @@ function VisitorView() {
 							.get(`logs`, {
 								params: {
 									objId: id,
-									logType: 'visitor',
-									visitorId: response.data.visitorId
+									logType: 'visitor'
 								}
 							})
 							.then((response) => {
