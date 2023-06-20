@@ -274,7 +274,7 @@ function HomeList() {
                                                             <div className='RequestCard__Header__Address__Container'>
                                                                 <div>
                                                                     <p className="BodyText3">#</p>
-                                                                    <p>{request.details.houseNumber}</p>
+                                                                    <p>{request.details.number}</p>
                                                                 </div>
                                                                 <div>
                                                                     <p className="BodyText3">Street</p>
