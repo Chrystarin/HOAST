@@ -16,14 +16,14 @@ import Navbar from '../../layouts/NavBar';
 import QRCodeCard from '../../layouts/QRCodeCard';
 
 import axios from '../../utils/axios';
-import {useAuth} from './../../utils/AuthContext.js';
+import { useAuth } from './../../utils/AuthContext.js';
 
 function VisitorView() {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const [visitor, setVisitor] = useState();
 	const [logs, setLogs] = useState();
-	const {isRole} = useAuth();
+	const { isRole } = useAuth();
 
 	// Runs onLoad
 	useEffect(() => {
@@ -33,7 +33,10 @@ function VisitorView() {
 				.get(`visitors`, {
 					params: {
 						visitorId: `${id}`,
-						hoaId: (isRole('admin') || isRole('guard')) ? localStorage.getItem('hoaId') : null
+						hoaId:
+							isRole('admin') || isRole('guard')
+								? localStorage.getItem('hoaId')
+								: null
 					}
 				})
 				.then((response) => {
@@ -42,37 +45,42 @@ function VisitorView() {
 					// // Retrieves All of Specific Visitor's Logs Data
 					const fetchLogs = async () => {
 						await axios
-						.get(`logs`, {
-							params: {
-								objId: id,
-								logType: 'visitor',
-								homeId: response.data.home
-							}
-						})
-						.then((response) => {
-							setLogs(response.data);
-							console.log(response.data);
-						});
+							.get(`logs`, {
+								params: {
+									objId: id,
+									logType: 'visitor',
+									visitorId: response.data.visitorId
+								}
+							})
+							.then((response) => {
+								setLogs(response.data);
+								console.log(response.data);
+							});
 					};
 					fetchLogs();
 				})
-                .catch((err)=>{
-                    navigate(`${err}`);
-                })
+				.catch((err) => {
+					navigate(`${err}`);
+				});
 		};
 
 		// Executes Functions of fetch visitors and fetch logs
 		fetchVisitor();
-		
 	}, []);
 
 	// Returns loading if data is not yet retrieved
-	if (!visitor || !logs) return <>
-    <div className='Loading'>
-      <img src={loading} alt="" />
-      <h3>Loading...</h3>
-    </div>
-  </>;
+	if (!visitor || !logs)
+		return (
+			<>
+				<div className="Loading">
+					<img
+						src={loading}
+						alt=""
+					/>
+					<h3>Loading...</h3>
+				</div>
+			</>
+		);
 
 	return (
 		<>
@@ -105,7 +113,21 @@ function VisitorView() {
 										</div>
 										<div className="GeneralInformation__InfoContainer">
 											<h6>Arrival Date: </h6>
-											<h5>{new Date(visitor.arrival).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.arrival).getDate() + ", " + new Date(visitor.arrival).getFullYear()}</h5>
+											<h5>
+												{new Date(
+													visitor.arrival
+												).toLocaleString('default', {
+													month: 'long'
+												}) +
+													' ' +
+													new Date(
+														visitor.arrival
+													).getDate() +
+													', ' +
+													new Date(
+														visitor.arrival
+													).getFullYear()}
+											</h5>
 										</div>
 									</div>
 									<div className="Input__Wrapper2">
@@ -115,7 +137,21 @@ function VisitorView() {
 										</div>
 										<div className="GeneralInformation__InfoContainer">
 											<h6>Departure Date: </h6>
-											<h5>{new Date(visitor.departure).toLocaleString('default', { month: 'long' }) + " " + new Date(visitor.departure).getDate() + ", " + new Date(visitor.departure).getFullYear()}</h5>
+											<h5>
+												{new Date(
+													visitor.departure
+												).toLocaleString('default', {
+													month: 'long'
+												}) +
+													' ' +
+													new Date(
+														visitor.departure
+													).getDate() +
+													', ' +
+													new Date(
+														visitor.departure
+													).getFullYear()}
+											</h5>
 										</div>
 									</div>
 									<div className="Input__Wrapper2">
@@ -155,7 +191,8 @@ function VisitorView() {
 													<p>No Logs Recorded</p>
 												) : (
 													<>
-														{logs.length > 0 && logs.map((log) => {
+														{logs.length > 0 &&
+															logs.map((log) => {
 																return (
 																	<TableRow
 																		key={
@@ -178,9 +215,41 @@ function VisitorView() {
 																			}
 																		</TableCell>
 																		<TableCell align="center">
-																			{
-																				new Date(log.createdAt).toLocaleString('default', { month: 'long' }) + " " + new Date(log.createdAt).getDate() + ", " + new Date(log.createdAt).getFullYear() + " | " + new Date(log.createdAt).getHours() + ":" + new Date(log.createdAt).getMinutes() + ":" + new Date(log.createdAt).getSeconds() + " " + (new Date(log.createdAt).getHours() >= 12 ? "PM" : "AM")
-																			}
+																			{new Date(
+																				log.createdAt
+																			).toLocaleString(
+																				'default',
+																				{
+																					month: 'long'
+																				}
+																			) +
+																				' ' +
+																				new Date(
+																					log.createdAt
+																				).getDate() +
+																				', ' +
+																				new Date(
+																					log.createdAt
+																				).getFullYear() +
+																				' | ' +
+																				new Date(
+																					log.createdAt
+																				).getHours() +
+																				':' +
+																				new Date(
+																					log.createdAt
+																				).getMinutes() +
+																				':' +
+																				new Date(
+																					log.createdAt
+																				).getSeconds() +
+																				' ' +
+																				(new Date(
+																					log.createdAt
+																				).getHours() >=
+																				12
+																					? 'PM'
+																					: 'AM')}
 																		</TableCell>
 																	</TableRow>
 																);
