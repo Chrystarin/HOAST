@@ -5,7 +5,7 @@ const {
 	VisitorNotFoundError,
 	VehicleNotFoundError,
 	NotFoundError,
-    UnauthorizedError
+	UnauthorizedError
 } = require('../helpers/errors');
 const {
 	roles: { USER },
@@ -35,7 +35,7 @@ const getRecords = async (req, res, next) => {
 	const { logId, objId, logType } = req.query;
 	const { type } = req.user;
 
-	console.log(req.query)
+	console.log(req.query);
 
 	// Validate input
 	checkString(logId, 'Log ID', true);
@@ -87,9 +87,9 @@ const getRecords = async (req, res, next) => {
 		const { user } = req.user;
 		const { home } = req.user;
 		if (logType === 'visitor')
-			logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
+			logs = await getLogsByLookup(logType, home.visitors, objId);
 		if (logType === 'vehicle')
-			logs = await getLogsByLookup(logType, user.vehicles, 'visitorId');
+			logs = await getLogsByLookup(logType, user.vehicles, objId);
 	}
 
 	res.json(logs);
@@ -121,12 +121,15 @@ const addRecord = async (req, res, next) => {
 			);
 			if (!visitor) throw new VisitorNotFoundError();
 
-            const current = new Date();
+			const current = new Date();
 
-            // Check if visitor is within the arrival and departure
-			if (visitor.arrival <= current && visitor.departure >= current) break;
+			// Check if visitor is within the arrival and departure
+			if (visitor.arrival <= current && visitor.departure >= current)
+				break;
 
-            throw new UnauthorizedError('Visitor is out of the arrival and departure duration');
+			throw new UnauthorizedError(
+				'Visitor is out of the arrival and departure duration'
+			);
 		case 'vehicle':
 			if (vehicles.find(({ plateNumber }) => plateNumber === objectId))
 				break;
