@@ -96,7 +96,7 @@ function AddHome() {
                     street: form.street,
                     phase: form.phase,
                     color: form.color,
-                    contactNumber: form.contactNumber
+                    contactNo: form.contactNumber
                 })
             )
             .then((response) => {
