@@ -86,10 +86,13 @@ const getRecords = async (req, res, next) => {
 	if (objId) {
 		const { user } = req.user;
 		const { home } = req.user;
-		if (logType === 'visitor')
-			logs = await getLogsByLookup(logType, home.visitors, objId);
-		if (logType === 'vehicle')
-			logs = await getLogsByLookup(logType, user.vehicles, objId);
+		if (logType === 'visitor') {
+			logs = await getLogsByLookup(logType, home.visitors, 'visitorId');
+			logs = logs.filter(({ objectId }) => objectId === objId);
+		} else if (logType === 'vehicle') {
+			logs = await getLogsByLookup(logType, user.vehicles, 'plateNumber');
+			logs = logs.filter(({ objectId }) => objectId === objId);
+		}
 	}
 
 	res.json(logs);
