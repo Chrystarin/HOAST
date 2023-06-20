@@ -122,7 +122,7 @@ function ResidentsView() {
                                     }
                             </div>
                         </div>
-                        <div className="SectionView__Sections">
+                        {/* <div className="SectionView__Sections">
                             <h5 className='SectionView__Sections__Title'>
                                 Logs
                             </h5>
@@ -151,7 +151,7 @@ function ResidentsView() {
                                     </Table>
                                 </TableContainer>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className='SectionView__SidePanel' id="ViewResident__QRCode__Container">
                         {/* <QRCodeCard/> */}
