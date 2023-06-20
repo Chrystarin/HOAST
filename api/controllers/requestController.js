@@ -75,7 +75,7 @@ const processRequest = async (req, res, next) => {
 			homeId: genHomeId(),
 			name,
             color,
-            contactNo,
+            contactNo: request.details.contactNo,
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
