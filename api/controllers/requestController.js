@@ -64,6 +64,8 @@ const processRequest = async (req, res, next) => {
 
 	// Process request if approved
 	if (status == 'approved') {
+		console.log(request);
+
 		const { name, contactNo, color, ...address } = request.details;
 
 		// Create home

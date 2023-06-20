@@ -83,7 +83,7 @@ const joinHoa = async (req, res, next) => {
 		requestId: genRequestId(),
 		hoa: hoa._id,
 		requestor: user._id,
-		details: { name, color, number, street, phase, contactNo }
+		details: { name, color, number, street, phase, contactNo }	
 	});
 
 	res.status(201).json({
