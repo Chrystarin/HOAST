@@ -27,7 +27,9 @@ const getRequests = async (req, res, next) => {
 
 	if (type == ADMIN) {
 		const { hoa } = req.user;
-		requests = await Request.find({ hoa: hoa._id }).populate('hoa requestor').exec();
+		requests = await Request.find({ hoa: hoa._id })
+			.populate('hoa requestor')
+			.exec();
 	}
 
 	// Get specific request
@@ -66,16 +68,17 @@ const processRequest = async (req, res, next) => {
 	if (status == 'approved') {
 		console.log(request.details);
 
-		const { name, contactNo, color, ...address } = request.details;
+		const { name, color, ...address } = request.details;
+		const { contactNo } = request.details;
 
-		console.log(contactNo)
+		console.log(contactNo);
 
 		// Create home
 		const home = await Home.create({
 			homeId: genHomeId(),
 			name,
-            color,
-            contactNo: request.details.contactNo,
+			color,
+			contactNo,
 			owner: request.requestor,
 			hoa: hoa._id,
 			address,
