@@ -33,7 +33,7 @@ function LandingPage() {
 									platform for homeowners to manage and access
 									vital community information.
 								</h4>
-								<Button variant="contained">Learn more</Button>
+								{/* <Button variant="contained">Learn more</Button> */}
 							</div>
 						</div>
 					</section>
