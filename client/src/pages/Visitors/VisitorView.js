@@ -48,7 +48,8 @@ function VisitorView() {
 							.get(`logs`, {
 								params: {
 									objId: id,
-									logType: 'visitor'
+									logType: 'visitor',
+									homeId: response.data.home
 								}
 							})
 							.then((response) => {
